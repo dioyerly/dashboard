@@ -1,0 +1,56 @@
+{
+  "block": "4B block 2: isolated catalogs and products",
+  "activation": "Business API remains off by default and is never connected to dashboard JavaScript. Only synthetic test schemas receive migrations. Active review schema and IndexedDB contents are untouched.",
+  "migrations": ["003_catalogs_products.sql", "004_project_stats_optional_origin.sql"],
+  "immutable_baselines": ["001_auth.sql", "002_business_foundation.sql"],
+  "new_tables": ["product_categories", "formats", "languages", "payment_methods", "expense_groups", "expense_categories", "plans", "plan_prices", "products", "product_versions", "product_links", "bundle_items", "product_channels", "product_version_channels", "project_user_stats", "product_version_history", "business_page_cursors"],
+  "altered_tables": {
+    "environments": "Adds catalog_revision for stable pagination conflict detection.",
+    "projects": "Adds nullable source_created_at/source_updated_at, distinct from technical timestamps.",
+    "project_user_stats": "004 makes origin nullable because original demo snapshots legitimately omit it. No fabricated origin or historical backfill."
+  },
+  "services": {
+    "commands": "Existing business_command batches, one transaction with record versions, idempotent receipt and audit. New resources are typed normalized rows; no complete state JSON table.",
+    "actions": "create/update/archive; restore reactivates the SAME archived entity/link ID with expected_version. Restore is not whole-backup restoration, which remains unimplemented. No physical deletion endpoint.",
+    "read_only_history": "product_version_history is generated atomically for each version mutation; clients cannot rewrite/archive it. project_user_stats is append-only. plan_prices values, currency, period, origin and start are immutable; only an open valid_to can be closed once in a batch that adds the next price.",
+    "links": "Foreign keys include environment. Active children block parent archive except retained historical price/version snapshots. A relation endpoint pair cannot be moved to another owner or target; archive and restore preserve link identity. Restoring a link validates active parents and package acyclicity.",
+    "prices": "DECIMAL(20,2), string inputs, no float/exponent coercion. Known price intervals are half-open [valid_from, valid_to) and cannot overlap. A single unknown legacy-date record can coexist explicitly with known intervals; no historical date or amount is invented. No billing/MRR calculation is implemented in this block.",
+    "packages": "No self-inclusion, duplicate edges or indirect cycles. Cross-brand contents are allowed, matching the original picker. Membership does not create sales or expand revenue.",
+    "catalogs": "Unique names per appropriate environment/brand/group/project; unique format/language/version tuple per product. Product category must belong to its brand. Optional project links may cross brands, as the original form permits.",
+    "migration_gate": "Business services reject a partially installed block (only 003 or only 004). The 002-only foundation remains compatible; the active review server remains business-disabled."
+  },
+  "pagination": {
+    "endpoint": "GET api.php?action=business_list&environment=...&resource=...&limit=...&cursor=...&archived=0|1",
+    "relations": "Optional parent_field and parent_id, restricted to the resource's declared foreign keys. Used for product versions, links, bundle members, channels, project statistics and plan price/history relations.",
+    "response": "ok, records, next_cursor (null at end), revision, limit",
+    "limits": "Integer page size 1..500, default 100. Binary immutable ID keyset order; clients use sort_order/sequence_no to reconstruct original list order after collection.",
+    "cursor": "Opaque random server-issued token stored in MariaDB, bound to environment, resource, page size, archived flag, filters, revision and last ID. Expires in 30 minutes. Invalid/expired/altered-query cursor yields invalid_cursor.",
+    "concurrency": "Each page holds the same environment lock used by writers. If a command commits between pages, the next page returns pagination_conflict (409), requiring traversal restart. There is no silent mixed-revision result or offset drift. Identical cursor retry returns identical records while revision is unchanged.",
+    "legacy_helper": "Business::list retains its explicit listing_limit error for old internal callers. The block-2 API and new relation reads use Business::page. No silent 500-row truncation.",
+    "maintenance_pending": "Expired cursor rows are unusable but retained; add controlled cleanup when preparing deployment. All business writes must use the transaction service for revision tracking."
+  },
+  "recovery": {
+    "runner": "tools/migrate_catalogs_local.php, CLI only, root credentials private in local subprocess environment, 127.0.0.1 isolated centro_auth_ schema only.",
+    "backup": "Before the first target DDL, require a private prior SQL dump plus database/SHA256 manifest. Recovery must use the same manifest-bound original backup, not an arbitrary new snapshot.",
+    "definitions": "Create a separate local scratch schema from the immutable migration chain on the same MariaDB engine. Store expected SHOW CREATE TABLE fingerprints plus prior definitions and migration checksums in an ignored private journal.",
+    "forward_recovery": "Acquire a named migration lock. Preflight every existing target definition. A matching already-committed DDL step is adopted, even if interruption occurred before journaling its acknowledgment. Execute only missing steps, verify each definition, then register the migration checksum. Rows are never deleted/recreated during recovery.",
+    "refusal": "Changed checksum, backup mismatch, divergent definitions, unexpected partial ALTER or missing previously acknowledged objects halt before further target DDL. Preserve data and investigate manually; never auto-drop or overwrite an unexpected object.",
+    "limits": "DDL is not rolled back as a transaction. Journals/scratch schemas/backups are project-private and retained. This runner covers the fixed CREATE/ALTER statements in 003/004, not arbitrary SQL or restore-from-disaster. A damaged journal requires manual investigation."
+  },
+  "legacy_json_mapping": {
+    "status": "Field mapping and synthetic compatibility cases verified; whole-backup importer, exporter and frontend adapter are not implemented or activated.",
+    "categories": "settings.categories {brandId,name} -> product_categories {brand_id,name}; labels and array position produce a deterministic new child ID during future staged import because originals have no ID.",
+    "named_lists": "settings.formats, languages, payMethods string arrays -> formats, languages, payment_methods with name and sort_order. expenseGroups [{name,items:[]}] -> expense_groups and expense_categories preserving group and item order.",
+    "plans": "Preserve plans[].id/projectId/name/trialDays. Current price/currency/period become plan_prices. If original has no price-history dates, valid_from is NULL and provenance unknown, never inferred from launch date. Internal active status is metadata; legacy plans have no equivalent status property.",
+    "products": "Preserve id, brandId/projectId, name, status, launchDate, pendingUpdates. category becomes category_label_snapshot plus optional real category FK. Retired labels do not require inventing a catalog row. createdAt/updatedAt are separate source timestamps.",
+    "versions": "Preserve nested version ID and array order. format/language/version -> snapshot labels and version_label; optional real format/language FKs. Language remains free text, not a forced catalog membership. One price/currency per version; do not invent channel-specific prices from descriptive UI text.",
+    "version_channels": "versions[].channels IDs -> ordered product_version_channels rows. Product-level product_channels is an additional explicit association; legacy JSON does not supply it and import must not fabricate it.",
+    "bundles": "products[].bundle product IDs -> ordered bundle_items; preserve contents, reject cycles and duplicates during preflight rather than silently pruning.",
+    "resources": "products[].resources is an ordered list of links or paths, not uploaded binaries. product_links preserves text, order and repeated values; link IDs must be derived from owner and source position during staged import.",
+    "project_fields": "brandId/desc/database/launchDate/initialInvestment/investCurrency and technical fields map to existing normalized project columns. Source timestamps remain separate. userStats[] -> append-only project_user_stats, preserving date, same-day sequence, registered/active independently, nullable origin. Original snapshots with active>registered and missing origin are not silently corrected.",
+    "history": "Product version history starts when its current state is registered and records subsequent changes; it does not fabricate unknown earlier product prices. SQL original IDs remain unchanged where provided.",
+    "preflight_pending": "Future importer must report unknown fields, duplicate normalized keys, invalid references, whitespace normalization differences, values beyond API bounds and ambiguous historical data before writing. No browser data is automatically loaded, changed or deleted."
+  },
+  "pending": ["Dataset generations and complete backup preflight/import/export", "Exchange rates and remaining full business settings", "Sales/expenses/treasury/subscription entities and atomic financial workflows", "Infrastructure, calendar, time logs and integration/import workflows", "Whole-dataset backup restoration and wipe", "Oracle MySQL/Hostinger validation", "Expired cursor metadata cleanup"],
+  "next_block": "Dataset generation scope and synthetic JSON preflight/staging for the implemented catalogs/products, without activating SQL storage or beginning financial workflows."
+}

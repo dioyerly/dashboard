@@ -1,0 +1,41 @@
+{
+  "checks": [
+    {
+      "check": "SQL login before restart",
+      "passed": true
+    },
+    {
+      "check": "PHP restart preserves authenticated session and SQL administrator",
+      "passed": true
+    },
+    {
+      "check": "Database outage returns generic HTTP 503",
+      "passed": true
+    },
+    {
+      "check": "No SQL user, password or DSN exposed",
+      "passed": true
+    },
+    {
+      "check": "Dashboard fails closed while SQL is unavailable",
+      "passed": true
+    },
+    {
+      "check": "No automatic fallback user file created",
+      "passed": true
+    },
+    {
+      "check": "Same session recovers after database restart",
+      "passed": true
+    },
+    {
+      "check": "Protected dashboard recovers",
+      "passed": true
+    },
+    {
+      "check": "Logout after recovery destroys access",
+      "passed": true
+    }
+  ],
+  "expected_log_errors": "Two intentional unavailable-database requests; no SQL details in HTTP"
+}

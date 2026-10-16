@@ -15,6 +15,7 @@ try {
     $action = $_GET['action'] ?? '';
     if (!is_string($action)) respond(400, ['ok' => false, 'code' => 'invalid_request']);
     $method = $_SERVER['REQUEST_METHOD'];
+    if (in_array($action, ['business_list','business_command'], true)) require dirname(__DIR__).'/app/business_api.php';
     if ($action === 'session' && $method === 'GET') {
         $user = $auth->current();
         respond(200, ['ok' => true, 'authenticated' => $user !== null, 'csrf' => Centro\Security::csrf(), 'user' => $user,

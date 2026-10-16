@@ -15,7 +15,7 @@ from playwright.sync_api import sync_playwright
 
 ROOT = Path(__file__).resolve().parents[1]
 PHASE3 = os.environ.get('CENTRO_TEST_PHASE3') == '1'
-OUT = ROOT / ('preparation/phase3-browser' if PHASE3 else 'preparation/phase2-browser')
+OUT = Path(os.environ.get('CENTRO_TEST_OUTPUT', str(ROOT / ('preparation/phase3-browser' if PHASE3 else 'preparation/phase2-browser'))))
 FIXED = datetime.fromisoformat('2026-10-15T15:00:00+00:00')
 ORIGINAL = (ROOT / 'reference/centro-operaciones.html').read_bytes()
 DEMO = (ROOT / 'reference/centro-operaciones-DEMO.html').read_text('utf-8')
@@ -48,6 +48,8 @@ def settle(page, delay=1250):
     page.evaluate('new Promise(resolve=>requestAnimationFrame(()=>requestAnimationFrame(resolve)))')
     page.wait_for_timeout(delay)
     page.evaluate("document.querySelectorAll('svg').forEach(s => { if(s.querySelector('animate,animateTransform') && s.pauseAnimations) {s.pauseAnimations();s.setCurrentTime(0)} })")
+    # Let the paused SMIL state reach the compositor before screenshot capture.
+    page.evaluate('new Promise(resolve=>requestAnimationFrame(()=>requestAnimationFrame(resolve)))')
 
 
 def install_fixture(page, fixture, theme='light'):

@@ -1,0 +1,439 @@
+{
+  "phase": "4B",
+  "status": "Inspection and contract characterization completed; business-storage activation stopped before modification under the user's consistency safeguard",
+  "authority": "User attachment, section 4: if consistency cannot be guaranteed, stop and propose a safer transition before modifying storage.",
+  "business_migration_executed": false,
+  "new_business_endpoints_implemented": [],
+  "new_tables_created": [],
+  "existing_changes_preserved": true,
+  "contracts": [
+    {
+      "name": "Storage and confirmation",
+      "source": "public/assets/js/01-storage-domain.js:2",
+      "existing": "One complete state per environment in IndexedDB, with localStorage fallback; transact snapshots memory, invokes a synchronous mutation and awaits one save.",
+      "must_preserve": "No success feedback until all required commits are confirmed; no remote failure handled as a local-only success; no old local catalog promoted to SQL authority.",
+      "missing": "Durable operation journal, server receipt reconciliation, per-entity versions and separation of local and server authority. busy is page-local only."
+    },
+    {
+      "name": "Sale with new customer",
+      "source": "public/assets/js/04-sales.js:163",
+      "existing": "createSale can append a customer, a sale, a receipt and an audit entry in one local save; email deduplication searches the current state.",
+      "must_preserve": "Same customer ID on the sale; exactly one receipt for a collected sale; no sale or receipt lost or duplicated on retry.",
+      "split": "Customer becomes SQL-owned; sale, receipt and current audit remain local. Two durable writes require recovery coordination, not memory rollback."
+    },
+    {
+      "name": "Subscription with new customer",
+      "source": "public/assets/js/05-subscriptions.js:69",
+      "existing": "One operation can create customer, subscription, event, sale and receipt.",
+      "must_preserve": "Customer/project/plan references, subscription event order, payment and receipt behavior.",
+      "split": "Customer/project SQL ownership intersects local plans, subscriptions, sales and treasury; none of those financial collections may be migrated in this phase."
+    },
+    {
+      "name": "CSV, JSON and duplicate review",
+      "sources": [
+        "public/assets/js/08-integrations.js:107",
+        "public/assets/js/08-integrations.js:121",
+        "public/assets/js/08-integrations.js:144",
+        "public/assets/js/08-integrations.js:163",
+        "public/assets/js/08-integrations.js:180"
+      ],
+      "existing": "Imports can create customers and financial records; JSON events can also update project userStats. Seen IDs and duplicate review remain local.",
+      "must_preserve": "No regenerated IDs or duplicated records after uncertain acknowledgments; no partial SQL customer or project mutation hidden by per-event error handling."
+    },
+    {
+      "name": "Project children",
+      "sources": [
+        "public/assets/js/03-overview-projects.js:181",
+        "public/assets/js/03-overview-projects.js:224",
+        "public/assets/js/03-overview-projects.js:229",
+        "public/assets/js/03-overview-projects.js:235"
+      ],
+      "existing": "Project editor writes projects; user editor appends nested userStats; plan and time editors append separate local collections referencing the project ID.",
+      "must_preserve": "Nested statistics and local plans/time logs remain attached to the same IDs; no project overwrite from an old local state."
+    },
+    {
+      "name": "Catalog deletions and historical lookups",
+      "sources": [
+        "public/assets/js/09-reports-settings.js:97",
+        "public/assets/js/09-reports-settings.js:98",
+        "public/assets/js/09-reports-settings.js:99",
+        "public/assets/js/09-reports-settings.js:100",
+        "public/assets/js/07-resources-calendar-customers.js:115"
+      ],
+      "existing": "Delete guards inspect only this browser's sales, expenses, subscriptions, plans and treasury; historical labels and grouping also resolve against current catalog arrays.",
+      "must_preserve": "An offline or second browser must never lose a referenced customer, currency, channel, product/version, brand, account or project.",
+      "missing": "The server cannot see references held only in other browsers. Row versions alone cannot enforce referential integrity across that boundary. Archiving must retain resolvable identity and historical data."
+    },
+    {
+      "name": "Backup, restore and wipe",
+      "sources": [
+        "public/assets/js/09-reports-settings.js:105",
+        "public/assets/js/09-reports-settings.js:107",
+        "public/assets/js/09-reports-settings.js:108",
+        "public/assets/js/09-reports-settings.js:114"
+      ],
+      "existing": "Backup serializes the whole state; restore replaces the whole environment state; wipe assigns emptyState and saves directly outside transact.",
+      "must_preserve": "No discarded records or dangling references, no old backup silently overwriting newer SQL revisions, and no destructive action affecting another environment.",
+      "scope_to_resolve": "Once catalog rows are shared, restoring/wiping one browser no longer has the same scope as replacing its complete local state. Specify shared-catalog versus browser-local effects before activating split persistence."
+    },
+    {
+      "name": "Bootstrap and environment separation",
+      "sources": [
+        "public/assets/js/10-boot.js:1",
+        "public/assets/js/01-storage-domain.js:1",
+        "public/assets/js/09-reports-settings.js:104"
+      ],
+      "existing": "State version 1; missing fields are normalized; production and test environments use distinct local keys; boot catches load errors and renders the initial state.",
+      "must_preserve": "Production/test separation on SQL foreign keys; transport or authentication failure must not be interpreted as an empty remote business; UI preferences and PIN stay local."
+    }
+  ],
+  "target_authority_after_safe_activation": {
+    "sql": [
+      "business configuration except local PIN",
+      "brands",
+      "currencies",
+      "exchange rates",
+      "channels",
+      "product categories",
+      "formats",
+      "languages",
+      "expense groups/categories and other required catalogs",
+      "payment methods",
+      "accounts metadata only",
+      "projects and user statistics",
+      "products, versions, channel links, bundle links and resources links",
+      "customers"
+    ],
+    "indexeddb": [
+      "plans",
+      "sales",
+      "subscriptions and subscription events",
+      "expenses",
+      "treasury movements",
+      "resources and suppliers",
+      "calendar events",
+      "integrations and seen IDs",
+      "duplicate review",
+      "time logs",
+      "current local audit log"
+    ],
+    "local_only_preferences": [
+      "PIN",
+      "theme",
+      "lens",
+      "filters",
+      "route and environment preference"
+    ],
+    "current_actual_authority": "Only authentication users and rate limits are in SQL; all business entities are still local."
+  },
+  "safer_transition_proposal": [
+    {
+      "step": 1,
+      "work": "Define a versioned environment/workspace identity and perform explicit staged bootstrap reconciliation. Preserve existing IDs; report collisions and orphaned references without silently fixing them or overwriting server data.",
+      "data_rule": "No automatic upload on load; no real data required for initial tests."
+    },
+    {
+      "step": 2,
+      "work": "Implement normalized SQL catalogs with row versions and idempotent command receipts. Archive instead of physically deleting any remotely referenced catalog identity; retain historical versions needed by local lookups.",
+      "data_rule": "No financial payload stored in SQL, including in operation receipts. A reference manifest alone cannot prove that offline browsers hold no references."
+    },
+    {
+      "step": 3,
+      "work": "Introduce a durable browser operation journal. Prepare the local operation before the idempotent SQL request; reconcile an unknown SQL result by its stable operation ID; finalize local financial changes and journal status atomically in IndexedDB. Resolve pending operations on restart before allowing dependent writes.",
+      "data_rule": "This is a recovery protocol, not an assertion of cross-store ACID. Test all interruption points and conflicts before activation; no success notification until both sides are confirmed."
+    },
+    {
+      "step": 4,
+      "work": "Specify and test backup/restore/wipe scope for shared catalogs and local financial records. Proposed default: versioned backup with explicit catalog revision; restore is staged and conflict-checked, retains historical identities, and never blindly replaces newer shared rows.",
+      "decision": "The treatment of shared catalog changes during restore/wipe needs to be explicit; preserving the old full-state browser replacement by directly splitting save is unsafe."
+    },
+    {
+      "step": 5,
+      "work": "Run synthetic two-context, retry, crash/restart, SQL-outage, orphan-reference and backup tests before connecting the existing controls to SQL; then execute the 13-screen functional/visual regression with the feature enabled.",
+      "activation_gate": "No activation until every mixed-operation interruption recovers deterministically without duplicates or loss."
+    }
+  ],
+  "tests_this_turn": {
+    "executed": "node tests/phase4b_contracts.cjs",
+    "existing_function_characterizations": 3,
+    "in_memory_failure_models": 2,
+    "real_sql_business_tests_run": false,
+    "visual_regression_run": false,
+    "limitations": "The two failure models exercise the existing transact memory rollback with a modeled split save. They do not claim a real SQL or IndexedDB integration test, nor an existing production data-loss incident."
+  },
+  "restrictions": {
+    "hostinger_accessed": false,
+    "sql_migrations_executed": false,
+    "financial_data_migrated": false,
+    "html_references_modified": false,
+    "commits_created": false,
+    "push_executed": false
+  },
+  "inventory": {
+    "method": "Static candidate read/write/call sites by textual pattern; includes views, closure writers and aliases. Not an AST proof or an exhaustive dynamic data-flow analysis.",
+    "files": [
+      {
+        "file": "public/assets/js/01-storage-domain.js",
+        "lines": [
+          35,
+          36,
+          41,
+          42,
+          46,
+          47,
+          53,
+          54,
+          63,
+          66,
+          75,
+          76,
+          77,
+          79,
+          80,
+          82,
+          91,
+          92,
+          93,
+          110,
+          302,
+          306,
+          307,
+          312,
+          323,
+          324,
+          329
+        ],
+        "sha256": "7e35bd74402abc00f020dab7f1c6436bc52a62a98382ac2bf6845920a9f80224"
+      },
+      {
+        "file": "public/assets/js/02-interface.js",
+        "lines": [
+          151,
+          152,
+          331,
+          356,
+          366,
+          367,
+          368,
+          369,
+          377,
+          429,
+          447,
+          449,
+          450,
+          451,
+          500,
+          501,
+          503,
+          504,
+          513,
+          514
+        ],
+        "sha256": "3218a79312516c51b998eb87661d4b8ec45ffee58481ac775e3b8b8e2bc1b148"
+      },
+      {
+        "file": "public/assets/js/03-overview-projects.js",
+        "lines": [
+          4,
+          5,
+          8,
+          10,
+          29,
+          54,
+          70,
+          73,
+          74,
+          78,
+          110,
+          112,
+          113,
+          115,
+          133,
+          134,
+          135,
+          142,
+          144,
+          145,
+          148,
+          162,
+          178,
+          181,
+          191,
+          224,
+          229,
+          232,
+          235
+        ],
+        "sha256": "f7426e1629fdbfdabe0fdeb8ce4af0cd9d8f7207b6b0df038c1a75617891aa32"
+      },
+      {
+        "file": "public/assets/js/04-sales.js",
+        "lines": [
+          15,
+          16,
+          30,
+          32,
+          54,
+          61,
+          65,
+          67,
+          71,
+          79,
+          82,
+          87,
+          104,
+          105,
+          109,
+          110,
+          122,
+          125,
+          159,
+          165,
+          166,
+          187,
+          190
+        ],
+        "sha256": "c73fc3dc2b33ab9ffd535e9f680dbc2439155462138d33480c857237005a8eac"
+      },
+      {
+        "file": "public/assets/js/05-subscriptions.js",
+        "lines": [
+          1,
+          29,
+          38,
+          46,
+          54,
+          69,
+          70,
+          87,
+          88,
+          92,
+          105,
+          110,
+          116
+        ],
+        "sha256": "daca25189fb2b516a716504a4b3fdf9592e11a4e1c26852f610aa7f2ca105795"
+      },
+      {
+        "file": "public/assets/js/06-expenses-finances.js",
+        "lines": [
+          16,
+          29,
+          31,
+          37,
+          38,
+          72,
+          90,
+          91,
+          92,
+          104,
+          106,
+          134,
+          136,
+          137,
+          142,
+          144,
+          145,
+          153,
+          156,
+          159,
+          164,
+          167,
+          169
+        ],
+        "sha256": "d28d4dd26016eb10abe6f7d799b87d69ec6ffc4e042547a44648c8cbead9dffc"
+      },
+      {
+        "file": "public/assets/js/07-resources-calendar-customers.js",
+        "lines": [
+          9,
+          28,
+          31,
+          34,
+          46,
+          71,
+          72,
+          88,
+          90,
+          105,
+          106,
+          117
+        ],
+        "sha256": "41bd5f98e87f77e206da897ae2eff5506c03e479ff92fcec0186983dcf1c20cd"
+      },
+      {
+        "file": "public/assets/js/08-integrations.js",
+        "lines": [
+          20,
+          21,
+          22,
+          49,
+          61,
+          76,
+          79,
+          87,
+          89,
+          107,
+          121,
+          144,
+          159,
+          161,
+          163,
+          165,
+          168
+        ],
+        "sha256": "5a0adc6d2522d3447c9fceea4e1ee04955e4338c20dcebfc05c8b93baa78e87e"
+      },
+      {
+        "file": "public/assets/js/09-reports-settings.js",
+        "lines": [
+          15,
+          30,
+          61,
+          66,
+          67,
+          68,
+          69,
+          70,
+          71,
+          72,
+          73,
+          74,
+          76,
+          82,
+          83,
+          84,
+          85,
+          86,
+          87,
+          88,
+          92,
+          93,
+          94,
+          95,
+          96,
+          97,
+          98,
+          99,
+          100,
+          101,
+          102,
+          103,
+          107,
+          108,
+          112,
+          114
+        ],
+        "sha256": "92a2f803be997ddfdc3de0790f07bd83bbe2e86fa00a98f4db0d35de37217cac"
+      },
+      {
+        "file": "public/assets/js/10-boot.js",
+        "lines": [
+          2,
+          3
+        ],
+        "sha256": "2287a4e0c7024c97cc19ea650cbedb6df2d966ddb50e355206ba70d93a7e4874"
+      }
+    ]
+  }
+}

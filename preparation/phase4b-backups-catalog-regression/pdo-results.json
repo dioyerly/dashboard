@@ -1,0 +1,149 @@
+{
+  "checks": [
+    {
+      "check": "003 checksum registered",
+      "passed": true
+    },
+    {
+      "check": "Recovery retained sentinel row in partially created table",
+      "passed": true
+    },
+    {
+      "check": "Compound catalog, plan, product, version, bundle and channels commit atomically",
+      "passed": true
+    },
+    {
+      "check": "Batch retry replays without duplicates",
+      "passed": true
+    },
+    {
+      "check": "Local file/resource path preserved as text",
+      "passed": true
+    },
+    {
+      "check": "Source creation timestamp preserved separately from technical time",
+      "passed": true
+    },
+    {
+      "check": "Multiple project statistics on same day retain sequence and partial counts",
+      "passed": true
+    },
+    {
+      "check": "Historical statistics cannot be overwritten",
+      "passed": true
+    },
+    {
+      "check": "Original statistics without origin remain NULL instead of fabricated manual origin",
+      "passed": true
+    },
+    {
+      "check": "Product version edits retain immutable previous price and labels",
+      "passed": true
+    },
+    {
+      "check": "History is read-only through services",
+      "passed": true
+    },
+    {
+      "check": "Plan prices use non-overlapping half-open historical intervals",
+      "passed": true
+    },
+    {
+      "check": "Historical plan price cannot be rewritten",
+      "passed": true
+    },
+    {
+      "check": "Overlapping price rolls back",
+      "passed": true
+    },
+    {
+      "check": "Archived price is not a way to erase history",
+      "passed": true
+    },
+    {
+      "check": "Catalog parent with active dependents cannot be archived",
+      "passed": true
+    },
+    {
+      "check": "Duplicate normalized version rejected",
+      "passed": true
+    },
+    {
+      "check": "Bundle graph rejects indirect cycle",
+      "passed": true
+    },
+    {
+      "check": "Self-bundle rejected by SQL constraint",
+      "passed": true
+    },
+    {
+      "check": "Duplicate channel association rejected",
+      "passed": true
+    },
+    {
+      "check": "Removing and re-adding a version channel restores same identity without duplicate",
+      "passed": true
+    },
+    {
+      "check": "Cross-environment product reference rejected",
+      "passed": true
+    },
+    {
+      "check": "Category must belong to product brand and entire batch rolls back",
+      "passed": true
+    },
+    {
+      "check": "No orphan brand remains from failed compound operation",
+      "passed": true
+    },
+    {
+      "check": "Retired/free-text format and language snapshots do not require invented catalog references",
+      "passed": true
+    },
+    {
+      "check": "Catalog edit/archive preserves identity and increments version",
+      "passed": true
+    },
+    {
+      "check": "Project source timestamp accepted without replacing technical creation",
+      "passed": true
+    },
+    {
+      "check": "Price exponent and float data rejected",
+      "passed": true
+    },
+    {
+      "check": "Keyset pagination traverses more than 500 records without loss or duplicates",
+      "passed": true
+    },
+    {
+      "check": "Pagination order is stable binary ID",
+      "passed": true
+    },
+    {
+      "check": "Repeating the same cursor returns identical records",
+      "passed": true
+    },
+    {
+      "check": "Cursor is bound to query and page size",
+      "passed": true
+    },
+    {
+      "check": "Cursor is bound to environment",
+      "passed": true
+    },
+    {
+      "check": "Invalid cursor/page size/filter rejected",
+      "passed": true
+    },
+    {
+      "check": "Mid-pagination mutation returns conflict instead of mixing snapshots",
+      "passed": true
+    },
+    {
+      "check": "Plan archive keeps historical price references resolvable",
+      "passed": true
+    }
+  ],
+  "page_record_count": 622
+}

@@ -1,0 +1,44 @@
+{
+  "date": "2026-10-16",
+  "php": "8.4.26 NTS VS17 x64",
+  "sha256": "da68394f9193b7f6b89d0c76861a4034ae10efee7fd55a7255d8118c2acf70d7",
+  "mysql_connected": false,
+  "migrations_executed": false,
+  "url": "http://127.0.0.1:8080/login.php",
+  "suites": {
+    "security": {
+      "checks": 55,
+      "passed": 55,
+      "failed": 0
+    },
+    "controls": {
+      "checks": 78,
+      "passed": 78,
+      "failed": 0
+    },
+    "resize": {
+      "checks": 2,
+      "passed": 2,
+      "failed": 0
+    },
+    "visual": {
+      "checks": 32,
+      "passed": 32,
+      "failed": 0
+    },
+    "motion": {
+      "checks": 4,
+      "passed": 4,
+      "failed": 0
+    }
+  },
+  "static": {
+    "php_lint_files": 14,
+    "javascript_syntax_files": 13,
+    "original_reference_hashes_preserved": true,
+    "original_css_preserved": true,
+    "business_js_only_existing_resize_guard": true,
+    "dashboard_markup_preserved": true
+  },
+  "changes": "Test screenshot waits for entrance animation; generated browser results refreshed. No application source changes."
+}

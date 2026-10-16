@@ -1,0 +1,128 @@
+{
+    "checks": [
+        {
+            "check": "Ten normalized business tables created",
+            "passed": true
+        },
+        {
+            "check": "Compound create commits settings, currency, brand, project and account",
+            "passed": true
+        },
+        {
+            "check": "Money round-trips as exact decimal string",
+            "passed": true
+        },
+        {
+            "check": "Same token and payload replay exact original result",
+            "passed": true
+        },
+        {
+            "check": "Idempotent replay creates one receipt and audit",
+            "passed": true
+        },
+        {
+            "check": "Reusing token for another command conflicts",
+            "passed": true
+        },
+        {
+            "check": "Actor permission enforced",
+            "passed": true
+        },
+        {
+            "check": "Invalid FK rejected and earlier batch changes rolled back",
+            "passed": true
+        },
+        {
+            "check": "Cross-environment FK refused",
+            "passed": true
+        },
+        {
+            "check": "Malformed money rejected",
+            "passed": true
+        },
+        {
+            "check": "Float money rejected instead of rounded silently",
+            "passed": true
+        },
+        {
+            "check": "Unknown fields rejected",
+            "passed": true
+        },
+        {
+            "check": "Invalid date rejected",
+            "passed": true
+        },
+        {
+            "check": "SQL identifier injection rejected",
+            "passed": true
+        },
+        {
+            "check": "Child reference blocks parent archive",
+            "passed": true
+        },
+        {
+            "check": "Stale editor detects version conflict",
+            "passed": true
+        },
+        {
+            "check": "Second independent connection reads committed edit",
+            "passed": true
+        },
+        {
+            "check": "Injected exception rolls back transaction",
+            "passed": true
+        },
+        {
+            "check": "Fault leaves neither row, receipt nor audit",
+            "passed": true
+        },
+        {
+            "check": "Email deduplicated on server",
+            "passed": true
+        },
+        {
+            "check": "Archive hides active row but preserves identity and version",
+            "passed": true
+        },
+        {
+            "check": "Archived IDs cannot be reused",
+            "passed": true
+        },
+        {
+            "check": "SQL FK restricts historical deletion",
+            "passed": true
+        },
+        {
+            "check": "SQL FK includes environment",
+            "passed": true
+        },
+        {
+            "check": "Only foundation collections available",
+            "passed": true
+        },
+        {
+            "check": "Commission preserves all six decimal places",
+            "passed": true
+        },
+        {
+            "check": "Commission at 100 percent rejected",
+            "passed": true
+        },
+        {
+            "check": "Channel create\/read\/update\/archive retains exact value and revision",
+            "passed": true
+        },
+        {
+            "check": "Oversized batch rejected before writing",
+            "passed": true
+        },
+        {
+            "check": "Injected audit failure propagated",
+            "passed": true
+        },
+        {
+            "check": "Audit failure rolls back entity and already-inserted operation receipt",
+            "passed": true
+        }
+    ]
+}

@@ -319,6 +319,7 @@
   "failed_requests": [],
   "contexts": "Fresh in-memory Playwright contexts, no personal browser profile",
   "normalization": "Fixed Date only (real timers and requestAnimationFrame), identical synthetic fixture, prefers-reduced-motion for deterministic comparisons, await fonts and two frames; SMIL paused at zero; no application code changes",
+  "visual_tolerance": "At most 10 rasterized pixels per image, each RGB channel delta <= 2/255; raw equality/diff always recorded, no layout/text tolerance",
   "chromium": "153.0.8010.12",
   "fonts_source": "Original Google Fonts CSS and binaries cached privately, requests fulfilled identically for both pages; app links unchanged",
   "reference_transport": "Original immutable HTML fulfilled verbatim by Playwright at a separate loopback origin; modular version served by actual PHP",

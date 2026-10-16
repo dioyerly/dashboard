@@ -1,0 +1,971 @@
+{
+  "suite": "visual",
+  "checks": [
+    {
+      "check": "onboarding-desktop",
+      "passed": true,
+      "pixels_equal": true,
+      "text_equal": true,
+      "sizes": [
+        [
+          1440,
+          900
+        ],
+        [
+          1440,
+          900
+        ]
+      ],
+      "difference_box": null,
+      "different_pixels": 0,
+      "maximum_channel_delta": 0,
+      "rasterization_tolerance": {
+        "maximum_pixels": 10,
+        "maximum_channel_delta": 2
+      },
+      "screenshots": [
+        "onboarding-desktop-original.png",
+        "onboarding-desktop-modular.png"
+      ]
+    },
+    {
+      "check": "onboarding-mobile",
+      "passed": true,
+      "pixels_equal": true,
+      "text_equal": true,
+      "sizes": [
+        [
+          390,
+          1110
+        ],
+        [
+          390,
+          1110
+        ]
+      ],
+      "difference_box": null,
+      "different_pixels": 0,
+      "maximum_channel_delta": 0,
+      "rasterization_tolerance": {
+        "maximum_pixels": 10,
+        "maximum_channel_delta": 2
+      },
+      "screenshots": [
+        "onboarding-mobile-original.png",
+        "onboarding-mobile-modular.png"
+      ]
+    },
+    {
+      "check": "desktop-light-pulso",
+      "passed": true,
+      "pixels_equal": true,
+      "text_equal": true,
+      "sizes": [
+        [
+          1440,
+          2627
+        ],
+        [
+          1440,
+          2627
+        ]
+      ],
+      "difference_box": null,
+      "different_pixels": 0,
+      "maximum_channel_delta": 0,
+      "rasterization_tolerance": {
+        "maximum_pixels": 10,
+        "maximum_channel_delta": 2
+      },
+      "screenshots": [
+        "desktop-light-pulso-original.png",
+        "desktop-light-pulso-modular.png"
+      ]
+    },
+    {
+      "check": "desktop-light-marcas",
+      "passed": true,
+      "pixels_equal": true,
+      "text_equal": true,
+      "sizes": [
+        [
+          1440,
+          1900
+        ],
+        [
+          1440,
+          1900
+        ]
+      ],
+      "difference_box": null,
+      "different_pixels": 0,
+      "maximum_channel_delta": 0,
+      "rasterization_tolerance": {
+        "maximum_pixels": 10,
+        "maximum_channel_delta": 2
+      },
+      "screenshots": [
+        "desktop-light-marcas-original.png",
+        "desktop-light-marcas-modular.png"
+      ]
+    },
+    {
+      "check": "desktop-light-apps",
+      "passed": true,
+      "pixels_equal": true,
+      "text_equal": true,
+      "sizes": [
+        [
+          1440,
+          900
+        ],
+        [
+          1440,
+          900
+        ]
+      ],
+      "difference_box": null,
+      "different_pixels": 0,
+      "maximum_channel_delta": 0,
+      "rasterization_tolerance": {
+        "maximum_pixels": 10,
+        "maximum_channel_delta": 2
+      },
+      "screenshots": [
+        "desktop-light-apps-original.png",
+        "desktop-light-apps-modular.png"
+      ]
+    },
+    {
+      "check": "desktop-light-ventas",
+      "passed": true,
+      "pixels_equal": true,
+      "text_equal": true,
+      "sizes": [
+        [
+          1440,
+          1528
+        ],
+        [
+          1440,
+          1528
+        ]
+      ],
+      "difference_box": null,
+      "different_pixels": 0,
+      "maximum_channel_delta": 0,
+      "rasterization_tolerance": {
+        "maximum_pixels": 10,
+        "maximum_channel_delta": 2
+      },
+      "screenshots": [
+        "desktop-light-ventas-original.png",
+        "desktop-light-ventas-modular.png"
+      ]
+    },
+    {
+      "check": "desktop-light-suscripciones",
+      "passed": true,
+      "pixels_equal": true,
+      "text_equal": true,
+      "sizes": [
+        [
+          1440,
+          1687
+        ],
+        [
+          1440,
+          1687
+        ]
+      ],
+      "difference_box": null,
+      "different_pixels": 0,
+      "maximum_channel_delta": 0,
+      "rasterization_tolerance": {
+        "maximum_pixels": 10,
+        "maximum_channel_delta": 2
+      },
+      "screenshots": [
+        "desktop-light-suscripciones-original.png",
+        "desktop-light-suscripciones-modular.png"
+      ]
+    },
+    {
+      "check": "desktop-light-gastos",
+      "passed": true,
+      "pixels_equal": true,
+      "text_equal": true,
+      "sizes": [
+        [
+          1440,
+          1171
+        ],
+        [
+          1440,
+          1171
+        ]
+      ],
+      "difference_box": null,
+      "different_pixels": 0,
+      "maximum_channel_delta": 0,
+      "rasterization_tolerance": {
+        "maximum_pixels": 10,
+        "maximum_channel_delta": 2
+      },
+      "screenshots": [
+        "desktop-light-gastos-original.png",
+        "desktop-light-gastos-modular.png"
+      ]
+    },
+    {
+      "check": "desktop-light-finanzas",
+      "passed": true,
+      "pixels_equal": true,
+      "text_equal": true,
+      "sizes": [
+        [
+          1440,
+          900
+        ],
+        [
+          1440,
+          900
+        ]
+      ],
+      "difference_box": null,
+      "different_pixels": 0,
+      "maximum_channel_delta": 0,
+      "rasterization_tolerance": {
+        "maximum_pixels": 10,
+        "maximum_channel_delta": 2
+      },
+      "screenshots": [
+        "desktop-light-finanzas-original.png",
+        "desktop-light-finanzas-modular.png"
+      ]
+    },
+    {
+      "check": "desktop-light-infra",
+      "passed": true,
+      "pixels_equal": true,
+      "text_equal": true,
+      "sizes": [
+        [
+          1440,
+          2254
+        ],
+        [
+          1440,
+          2254
+        ]
+      ],
+      "difference_box": null,
+      "different_pixels": 0,
+      "maximum_channel_delta": 0,
+      "rasterization_tolerance": {
+        "maximum_pixels": 10,
+        "maximum_channel_delta": 2
+      },
+      "screenshots": [
+        "desktop-light-infra-original.png",
+        "desktop-light-infra-modular.png"
+      ]
+    },
+    {
+      "check": "desktop-light-calendario",
+      "passed": true,
+      "pixels_equal": true,
+      "text_equal": true,
+      "sizes": [
+        [
+          1440,
+          3808
+        ],
+        [
+          1440,
+          3808
+        ]
+      ],
+      "difference_box": null,
+      "different_pixels": 0,
+      "maximum_channel_delta": 0,
+      "rasterization_tolerance": {
+        "maximum_pixels": 10,
+        "maximum_channel_delta": 2
+      },
+      "screenshots": [
+        "desktop-light-calendario-original.png",
+        "desktop-light-calendario-modular.png"
+      ]
+    },
+    {
+      "check": "desktop-light-clientes",
+      "passed": true,
+      "pixels_equal": true,
+      "text_equal": true,
+      "sizes": [
+        [
+          1440,
+          1523
+        ],
+        [
+          1440,
+          1523
+        ]
+      ],
+      "difference_box": null,
+      "different_pixels": 0,
+      "maximum_channel_delta": 0,
+      "rasterization_tolerance": {
+        "maximum_pixels": 10,
+        "maximum_channel_delta": 2
+      },
+      "screenshots": [
+        "desktop-light-clientes-original.png",
+        "desktop-light-clientes-modular.png"
+      ]
+    },
+    {
+      "check": "desktop-light-integraciones",
+      "passed": true,
+      "pixels_equal": true,
+      "text_equal": true,
+      "sizes": [
+        [
+          1440,
+          964
+        ],
+        [
+          1440,
+          964
+        ]
+      ],
+      "difference_box": null,
+      "different_pixels": 0,
+      "maximum_channel_delta": 0,
+      "rasterization_tolerance": {
+        "maximum_pixels": 10,
+        "maximum_channel_delta": 2
+      },
+      "screenshots": [
+        "desktop-light-integraciones-original.png",
+        "desktop-light-integraciones-modular.png"
+      ]
+    },
+    {
+      "check": "desktop-light-reportes",
+      "passed": true,
+      "pixels_equal": true,
+      "text_equal": true,
+      "sizes": [
+        [
+          1440,
+          1646
+        ],
+        [
+          1440,
+          1646
+        ]
+      ],
+      "difference_box": null,
+      "different_pixels": 0,
+      "maximum_channel_delta": 0,
+      "rasterization_tolerance": {
+        "maximum_pixels": 10,
+        "maximum_channel_delta": 2
+      },
+      "screenshots": [
+        "desktop-light-reportes-original.png",
+        "desktop-light-reportes-modular.png"
+      ]
+    },
+    {
+      "check": "desktop-light-ajustes",
+      "passed": true,
+      "pixels_equal": true,
+      "text_equal": true,
+      "sizes": [
+        [
+          1440,
+          3015
+        ],
+        [
+          1440,
+          3015
+        ]
+      ],
+      "difference_box": null,
+      "different_pixels": 0,
+      "maximum_channel_delta": 0,
+      "rasterization_tolerance": {
+        "maximum_pixels": 10,
+        "maximum_channel_delta": 2
+      },
+      "screenshots": [
+        "desktop-light-ajustes-original.png",
+        "desktop-light-ajustes-modular.png"
+      ]
+    },
+    {
+      "check": "mobile-dark-pulso",
+      "passed": true,
+      "pixels_equal": false,
+      "text_equal": true,
+      "sizes": [
+        [
+          390,
+          5907
+        ],
+        [
+          390,
+          5907
+        ]
+      ],
+      "difference_box": [
+        196,
+        69,
+        222,
+        88
+      ],
+      "different_pixels": 6,
+      "maximum_channel_delta": 1,
+      "rasterization_tolerance": {
+        "maximum_pixels": 10,
+        "maximum_channel_delta": 2
+      },
+      "screenshots": [
+        "mobile-dark-pulso-original.png",
+        "mobile-dark-pulso-modular.png"
+      ]
+    },
+    {
+      "check": "mobile-dark-marcas",
+      "passed": true,
+      "pixels_equal": true,
+      "text_equal": true,
+      "sizes": [
+        [
+          390,
+          3270
+        ],
+        [
+          390,
+          3270
+        ]
+      ],
+      "difference_box": null,
+      "different_pixels": 0,
+      "maximum_channel_delta": 0,
+      "rasterization_tolerance": {
+        "maximum_pixels": 10,
+        "maximum_channel_delta": 2
+      },
+      "screenshots": [
+        "mobile-dark-marcas-original.png",
+        "mobile-dark-marcas-modular.png"
+      ]
+    },
+    {
+      "check": "mobile-dark-apps",
+      "passed": true,
+      "pixels_equal": true,
+      "text_equal": true,
+      "sizes": [
+        [
+          390,
+          2435
+        ],
+        [
+          390,
+          2435
+        ]
+      ],
+      "difference_box": null,
+      "different_pixels": 0,
+      "maximum_channel_delta": 0,
+      "rasterization_tolerance": {
+        "maximum_pixels": 10,
+        "maximum_channel_delta": 2
+      },
+      "screenshots": [
+        "mobile-dark-apps-original.png",
+        "mobile-dark-apps-modular.png"
+      ]
+    },
+    {
+      "check": "mobile-dark-ventas",
+      "passed": true,
+      "pixels_equal": true,
+      "text_equal": true,
+      "sizes": [
+        [
+          390,
+          4418
+        ],
+        [
+          390,
+          4418
+        ]
+      ],
+      "difference_box": null,
+      "different_pixels": 0,
+      "maximum_channel_delta": 0,
+      "rasterization_tolerance": {
+        "maximum_pixels": 10,
+        "maximum_channel_delta": 2
+      },
+      "screenshots": [
+        "mobile-dark-ventas-original.png",
+        "mobile-dark-ventas-modular.png"
+      ]
+    },
+    {
+      "check": "mobile-dark-suscripciones",
+      "passed": true,
+      "pixels_equal": true,
+      "text_equal": true,
+      "sizes": [
+        [
+          390,
+          4807
+        ],
+        [
+          390,
+          4807
+        ]
+      ],
+      "difference_box": null,
+      "different_pixels": 0,
+      "maximum_channel_delta": 0,
+      "rasterization_tolerance": {
+        "maximum_pixels": 10,
+        "maximum_channel_delta": 2
+      },
+      "screenshots": [
+        "mobile-dark-suscripciones-original.png",
+        "mobile-dark-suscripciones-modular.png"
+      ]
+    },
+    {
+      "check": "mobile-dark-gastos",
+      "passed": true,
+      "pixels_equal": true,
+      "text_equal": true,
+      "sizes": [
+        [
+          390,
+          2706
+        ],
+        [
+          390,
+          2706
+        ]
+      ],
+      "difference_box": null,
+      "different_pixels": 0,
+      "maximum_channel_delta": 0,
+      "rasterization_tolerance": {
+        "maximum_pixels": 10,
+        "maximum_channel_delta": 2
+      },
+      "screenshots": [
+        "mobile-dark-gastos-original.png",
+        "mobile-dark-gastos-modular.png"
+      ]
+    },
+    {
+      "check": "mobile-dark-finanzas",
+      "passed": true,
+      "pixels_equal": true,
+      "text_equal": true,
+      "sizes": [
+        [
+          390,
+          1454
+        ],
+        [
+          390,
+          1454
+        ]
+      ],
+      "difference_box": null,
+      "different_pixels": 0,
+      "maximum_channel_delta": 0,
+      "rasterization_tolerance": {
+        "maximum_pixels": 10,
+        "maximum_channel_delta": 2
+      },
+      "screenshots": [
+        "mobile-dark-finanzas-original.png",
+        "mobile-dark-finanzas-modular.png"
+      ]
+    },
+    {
+      "check": "mobile-dark-infra",
+      "passed": true,
+      "pixels_equal": true,
+      "text_equal": true,
+      "sizes": [
+        [
+          390,
+          2939
+        ],
+        [
+          390,
+          2939
+        ]
+      ],
+      "difference_box": null,
+      "different_pixels": 0,
+      "maximum_channel_delta": 0,
+      "rasterization_tolerance": {
+        "maximum_pixels": 10,
+        "maximum_channel_delta": 2
+      },
+      "screenshots": [
+        "mobile-dark-infra-original.png",
+        "mobile-dark-infra-modular.png"
+      ]
+    },
+    {
+      "check": "mobile-dark-calendario",
+      "passed": true,
+      "pixels_equal": true,
+      "text_equal": true,
+      "sizes": [
+        [
+          390,
+          5645
+        ],
+        [
+          390,
+          5645
+        ]
+      ],
+      "difference_box": null,
+      "different_pixels": 0,
+      "maximum_channel_delta": 0,
+      "rasterization_tolerance": {
+        "maximum_pixels": 10,
+        "maximum_channel_delta": 2
+      },
+      "screenshots": [
+        "mobile-dark-calendario-original.png",
+        "mobile-dark-calendario-modular.png"
+      ]
+    },
+    {
+      "check": "mobile-dark-clientes",
+      "passed": true,
+      "pixels_equal": true,
+      "text_equal": true,
+      "sizes": [
+        [
+          390,
+          6002
+        ],
+        [
+          390,
+          6002
+        ]
+      ],
+      "difference_box": null,
+      "different_pixels": 0,
+      "maximum_channel_delta": 0,
+      "rasterization_tolerance": {
+        "maximum_pixels": 10,
+        "maximum_channel_delta": 2
+      },
+      "screenshots": [
+        "mobile-dark-clientes-original.png",
+        "mobile-dark-clientes-modular.png"
+      ]
+    },
+    {
+      "check": "mobile-dark-integraciones",
+      "passed": true,
+      "pixels_equal": true,
+      "text_equal": true,
+      "sizes": [
+        [
+          390,
+          1709
+        ],
+        [
+          390,
+          1709
+        ]
+      ],
+      "difference_box": null,
+      "different_pixels": 0,
+      "maximum_channel_delta": 0,
+      "rasterization_tolerance": {
+        "maximum_pixels": 10,
+        "maximum_channel_delta": 2
+      },
+      "screenshots": [
+        "mobile-dark-integraciones-original.png",
+        "mobile-dark-integraciones-modular.png"
+      ]
+    },
+    {
+      "check": "mobile-dark-reportes",
+      "passed": true,
+      "pixels_equal": true,
+      "text_equal": true,
+      "sizes": [
+        [
+          390,
+          9184
+        ],
+        [
+          390,
+          9184
+        ]
+      ],
+      "difference_box": null,
+      "different_pixels": 0,
+      "maximum_channel_delta": 0,
+      "rasterization_tolerance": {
+        "maximum_pixels": 10,
+        "maximum_channel_delta": 2
+      },
+      "screenshots": [
+        "mobile-dark-reportes-original.png",
+        "mobile-dark-reportes-modular.png"
+      ]
+    },
+    {
+      "check": "mobile-dark-ajustes",
+      "passed": true,
+      "pixels_equal": true,
+      "text_equal": true,
+      "sizes": [
+        [
+          390,
+          5611
+        ],
+        [
+          390,
+          5611
+        ]
+      ],
+      "difference_box": null,
+      "different_pixels": 0,
+      "maximum_channel_delta": 0,
+      "rasterization_tolerance": {
+        "maximum_pixels": 10,
+        "maximum_channel_delta": 2
+      },
+      "screenshots": [
+        "mobile-dark-ajustes-original.png",
+        "mobile-dark-ajustes-modular.png"
+      ]
+    },
+    {
+      "check": "desktop-dark-pulso",
+      "passed": true,
+      "pixels_equal": true,
+      "text_equal": true,
+      "sizes": [
+        [
+          1440,
+          2615
+        ],
+        [
+          1440,
+          2615
+        ]
+      ],
+      "difference_box": null,
+      "different_pixels": 0,
+      "maximum_channel_delta": 0,
+      "rasterization_tolerance": {
+        "maximum_pixels": 10,
+        "maximum_channel_delta": 2
+      },
+      "screenshots": [
+        "desktop-dark-pulso-original.png",
+        "desktop-dark-pulso-modular.png"
+      ]
+    },
+    {
+      "check": "mobile-light-pulso",
+      "passed": true,
+      "pixels_equal": true,
+      "text_equal": true,
+      "sizes": [
+        [
+          390,
+          5907
+        ],
+        [
+          390,
+          5907
+        ]
+      ],
+      "difference_box": null,
+      "different_pixels": 0,
+      "maximum_channel_delta": 0,
+      "rasterization_tolerance": {
+        "maximum_pixels": 10,
+        "maximum_channel_delta": 2
+      },
+      "screenshots": [
+        "mobile-light-pulso-original.png",
+        "mobile-light-pulso-modular.png"
+      ]
+    },
+    {
+      "check": "lock-mobile",
+      "passed": false,
+      "pixels_equal": false,
+      "text_equal": true,
+      "sizes": [
+        [
+          390,
+          844
+        ],
+        [
+          390,
+          844
+        ]
+      ],
+      "difference_box": [
+        43,
+        150,
+        358,
+        385
+      ],
+      "different_pixels": 4913,
+      "maximum_channel_delta": 164,
+      "rasterization_tolerance": {
+        "maximum_pixels": 10,
+        "maximum_channel_delta": 2
+      },
+      "screenshots": [
+        "lock-mobile-original.png",
+        "lock-mobile-modular.png"
+      ]
+    },
+    {
+      "check": "No modular errors; original resize defect only on baseline",
+      "passed": true
+    }
+  ],
+  "errors": [
+    {
+      "page": "original",
+      "message": "Cannot set properties of null (setting 'textContent')",
+      "stack": "TypeError: Cannot set properties of null (setting 'textContent')\n    at updateShell (http://127.0.0.1:53299/baseline.html:1148:29)\n    at http://127.0.0.1:53299/baseline.html:1189:125\n    at http://127.0.0.1:53299/baseline.html:411:102"
+    },
+    {
+      "page": "original",
+      "message": "Cannot set properties of null (setting 'textContent')",
+      "stack": "TypeError: Cannot set properties of null (setting 'textContent')\n    at updateShell (http://127.0.0.1:53299/baseline.html:1148:29)\n    at http://127.0.0.1:53299/baseline.html:1189:125\n    at http://127.0.0.1:53299/baseline.html:411:102"
+    }
+  ],
+  "console_errors": [],
+  "failed_requests": [],
+  "contexts": "Fresh in-memory Playwright contexts, no personal browser profile",
+  "normalization": "Fixed Date only (real timers and requestAnimationFrame), identical synthetic fixture, prefers-reduced-motion for deterministic comparisons, await fonts and two frames; SMIL paused at zero; no application code changes",
+  "visual_tolerance": "At most 10 rasterized pixels per image, each RGB channel delta <= 2/255; raw equality/diff always recorded, no layout/text tolerance",
+  "chromium": "153.0.8010.12",
+  "fonts_source": "Original Google Fonts CSS and binaries cached privately, requests fulfilled identically for both pages; app links unchanged",
+  "reference_transport": "Original immutable HTML fulfilled verbatim by Playwright at a separate loopback origin; modular version served by actual PHP",
+  "server_authentication": "Real PHP session authenticated via API in disposable test storage; not bypassed",
+  "fonts": [
+    [
+      {
+        "family": "Inter",
+        "status": "loaded"
+      },
+      {
+        "family": "Inter",
+        "status": "unloaded"
+      },
+      {
+        "family": "Inter",
+        "status": "loaded"
+      },
+      {
+        "family": "Inter",
+        "status": "unloaded"
+      },
+      {
+        "family": "JetBrains Mono",
+        "status": "loaded"
+      },
+      {
+        "family": "JetBrains Mono",
+        "status": "unloaded"
+      },
+      {
+        "family": "JetBrains Mono",
+        "status": "unloaded"
+      },
+      {
+        "family": "Space Grotesk",
+        "status": "unloaded"
+      },
+      {
+        "family": "Space Grotesk",
+        "status": "unloaded"
+      },
+      {
+        "family": "Space Grotesk",
+        "status": "loaded"
+      },
+      {
+        "family": "Space Grotesk",
+        "status": "unloaded"
+      }
+    ],
+    [
+      {
+        "family": "Inter",
+        "status": "loaded"
+      },
+      {
+        "family": "Inter",
+        "status": "unloaded"
+      },
+      {
+        "family": "Inter",
+        "status": "loaded"
+      },
+      {
+        "family": "Inter",
+        "status": "unloaded"
+      },
+      {
+        "family": "JetBrains Mono",
+        "status": "loaded"
+      },
+      {
+        "family": "JetBrains Mono",
+        "status": "unloaded"
+      },
+      {
+        "family": "JetBrains Mono",
+        "status": "unloaded"
+      },
+      {
+        "family": "Space Grotesk",
+        "status": "unloaded"
+      },
+      {
+        "family": "Space Grotesk",
+        "status": "unloaded"
+      },
+      {
+        "family": "Space Grotesk",
+        "status": "loaded"
+      },
+      {
+        "family": "Space Grotesk",
+        "status": "unloaded"
+      }
+    ]
+  ]
+}

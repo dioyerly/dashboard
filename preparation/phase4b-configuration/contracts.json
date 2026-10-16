@@ -1,0 +1,47 @@
+{
+  "block": "4B block 4: configuration, historical absence, exact decimals and financial contracts",
+  "authorization": "User approved separation of commercial status from confirmed cash; explicit confirmed financial commands must atomically register all related effects. No historical cash inferred.",
+  "migrations": ["005_configuration_rates", "006_historical_absence"],
+  "schema": {
+    "dataset_settings": "One main row per environment: nullable original schema_version/setup_done/source_created_at/timezone, alert thresholds and hourly rate/currency. Separate from business_settings so root metadata also exists before onboarding. All business FKs include environment.",
+    "exchange_rates": "Original rate IDs preserved, positive exact rate, currency/date unique, currency and base-currency FKs scoped by environment. base_currency_id snapshots the explicitly supplied backup baseCurrency, not a fabricated rate or inferred historic base. Existing quotes prevent silent base changes through services.",
+    "customers": "consent/origin nullable; preserve existing values, no backfill. Missing, explicit NULL, false and zero remain distinguishable using SQL NULL and source presence mapping.",
+    "plans": "trial_days nullable, no invented trial duration. Existing explicit zero unchanged.",
+    "migration_recovery": "Existing forward-recovery runner extended to the fixed 005/006 chain; prior private backup/SHA256, checksum chain, scratch definition fingerprints, named lock and journal. Tests interrupt 005 and 006 after DDL before acknowledgement and preserve pre-existing rows. 001-004 unchanged."
+  },
+  "precision": {
+    "exact_inputs": "Python Decimal and canonical strings into PDO DECIMAL; no persistent monetary calculation uses float. Never trust SQL implicit rounding: PHP/Python reject excess scale before DML.",
+    "quotes": "DECIMAL(38,18), positive, max 20 integer and 18 fractional digits. No implicit rounding. Quote lookup remains latest date <= business date; same-currency factor 1 and missing quote unknown, as original.",
+    "hourly_and_thresholds": "DECIMAL(38,18), no economic rounding. Hourly zero distinct from unknown. Positive thresholds and drop_pct <=100; fractions accepted as original validation does not require integral values.",
+    "descriptive_costs_and_pending_unit_prices": "Up to 20 integer +18 fractional digits preserved exactly in diagnosis. Infrastructure remains pending SQL, so costs are not claimed imported. Existing mapped product/plan price columns remain DECIMAL(20,2); higher-precision prices require review and are rejected rather than rounded.",
+    "subtotals": "Future executor must calculate exact decimal products/sums, record input/snapshot provenance, and expose any rounding boundary. No subtotal/cash financial executor is implemented in this block.",
+    "cash": "Existing import contract uses exact DECIMAL(20,2)-compatible values; financial contract validator rejects overprecision, requires explicit account/date/currency/amount and confirmation. Never reuse descriptive-cost normalization for cash, quotes or unit prices.",
+    "legacy_rounding": "Original round2 is Math.round(Number(n)*100 + Number.EPSILON*100)/100. Infrastructure resource editor uses num/step=any without round2. Demo priceHistory uses cost*.82, producing exactly the three identified artifacts. Do not claim decimal arithmetic generally reproduces every IEEE-754 legacy edge case.",
+    "known_demo_only": "Explicit --normalize-known-demo-costs on a NEW block4 synthetic target, DEMO business marker, exact three IDs/source values. 12999*0.82=10659.18, 15*0.82=12.30, 5999*0.82=4919.18 using decimal arithmetic. Any mismatch refuses. Before/after/path/source SHA persisted as precision evidence. Original bytes unchanged. No infrastructure financial movement or full resource import is created."
+  },
+  "historical_policy": {
+    "missing_timezone": "NULL, never machine timezone",
+    "source_presence": "Path mapping retains omitted vs explicitly NULL fields; exports read SQL, not cached source values.",
+    "unknown_price_dates": "NULL with provenance unknown; no retroactive known price intervals inferred",
+    "retired_format_language_category": "Existing snapshot labels remain with nullable catalog FKs; do not invent catalog membership",
+    "unknown_formats": "Additional unrecognized history objects/fields still require review; do not silently discard them or invent an import format",
+    "visual_preferences": "Theme, lens, filters, tabs and browser environment selector stay local; PIN/credentials excluded from business SQL"
+  },
+  "financial_contracts": {
+    "code": "app/FinancialContracts.php, executable validation and effect descriptions only; execution_implemented=false",
+    "operations": ["sale_register", "sale_edit", "sale_collect", "sale_refund_commercial", "cash_refund", "sale_void", "expense_register", "expense_edit", "expense_pay", "cash_compensate", "transfer", "subscription_register", "subscription_renew", "subscription_status", "plan_price_change", "external_import"],
+    "commercial": "Edits/refund totals/void/status changes do not create, delete or mutate confirmed cash. Voids include regularization warning. Preserve historical receipts/payments.",
+    "confirmed_cash": "An explicit collect/pay/refund/transfer or settle_now command must produce all automatic linked domain effects plus immutable receipt and audit in ONE SQL transaction, never require the client to perform multiple durable saves.",
+    "compensation": "New movement linked to the original; never edit/delete historical bank records. Executor must lock original/prior compensations and validate remaining eligible amount.",
+    "concurrency": "Expected versions checked against locked context; stable canonical operation key; same request replays, changed payload conflicts; all effects rollback on failure; lost commit acknowledgement reconciles receipt.",
+    "prices_and_events": "Immutable explicit price snapshot ID required for subscription registration/renewal and price change; ordered subscription events; integration-scoped external entity/event identity.",
+    "executor_boundary": "No financial tables/API/executor are introduced. Real SQL atomicity/concurrency/failure tests exercise configuration/import services. Financial tests validate contracts, not pretend persisted cash flows.",
+    "later_financial_work": "Implement reference/balance/partial-payment checks, compensation eligibility and reconciliation, immutable financial ledger, historical price/event calculations, actual external-event execution and end-to-end financial SQL tests. Preserve user-approved policy; do not infer missing historical bank facts."
+  },
+  "importer": {
+    "profiles": "block3 remains compatible with existing synthetic baselines. Explicit --profile block4 prepare applies 001-006; registered target chooses model/profile thereafter. No upgrade of review database.",
+    "added": "Metadata, alert/hourly settings, timezone if actually present, exchange quotes, historical NULLs; original IDs and dates preserved.",
+    "still_partial": "No financial/subscription/infra/calendar/integration/time-log collections imported. Full private raw source archive remains authoritative for pending data; precision evidence is audit metadata, not an entire JSON state database."
+  },
+  "activation": "Frontend and IndexedDB untouched, no active business SQL, no Hostinger, no commit/push. Stop after this block."
+}

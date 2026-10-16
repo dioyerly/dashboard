@@ -1,0 +1,219 @@
+{
+  "checks": [
+    {
+      "check": "005 interruption after first DDL is detectable",
+      "passed": true
+    },
+    {
+      "check": "005 forward recovery adopts existing table",
+      "passed": true
+    },
+    {
+      "check": "005 repeat verifies immutable checksum",
+      "passed": true
+    },
+    {
+      "check": "Services reject half-applied block 4",
+      "passed": true
+    },
+    {
+      "check": "006 interruption after nullable ALTER preserves data",
+      "passed": true
+    },
+    {
+      "check": "006 nullable ALTER safely resumes",
+      "passed": true
+    },
+    {
+      "check": "Migration preserves explicit true/manual and zero trial days",
+      "passed": true
+    },
+    {
+      "check": "Full metadata/rates and missing historical values pass read-only preflight",
+      "passed": true
+    },
+    {
+      "check": "Missing consent/origin/trialDays become NULL, not fabricated defaults",
+      "passed": true
+    },
+    {
+      "check": "New profile rolls back mid-import including environment/receipt",
+      "passed": true
+    },
+    {
+      "check": "Real PDO import into 005/006 schema succeeds",
+      "passed": true
+    },
+    {
+      "check": "Original to SQL to export compares all supported fields",
+      "passed": true
+    },
+    {
+      "check": "Absent source fields remain absent on export",
+      "passed": true
+    },
+    {
+      "check": "SQL distinguishes NULL from explicit false/zero",
+      "passed": true
+    },
+    {
+      "check": "18-digit rate and hourly precision survives exactly",
+      "passed": true
+    },
+    {
+      "check": "JSON numeric exponent quote also persists exactly",
+      "passed": true
+    },
+    {
+      "check": "Historical prices still have unknown dates and no reconstructed chronology",
+      "passed": true
+    },
+    {
+      "check": "Exact decimal helper rejects float and overprecision",
+      "passed": true
+    },
+    {
+      "check": "Zero exact hourly value is distinct from NULL",
+      "passed": true
+    },
+    {
+      "check": "Numeric scientific notation expands exactly without binary float",
+      "passed": true
+    },
+    {
+      "check": "Malformed JSON shapes fail closed in new profile",
+      "passed": true
+    },
+    {
+      "check": "Explicit unknown historical fields and metadata accept NULL",
+      "passed": true
+    },
+    {
+      "check": "Missing timezone/setup/date do not become machine timezone or false",
+      "passed": true
+    },
+    {
+      "check": "Empty historical string is not silently treated as NULL",
+      "passed": true
+    },
+    {
+      "check": "Conflicting timezone fields cannot overwrite an explicit unknown",
+      "passed": true
+    },
+    {
+      "check": "Duplicate currency/date quote rejected before import",
+      "passed": true
+    },
+    {
+      "check": "Zero rate rejected",
+      "passed": true
+    },
+    {
+      "check": "Unknown timezone rejected without default",
+      "passed": true
+    },
+    {
+      "check": "More precise unsupported product price is never rounded",
+      "passed": true
+    },
+    {
+      "check": "SQL rejects nonpositive quote",
+      "passed": true
+    },
+    {
+      "check": "SQL rejects threshold over 100",
+      "passed": true
+    },
+    {
+      "check": "SQL rejects wrong currency FK",
+      "passed": true
+    },
+    {
+      "check": "SQL rejects invalid nullable consent",
+      "passed": true
+    },
+    {
+      "check": "SQL rejects negative nullable trial days",
+      "passed": true
+    },
+    {
+      "check": "Four concurrent configuration retries apply once and replay three",
+      "passed": true
+    },
+    {
+      "check": "Stale configuration edit conflicts",
+      "passed": true
+    },
+    {
+      "check": "Existing exchange history prevents silently changing its base",
+      "passed": true
+    },
+    {
+      "check": "A quote cannot be relabeled with a different historical base",
+      "passed": true
+    },
+    {
+      "check": "Lost acknowledgement recovered by three concurrent durable replays",
+      "passed": true
+    },
+    {
+      "check": "Explicit false consent and zero values retain meaning",
+      "passed": true
+    },
+    {
+      "check": "Full backup plan stays identical across independent CLI process hash seeds",
+      "passed": true
+    },
+    {
+      "check": "Known DEMO artifacts require explicit normalization",
+      "passed": true
+    },
+    {
+      "check": "Explicit known DEMO normalization passes without treating artifacts as economic precision",
+      "passed": true
+    },
+    {
+      "check": "Exactly three auditable known-cost repairs use decimal arithmetic",
+      "passed": true
+    },
+    {
+      "check": "DEMO supported subset including settings/rates imports and round-trips",
+      "passed": true
+    },
+    {
+      "check": "A separate CLI process replays the full DEMO import safely",
+      "passed": true
+    },
+    {
+      "check": "Original DEMO bytes remain intact and pending infrastructure is not migrated",
+      "passed": true
+    },
+    {
+      "check": "Known demo switch cannot normalize an arbitrary business backup",
+      "passed": true
+    },
+    {
+      "check": "Legitimate descriptive precision retained without DEMO rounding",
+      "passed": true
+    },
+    {
+      "check": "Executable financial contract suite passes",
+      "passed": true
+    },
+    {
+      "check": "Metadata/rates, receipt and absent values persist after restart",
+      "passed": true
+    },
+    {
+      "check": "Immutable migrations 001-004 are unchanged",
+      "passed": true
+    },
+    {
+      "check": "Frontend and original/demo bytes unchanged",
+      "passed": true
+    }
+  ],
+  "engine": "11.4.13-MariaDB",
+  "complete_migration": false,
+  "financial_execution_implemented": false
+}

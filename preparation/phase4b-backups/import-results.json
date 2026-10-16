@@ -1,0 +1,235 @@
+{
+  "checks": [
+    {
+      "check": "Valid synthetic v1 preflight is read-only and SQL-compatible",
+      "passed": true
+    },
+    {
+      "check": "Review database cannot be nominated as an import target",
+      "passed": true
+    },
+    {
+      "check": "Remote target refused before connecting",
+      "passed": true
+    },
+    {
+      "check": "Real SQL collation collision is detected before writes",
+      "passed": true
+    },
+    {
+      "check": "Optional absent fields are distinguished from invalid fields",
+      "passed": true
+    },
+    {
+      "check": "Same-day statistics preserve sequence and active can exceed registered",
+      "passed": true
+    },
+    {
+      "check": "Historical prices have unknown dates and no invented history",
+      "passed": true
+    },
+    {
+      "check": "PIN absent from plan, rows, reports and mapping",
+      "passed": true
+    },
+    {
+      "check": "Corrupt JSON rejected",
+      "passed": true
+    },
+    {
+      "check": "Repeated JSON property rejected",
+      "passed": true
+    },
+    {
+      "check": "Unsupported version rejected",
+      "passed": true
+    },
+    {
+      "check": "Duplicate historical ID rejected",
+      "passed": true
+    },
+    {
+      "check": "Missing ID rejected",
+      "passed": true
+    },
+    {
+      "check": "Missing relationship rejected",
+      "passed": true
+    },
+    {
+      "check": "Unknown supported field requires review",
+      "passed": true
+    },
+    {
+      "check": "Unconfigured currency rejected",
+      "passed": true
+    },
+    {
+      "check": "Invalid date rejected",
+      "passed": true
+    },
+    {
+      "check": "Unrepresentable money rejected without rounding",
+      "passed": true
+    },
+    {
+      "check": "Active reference to archived parent requires review",
+      "passed": true
+    },
+    {
+      "check": "Indirect bundle cycle rejected before writes",
+      "passed": true
+    },
+    {
+      "check": "Collation name collision requires review",
+      "passed": true
+    },
+    {
+      "check": "Ambiguous whitespace rejected without trimming",
+      "passed": true
+    },
+    {
+      "check": "Unknown secret excluded and requires review",
+      "passed": true
+    },
+    {
+      "check": "Embedded credential rejected rather than imported as link",
+      "passed": true
+    },
+    {
+      "check": "Unspecified historical price format requires review instead of losing entries",
+      "passed": true
+    },
+    {
+      "check": "Unknown customer origin is not invented to satisfy NOT NULL",
+      "passed": true
+    },
+    {
+      "check": "Missing customer consent requires review instead of becoming false",
+      "passed": true
+    },
+    {
+      "check": "Missing trial duration requires review instead of inventing zero",
+      "passed": true
+    },
+    {
+      "check": "Pending hourly currency still receives validation",
+      "passed": true
+    },
+    {
+      "check": "Pending alert values still receive validation",
+      "passed": true
+    },
+    {
+      "check": "Unsupported collections and every nested field explicitly inventoried",
+      "passed": true
+    },
+    {
+      "check": "Critical reference errors also rejected in non-imported financial rows",
+      "passed": true
+    },
+    {
+      "check": "Mid-import failure rolls back rows, environment, receipt and audit",
+      "passed": true
+    },
+    {
+      "check": "Retry after rollback imports complete consistent partial dataset",
+      "passed": true
+    },
+    {
+      "check": "Source to MariaDB to independent export compares every mapped field",
+      "passed": true
+    },
+    {
+      "check": "Nested order, duplicate resource links, IDs and nullable stats survive export",
+      "passed": true
+    },
+    {
+      "check": "Archived product and its version retained, status not confused with archive",
+      "passed": true
+    },
+    {
+      "check": "Same operation and payload replay without duplicate rows",
+      "passed": true
+    },
+    {
+      "check": "Same operation with changed source conflicts",
+      "passed": true
+    },
+    {
+      "check": "New operation cannot merge or overwrite existing destination",
+      "passed": true
+    },
+    {
+      "check": "Verification detects changed SQL values rather than echoing source",
+      "passed": true
+    },
+    {
+      "check": "Verification also detects altered environment identity",
+      "passed": true
+    },
+    {
+      "check": "Backup hash mismatch prevents writes",
+      "passed": true
+    },
+    {
+      "check": "Four concurrent retries commit once and return three durable replays",
+      "passed": true
+    },
+    {
+      "check": "More than 500 records import and export completely without truncation",
+      "passed": true
+    },
+    {
+      "check": "Concurrent different operations yield one commit and one occupied-target conflict",
+      "passed": true
+    },
+    {
+      "check": "Lost post-commit acknowledgement recovers by durable receipt",
+      "passed": true
+    },
+    {
+      "check": "Original demo is completely inventoried without source normalization",
+      "passed": true
+    },
+    {
+      "check": "Original demo incompatibilities reject import before writes",
+      "passed": true
+    },
+    {
+      "check": "Derived synthetic demo catalogs, products and associations round-trip",
+      "passed": true
+    },
+    {
+      "check": "Imported administrator, receipt and data persist after MariaDB restart",
+      "passed": true
+    },
+    {
+      "check": "Original private backup remains byte-identical",
+      "passed": true
+    },
+    {
+      "check": "Private complete source archive preserves pending data and original PIN only outside SQL",
+      "passed": true
+    },
+    {
+      "check": "Frontend, originals and demo are byte-identical to initial state",
+      "passed": true
+    },
+    {
+      "check": "Review configuration keeps business SQL disabled",
+      "passed": true
+    }
+  ],
+  "engine": "11.4.13-MariaDB",
+  "migrations": [
+    "001_auth",
+    "002_business_foundation",
+    "003_catalogs_products",
+    "004_project_stats_optional_origin"
+  ],
+  "new_migrations": [],
+  "source_unchanged": true,
+  "complete_migration": false,
+  "frontend_sql_enabled": false
+}

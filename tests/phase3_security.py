@@ -1,4 +1,4 @@
-"""Real PHP authentication tests with private file persistence. Never connects to MySQL."""
+"""PHP authentication tests: file by default, isolated local MariaDB by explicit opt-in."""
 import argparse
 import contextlib
 import json
@@ -8,13 +8,19 @@ import socket
 import subprocess
 import tempfile
 import time
+import sys
 import urllib.request
 from pathlib import Path
 from playwright.sync_api import sync_playwright
 
 ROOT=Path(__file__).resolve().parents[1]
 PHP=ROOT/'.runtime/php/php.exe'
-OUT=ROOT/'preparation/phase3-browser'
+MYSQL=os.environ.get('CENTRO_TEST_AUTH_DRIVER') == 'mysql'
+if MYSQL:
+    sys.path.insert(0,str(ROOT/'tools'))
+    import local_mariadb
+PHP_ARGS=local_mariadb.PHP_ARGS if MYSQL else [str(PHP),'-n']
+OUT=Path(os.environ.get('CENTRO_TEST_OUTPUT',str(ROOT/'preparation/phase3-browser')))
 OUT.mkdir(exist_ok=True)
 EMAIL='phase3-test@ejemplo.test'
 
@@ -25,14 +31,16 @@ def server(**options):
     env=os.environ.copy()
     env.update({'CENTRO_PRIVATE_DIR':str(private),'CENTRO_ENV':'local','CENTRO_AUTH_DRIVER':'file','CENTRO_DB_ENABLED':'0',
         'CENTRO_IDLE_SECONDS':'600','CENTRO_ABSOLUTE_SECONDS':'1800','CENTRO_RATE_WINDOW':'3'})
+    if MYSQL:
+        env.update(local_mariadb.environment(local_mariadb.database()))
     env.update(options)
-    init=subprocess.run([str(PHP),'-n',str(ROOT/'tools/create_admin.php'),'--email='+EMAIL,'--password-stdin'],input=password+'\n',text=True,capture_output=True,env=env)
+    init=subprocess.run(PHP_ARGS+[str(ROOT/'tools/create_admin.php'),'--email='+EMAIL,'--password-stdin'],input=password+'\n',text=True,capture_output=True,env=env)
     assert init.returncode==0,init.stderr
     with socket.socket() as s:
         s.bind(('127.0.0.1',0))
         port=s.getsockname()[1]
     log=open(private/'server.log','w',encoding='utf-8')
-    process=subprocess.Popen([str(PHP),'-n','-S','127.0.0.1:'+str(port),'-t',str(ROOT/'public')],
+    process=subprocess.Popen(PHP_ARGS+['-S','127.0.0.1:'+str(port),'-t',str(ROOT/'public')],
         env=env,stdout=log,stderr=log,creationflags=subprocess.CREATE_NO_WINDOW if os.name=='nt' else 0)
     base='http://127.0.0.1:'+str(port)+'/'
     try:
@@ -59,9 +67,19 @@ def login(request,base,password):
     return result,session['csrf']
 
 
+def admin_record(private,env):
+    if not MYSQL:
+        return json.loads((private/'auth.json').read_text('utf-8'))['admin']
+    result=subprocess.run(PHP_ARGS+['-r',"require 'app/bootstrap.php'; echo json_encode($store->admin());"],
+        cwd=ROOT,env=env,capture_output=True,text=True)
+    assert result.returncode==0,'Cannot read isolated SQL test administrator'
+    return json.loads(result.stdout)
+
+
 def security():
     report={'checks':[],'storage':'Real private file auth and PHP sessions, not a MySQL simulation',
-        'mysql':'Not connected or tested; no local server found, remote access unauthorized','browser_errors':[]}
+        'mysql':'Local MariaDB via PDO' if MYSQL else 'Not connected','browser_errors':[]}
+    if MYSQL:report['storage']='MariaDB administrator and rate limits; private PHP file sessions'
     def check(name,condition,**detail):
         report['checks'].append({'check':name,'passed':bool(condition),**detail})
         print(('PASS' if condition else 'FAIL')+': '+name,flush=True)
@@ -99,10 +117,10 @@ def security():
             for path in paths:
                 response=request.get(base+path,max_redirects=0)
                 check('HTTP cannot retrieve private path: '+path,response.status==404)
-            record=json.loads((private/'auth.json').read_text('utf-8'))['admin']
-            check('Only a password hash is persisted',record['password_hash'].startswith('$2') and password not in (private/'auth.json').read_text('utf-8'))
-            second=subprocess.run([str(PHP),'-n',str(ROOT/'tools/create_admin.php'),'--email=second@ejemplo.test','--password-stdin'],input=secrets.token_urlsafe(24)+'\n',text=True,capture_output=True,env=env)
-            check('Private initialization refuses a second administrator',second.returncode!=0 and json.loads((private/'auth.json').read_text())['admin']==record)
+            record=admin_record(private,env)
+            check('Only a password hash is persisted',record['password_hash'].startswith('$2') and password not in json.dumps(record))
+            second=subprocess.run(PHP_ARGS+[str(ROOT/'tools/create_admin.php'),'--email=second@ejemplo.test','--password-stdin'],input=secrets.token_urlsafe(24)+'\n',text=True,capture_output=True,env=env)
+            check('Private initialization refuses a second administrator',second.returncode!=0 and admin_record(private,env)==record)
             check('Credentials absent from all public source files',all(password.encode() not in f.read_bytes() and record['password_hash'].encode() not in f.read_bytes() for f in (ROOT/'public').rglob('*') if f.is_file()))
             captured=after['value']
             response=request.post(base+'api.php?action=logout',headers={'X-CSRF-Token':token})
@@ -139,6 +157,9 @@ def security():
                 page.goto(base)
                 page.wait_for_selector('#server-login button:not([disabled])')
                 page.evaluate('document.fonts.ready')
+                page.bring_to_front()
+                page.evaluate('Promise.all(document.getAnimations().map(animation => animation.finished))')
+                page.evaluate('new Promise(resolve=>requestAnimationFrame(()=>requestAnimationFrame(resolve)))')
                 page.screenshot(path=str(OUT/f'login-{name}.png'),full_page=True)
                 check('Login form fits '+name,page.evaluate('document.documentElement.scrollWidth<=innerWidth'))
                 page.locator('#email').fill(EMAIL)
@@ -174,7 +195,7 @@ def security():
         report['checks'].append({'check':'Security suite completed','passed':False,'error_type':type(error).__name__})
         raise
     finally:
-        (ROOT/'preparation/phase3-security.json').write_text(json.dumps(report,ensure_ascii=False,indent=2),encoding='utf-8')
+        (OUT/'security-results.json' if MYSQL or os.environ.get('CENTRO_TEST_OUTPUT') else ROOT/'preparation/phase3-security.json').write_text(json.dumps(report,ensure_ascii=False,indent=2),encoding='utf-8')
 
 
 def regression(suites):

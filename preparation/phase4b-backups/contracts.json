@@ -1,0 +1,53 @@
+{
+  "block": "4B block 3: synthetic-only partial backup staging",
+  "activation": "No frontend storage adapter or new HTTP endpoint. Review database remains auth-only. Business data stays in the browser.",
+  "entry_points": {
+    "cli": "tools/backup_local.py diagnose|prepare|import|export|verify",
+    "offline_model": "tools/backup_model.py",
+    "pdo_service": "app/BackupImport.php through tools/backup_bridge.php (CLI only)",
+    "tests": "python tests/backup_import.py"
+  },
+  "format": {
+    "source": "Original raw state JSON, integer version 1, UTF-8 (optional BOM), at most 32 MiB. Reject duplicate JSON properties and non-finite numbers.",
+    "environment": "Required CLI argument produccion or pruebas: original backup does not contain its browser environment. Both are synthetic when staged; neither selects the active dashboard.",
+    "diagnosis": "No SQL connection unless a registered target is explicitly supplied for additional read-only PDO preflight. Never invokes normalizeState or mutates source.",
+    "findings": "error/review findings reject the entire attempt. optional/normalization/pending findings remain explicit. No record pruning or relationship removal to force acceptance.",
+    "precision": "JSON decimals parsed as decimal values, not binary floats. No rounding of overprecision, negative amounts, or unsupported numeric notation. Prices normalized to exact two-decimal strings, commission to six.",
+    "dates": "Strict calendar dates; source instants require an explicit offset and normalize to UTC microseconds. Optional nullable absence remains NULL; source field presence is preserved by the export map.",
+    "absence_limits": "Customers missing origin or consent, and plans missing trialDays, require review because existing NOT NULL columns cannot preserve those unknown historical values. Missing statistics origin is representable as NULL."
+  },
+  "supported": [
+    "Explicit environment; represented business name/owner/site/baseCurrency/numFormat",
+    "Currencies, brands, channels, accounts, projects and customers with representable required fields",
+    "Categories, formats, languages, payment methods, expense groups and categories",
+    "Plans and their available current price as unknown-date historical evidence",
+    "Products, versions, ordered links/resources, bundle membership and ordered version-channel associations",
+    "Project user statistics, same-day ordering and source timestamps",
+    "Initial SQL version snapshot; not fabricated pre-import history"
+  ],
+  "identity": "Existing IDs unchanged. Deterministic technical IDs for child/list rows lacking original IDs; source position and ownership are retained. SQL uniqueness checked with actual MariaDB collation before inserts.",
+  "partial_import": {
+    "target": "Only a NEW schema created by prepare, registered in ignored .runtime/mariadb/import-targets. local environment, 127.0.0.1, fixed local port and verified 001-004 ledger checksums required; business tables must be InnoDB.",
+    "permissions": "Dedicated per-target user with SELECT/INSERT on import tables; no business UPDATE/DELETE/DDL grants. A new temporary administrator is created using existing password-stdin procedure; no original/review credentials copied.",
+    "backup": "Private single-transaction SQL dump plus destination/SHA256 manifest verified before writes. Full source byte archive retained under ignored .runtime, including all pending data; never read as SQL export authority.",
+    "transaction": "One transaction for the entire supported dataset, environment, immutable receipt and audit. Named target lock serializes concurrent imports. No schema migration is needed in this block.",
+    "idempotency": "Stable import_ operation ID bound to the exact source bytes and deterministic plan. Same ID/payload replays committed receipt; changed payload conflicts. Different operation on occupied destination always rejects.",
+    "recovery": "Injected mid-import exception rolls back the whole dataset. Lost acknowledgement after commit is recovered by replay. Does not implement disaster restoration, dataset generations, merge, overwrite, wipe or active-dataset switching."
+  },
+  "comparison": {
+    "export": "Read normalized SQL tables under environment lock and transaction. Reconstruct supported original paths using persisted path/type/presence/order metadata, not cached business values. No 500-row truncation.",
+    "verification": "Compare IDs, counts and all normalized fields/relationships per table plus reconstructed supported projection and exact source SHA256. Altered SQL values must fail comparison.",
+    "normalizations": "Document decimal representation, nullable empty values, UTC source instants, email casing, generated child identities and technical initial history. Absent source fields are not exported as invented source facts.",
+    "claim": "Supported projection equivalence only; never whole original JSON equivalence or complete migration."
+  },
+  "pending": [
+    "Exchange rates; alerts/hourly settings; root version/setupDone/createdAt and timezone",
+    "Sales, subscriptions, expenses, treasury, infrastructure resources, suppliers, events, integrations, review, time logs and legacy log",
+    "Full domain-specific validation of unimplemented financial/integration structures; diagnostic reports their nested paths as unassessed, with generic IDs/reference/currency/date/money checks",
+    "Unrecognized priceHistory or version-history source formats require review; do not silently infer their contract",
+    "Original demo has three infrastructure price-history costs beyond two decimals; full original demo rejected until an explicit preservation/precision policy exists",
+    "Dataset generations, whole-dataset restore/wipe and shared-storage cutover",
+    "Oracle MySQL/Hostinger validation and deployment"
+  ],
+  "next_block": "Complete represented settings and exchange-rate schema and tests, resolve historical precision/absence policies, then model complete financial/subscription transactions. Keep SQL business storage disabled until a separately verified full cutover."
+}

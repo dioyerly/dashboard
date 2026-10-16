@@ -1,0 +1,74 @@
+{
+  "engine": "11.4.13-MariaDB",
+  "suites": [
+    {
+      "file": "preparation/phase4b-backups/import-results.json",
+      "checks": 55,
+      "failed": 0
+    },
+    {
+      "file": "preparation/phase4b-backups-catalog-regression/pdo-results.json",
+      "checks": 36,
+      "failed": 0
+    },
+    {
+      "file": "preparation/phase4b-backups-catalog-regression/integration-results.json",
+      "checks": 21,
+      "failed": 0
+    },
+    {
+      "file": "preparation/phase4b-backups-catalog-regression/foundation-regression.json",
+      "checks": 31,
+      "failed": 0
+    },
+    {
+      "file": "preparation/phase4b-backups-browser/controls-results.json",
+      "checks": 78,
+      "failed": 0
+    },
+    {
+      "file": "preparation/phase4b-backups-browser/motion-results.json",
+      "checks": 4,
+      "failed": 0
+    },
+    {
+      "file": "preparation/phase4b-backups-browser/resize-results.json",
+      "checks": 2,
+      "failed": 0
+    },
+    {
+      "file": "preparation/phase4b-backups-browser/security-results.json",
+      "checks": 55,
+      "failed": 0
+    },
+    {
+      "file": "preparation/phase4b-backups-browser/visual-results.json",
+      "checks": 32,
+      "failed": 0
+    }
+  ],
+  "login_http": 200,
+  "url": "http://127.0.0.1:8080/login.php",
+  "business_storage": "local",
+  "mysql_sync": false,
+  "review_tables": [
+    "auth_login_limits",
+    "auth_users",
+    "schema_migrations"
+  ],
+  "frontend_reference_git_diff_exit": 0,
+  "visual_pairs": 31,
+  "pixel_identical_pairs": 30,
+  "remaining_differences": [
+    {
+      "check": "mobile-dark-pulso",
+      "pixels": 6,
+      "max_channel_delta": 1
+    }
+  ],
+  "existing_whitespace_findings": "Global git diff --check reports pre-existing phase3-browser JSON CRLF/whitespace. Preserved; current changed code and REPRODUCIR check clean.",
+  "new_sql_migrations": [],
+  "complete_migration": false,
+  "hostinger_contacted": false,
+  "commit_or_push": false
+}

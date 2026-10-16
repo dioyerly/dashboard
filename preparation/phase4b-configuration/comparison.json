@@ -1,0 +1,662 @@
+{
+  "ok": true,
+  "complete_migration": false,
+  "source_sha256_matches": true,
+  "supported_projection_equal": true,
+  "environment_matches": true,
+  "supported_projection_sha256": "8a45b2074f08bf37e0cae488effb415e6cc78a09e9981fc73966b38718b69daa",
+  "tables": [
+    {
+      "table": "currencies",
+      "expected": 2,
+      "actual": 2,
+      "fields_ids_relationships_equal": true
+    },
+    {
+      "table": "brands",
+      "expected": 1,
+      "actual": 1,
+      "fields_ids_relationships_equal": true
+    },
+    {
+      "table": "channels",
+      "expected": 1,
+      "actual": 1,
+      "fields_ids_relationships_equal": true
+    },
+    {
+      "table": "projects",
+      "expected": 1,
+      "actual": 1,
+      "fields_ids_relationships_equal": true
+    },
+    {
+      "table": "customers",
+      "expected": 1,
+      "actual": 1,
+      "fields_ids_relationships_equal": true
+    },
+    {
+      "table": "accounts",
+      "expected": 1,
+      "actual": 1,
+      "fields_ids_relationships_equal": true
+    },
+    {
+      "table": "business_settings",
+      "expected": 1,
+      "actual": 1,
+      "fields_ids_relationships_equal": true
+    },
+    {
+      "table": "product_categories",
+      "expected": 1,
+      "actual": 1,
+      "fields_ids_relationships_equal": true
+    },
+    {
+      "table": "formats",
+      "expected": 1,
+      "actual": 1,
+      "fields_ids_relationships_equal": true
+    },
+    {
+      "table": "languages",
+      "expected": 1,
+      "actual": 1,
+      "fields_ids_relationships_equal": true
+    },
+    {
+      "table": "payment_methods",
+      "expected": 1,
+      "actual": 1,
+      "fields_ids_relationships_equal": true
+    },
+    {
+      "table": "expense_groups",
+      "expected": 1,
+      "actual": 1,
+      "fields_ids_relationships_equal": true
+    },
+    {
+      "table": "expense_categories",
+      "expected": 2,
+      "actual": 2,
+      "fields_ids_relationships_equal": true
+    },
+    {
+      "table": "plans",
+      "expected": 1,
+      "actual": 1,
+      "fields_ids_relationships_equal": true
+    },
+    {
+      "table": "plan_prices",
+      "expected": 1,
+      "actual": 1,
+      "fields_ids_relationships_equal": true
+    },
+    {
+      "table": "products",
+      "expected": 2,
+      "actual": 2,
+      "fields_ids_relationships_equal": true
+    },
+    {
+      "table": "product_versions",
+      "expected": 2,
+      "actual": 2,
+      "fields_ids_relationships_equal": true
+    },
+    {
+      "table": "product_links",
+      "expected": 2,
+      "actual": 2,
+      "fields_ids_relationships_equal": true
+    },
+    {
+      "table": "bundle_items",
+      "expected": 1,
+      "actual": 1,
+      "fields_ids_relationships_equal": true
+    },
+    {
+      "table": "product_channels",
+      "expected": 0,
+      "actual": 0,
+      "fields_ids_relationships_equal": true
+    },
+    {
+      "table": "product_version_channels",
+      "expected": 1,
+      "actual": 1,
+      "fields_ids_relationships_equal": true
+    },
+    {
+      "table": "project_user_stats",
+      "expected": 2,
+      "actual": 2,
+      "fields_ids_relationships_equal": true
+    },
+    {
+      "table": "product_version_history",
+      "expected": 2,
+      "actual": 2,
+      "fields_ids_relationships_equal": true
+    },
+    {
+      "table": "dataset_settings",
+      "expected": 1,
+      "actual": 1,
+      "fields_ids_relationships_equal": true
+    },
+    {
+      "table": "exchange_rates",
+      "expected": 3,
+      "actual": 3,
+      "fields_ids_relationships_equal": true
+    }
+  ],
+  "normalizations": [
+    {
+      "path": [
+        "projects",
+        0,
+        "investCurrency"
+      ],
+      "rule": "nullable_currency"
+    },
+    {
+      "path": [
+        "projects",
+        0,
+        "createdAt"
+      ],
+      "rule": "nullable_timestamp"
+    },
+    {
+      "path": [
+        "customers",
+        0,
+        "email"
+      ],
+      "rule": "nullable_email"
+    },
+    {
+      "path": [
+        "customers",
+        0,
+        "createdAt"
+      ],
+      "rule": "nullable_date"
+    },
+    {
+      "path": [
+        "plans",
+        0,
+        "price"
+      ],
+      "rule": "money"
+    },
+    {
+      "path": [
+        "products",
+        0,
+        "createdAt"
+      ],
+      "rule": "nullable_timestamp"
+    },
+    {
+      "path": [
+        "products",
+        0,
+        "updatedAt"
+      ],
+      "rule": "nullable_timestamp"
+    },
+    {
+      "path": [
+        "products",
+        0,
+        "versions",
+        0,
+        "price"
+      ],
+      "rule": "money"
+    },
+    {
+      "path": [
+        "products",
+        1,
+        "archivedAt"
+      ],
+      "rule": "nullable_timestamp"
+    },
+    {
+      "path": [
+        "products",
+        1,
+        "versions",
+        0,
+        "price"
+      ],
+      "rule": "money"
+    },
+    {
+      "path": [
+        "createdAt"
+      ],
+      "rule": "nullable_timestamp"
+    },
+    {
+      "path": [
+        "settings",
+        "alerts",
+        "upcomingDays"
+      ],
+      "rule": "nullable_positive_precise"
+    },
+    {
+      "path": [
+        "settings",
+        "alerts",
+        "noSalesDays"
+      ],
+      "rule": "nullable_positive_precise"
+    },
+    {
+      "path": [
+        "settings",
+        "alerts",
+        "dropPct"
+      ],
+      "rule": "nullable_positive_precise"
+    },
+    {
+      "path": [
+        "rates",
+        2,
+        "rate"
+      ],
+      "rule": "positive_precise"
+    }
+  ],
+  "pending": [
+    {
+      "level": "pending",
+      "path": [
+        "settings",
+        "[private-field]"
+      ],
+      "code": "secret_excluded"
+    },
+    {
+      "level": "pending",
+      "path": [
+        "sales"
+      ],
+      "code": "collection_not_imported",
+      "count": 0
+    },
+    {
+      "level": "pending",
+      "path": [
+        "subs"
+      ],
+      "code": "collection_not_imported",
+      "count": 0
+    },
+    {
+      "level": "pending",
+      "path": [
+        "expenses"
+      ],
+      "code": "collection_not_imported",
+      "count": 0
+    },
+    {
+      "level": "pending",
+      "path": [
+        "resources"
+      ],
+      "code": "collection_not_imported",
+      "count": 0
+    },
+    {
+      "level": "pending",
+      "path": [
+        "suppliers"
+      ],
+      "code": "collection_not_imported",
+      "count": 0
+    },
+    {
+      "level": "pending",
+      "path": [
+        "events"
+      ],
+      "code": "collection_not_imported",
+      "count": 0
+    },
+    {
+      "level": "pending",
+      "path": [
+        "treasury"
+      ],
+      "code": "collection_not_imported",
+      "count": 0
+    },
+    {
+      "level": "pending",
+      "path": [
+        "integrations"
+      ],
+      "code": "collection_not_imported",
+      "count": 0
+    },
+    {
+      "level": "pending",
+      "path": [
+        "review"
+      ],
+      "code": "collection_not_imported",
+      "count": 0
+    },
+    {
+      "level": "pending",
+      "path": [
+        "timeLogs"
+      ],
+      "code": "collection_not_imported",
+      "count": 0
+    },
+    {
+      "level": "pending",
+      "path": [
+        "log"
+      ],
+      "code": "collection_not_imported",
+      "count": 0
+    },
+    {
+      "level": "optional",
+      "path": [
+        "projects",
+        0,
+        "launchDate"
+      ],
+      "code": "absent_source_field",
+      "sql_value": "NULL"
+    },
+    {
+      "level": "optional",
+      "path": [
+        "projects",
+        0,
+        "url"
+      ],
+      "code": "absent_source_field",
+      "sql_value": "documented_internal_default"
+    },
+    {
+      "level": "optional",
+      "path": [
+        "projects",
+        0,
+        "desc"
+      ],
+      "code": "absent_source_field",
+      "sql_value": "documented_internal_default"
+    },
+    {
+      "level": "optional",
+      "path": [
+        "projects",
+        0,
+        "domain"
+      ],
+      "code": "absent_source_field",
+      "sql_value": "documented_internal_default"
+    },
+    {
+      "level": "optional",
+      "path": [
+        "projects",
+        0,
+        "repo"
+      ],
+      "code": "absent_source_field",
+      "sql_value": "documented_internal_default"
+    },
+    {
+      "level": "optional",
+      "path": [
+        "projects",
+        0,
+        "hosting"
+      ],
+      "code": "absent_source_field",
+      "sql_value": "documented_internal_default"
+    },
+    {
+      "level": "optional",
+      "path": [
+        "projects",
+        0,
+        "database"
+      ],
+      "code": "absent_source_field",
+      "sql_value": "documented_internal_default"
+    },
+    {
+      "level": "optional",
+      "path": [
+        "projects",
+        0,
+        "tech"
+      ],
+      "code": "absent_source_field",
+      "sql_value": "documented_internal_default"
+    },
+    {
+      "level": "optional",
+      "path": [
+        "projects",
+        0,
+        "milestone"
+      ],
+      "code": "absent_source_field",
+      "sql_value": "documented_internal_default"
+    },
+    {
+      "level": "optional",
+      "path": [
+        "projects",
+        0,
+        "notes"
+      ],
+      "code": "absent_source_field",
+      "sql_value": "documented_internal_default"
+    },
+    {
+      "level": "optional",
+      "path": [
+        "projects",
+        0,
+        "updatedAt"
+      ],
+      "code": "absent_source_field",
+      "sql_value": "NULL"
+    },
+    {
+      "level": "optional",
+      "path": [
+        "projects",
+        0,
+        "userStats",
+        0,
+        "origin"
+      ],
+      "code": "absent_source_field",
+      "sql_value": "NULL"
+    },
+    {
+      "level": "optional",
+      "path": [
+        "customers",
+        0,
+        "country"
+      ],
+      "code": "absent_source_field",
+      "sql_value": "documented_internal_default"
+    },
+    {
+      "level": "optional",
+      "path": [
+        "customers",
+        0,
+        "consent"
+      ],
+      "code": "absent_source_field",
+      "sql_value": "NULL"
+    },
+    {
+      "level": "optional",
+      "path": [
+        "customers",
+        0,
+        "notes"
+      ],
+      "code": "absent_source_field",
+      "sql_value": "documented_internal_default"
+    },
+    {
+      "level": "optional",
+      "path": [
+        "customers",
+        0,
+        "origin"
+      ],
+      "code": "absent_source_field",
+      "sql_value": "NULL"
+    },
+    {
+      "level": "optional",
+      "path": [
+        "plans",
+        0,
+        "trialDays"
+      ],
+      "code": "absent_source_field",
+      "sql_value": "NULL"
+    },
+    {
+      "level": "normalization",
+      "path": [
+        "plans",
+        0
+      ],
+      "code": "price_history_unknown_dates"
+    },
+    {
+      "level": "optional",
+      "path": [
+        "products",
+        0,
+        "launchDate"
+      ],
+      "code": "absent_source_field",
+      "sql_value": "NULL"
+    },
+    {
+      "level": "optional",
+      "path": [
+        "products",
+        0,
+        "pendingUpdates"
+      ],
+      "code": "absent_source_field",
+      "sql_value": "documented_internal_default"
+    },
+    {
+      "level": "optional",
+      "path": [
+        "products",
+        1,
+        "projectId"
+      ],
+      "code": "absent_source_field",
+      "sql_value": "NULL"
+    },
+    {
+      "level": "optional",
+      "path": [
+        "products",
+        1,
+        "category"
+      ],
+      "code": "absent_source_field",
+      "sql_value": "documented_internal_default"
+    },
+    {
+      "level": "optional",
+      "path": [
+        "products",
+        1,
+        "launchDate"
+      ],
+      "code": "absent_source_field",
+      "sql_value": "NULL"
+    },
+    {
+      "level": "optional",
+      "path": [
+        "products",
+        1,
+        "pendingUpdates"
+      ],
+      "code": "absent_source_field",
+      "sql_value": "documented_internal_default"
+    },
+    {
+      "level": "optional",
+      "path": [
+        "products",
+        1,
+        "createdAt"
+      ],
+      "code": "absent_source_field",
+      "sql_value": "NULL"
+    },
+    {
+      "level": "optional",
+      "path": [
+        "products",
+        1,
+        "updatedAt"
+      ],
+      "code": "absent_source_field",
+      "sql_value": "NULL"
+    },
+    {
+      "level": "optional",
+      "path": [
+        "rates",
+        1,
+        "source"
+      ],
+      "code": "absent_source_field",
+      "sql_value": "NULL"
+    },
+    {
+      "level": "optional",
+      "path": [
+        "rates",
+        2,
+        "source"
+      ],
+      "code": "absent_source_field",
+      "sql_value": "NULL"
+    }
+  ]
+}

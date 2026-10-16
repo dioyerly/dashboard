@@ -1,0 +1,45 @@
+-- Local staging only. Missing historical metadata remains unknown, never backfilled.
+CREATE TABLE dataset_settings (
+ environment_id VARCHAR(64) COLLATE utf8mb4_bin NOT NULL,
+ id VARCHAR(64) COLLATE utf8mb4_bin NOT NULL,
+ schema_version INT UNSIGNED NULL,
+ setup_done TINYINT UNSIGNED NULL,
+ source_created_at DATETIME(6) NULL,
+ timezone VARCHAR(64) NULL,
+ upcoming_days DECIMAL(38,18) NULL,
+ no_sales_days DECIMAL(38,18) NULL,
+ drop_pct DECIMAL(38,18) NULL,
+ hourly_rate DECIMAL(38,18) NULL,
+ hourly_currency VARCHAR(64) COLLATE utf8mb4_bin NULL,
+ row_version BIGINT UNSIGNED NOT NULL DEFAULT 1,
+ archived_at DATETIME(6) NULL,
+ created_at DATETIME(6) NOT NULL DEFAULT CURRENT_TIMESTAMP(6),
+ updated_at DATETIME(6) NOT NULL DEFAULT CURRENT_TIMESTAMP(6),
+ PRIMARY KEY(environment_id,id),
+ FOREIGN KEY(environment_id) REFERENCES environments(id) ON DELETE RESTRICT,
+ FOREIGN KEY(environment_id,hourly_currency) REFERENCES currencies(environment_id,id) ON DELETE RESTRICT,
+ CHECK(id='main'), CHECK(row_version>0), CHECK(schema_version IS NULL OR schema_version=1),
+ CHECK(setup_done IS NULL OR setup_done IN (0,1)),
+ CHECK(upcoming_days IS NULL OR upcoming_days>0), CHECK(no_sales_days IS NULL OR no_sales_days>0),
+ CHECK(drop_pct IS NULL OR (drop_pct>0 AND drop_pct<=100)), CHECK(hourly_rate IS NULL OR hourly_rate>=0)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+CREATE TABLE exchange_rates (
+ environment_id VARCHAR(64) COLLATE utf8mb4_bin NOT NULL,
+ id VARCHAR(64) COLLATE utf8mb4_bin NOT NULL,
+ currency_id VARCHAR(64) COLLATE utf8mb4_bin NOT NULL,
+ base_currency_id VARCHAR(64) COLLATE utf8mb4_bin NOT NULL,
+ business_date DATE NOT NULL,
+ rate DECIMAL(38,18) NOT NULL,
+ source VARCHAR(255) NULL,
+ row_version BIGINT UNSIGNED NOT NULL DEFAULT 1,
+ archived_at DATETIME(6) NULL,
+ created_at DATETIME(6) NOT NULL DEFAULT CURRENT_TIMESTAMP(6),
+ updated_at DATETIME(6) NOT NULL DEFAULT CURRENT_TIMESTAMP(6),
+ PRIMARY KEY(environment_id,id),
+ FOREIGN KEY(environment_id) REFERENCES environments(id) ON DELETE RESTRICT,
+ FOREIGN KEY(environment_id,currency_id) REFERENCES currencies(environment_id,id) ON DELETE RESTRICT,
+ FOREIGN KEY(environment_id,base_currency_id) REFERENCES currencies(environment_id,id) ON DELETE RESTRICT,
+ UNIQUE(environment_id,currency_id,business_date),
+ INDEX(environment_id,currency_id,business_date,id), CHECK(rate>0), CHECK(row_version>0)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;

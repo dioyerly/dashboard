@@ -1,0 +1,8 @@
+{
+  "status": "Initial catalog regression interrupted by test harness URL construction",
+  "application_failure": false,
+  "cause": "The test replaced every occurrence of 91 with 501, including digits in the randomly allocated HTTP port, producing an invalid URL.",
+  "fix": "Replace only &limit=91 with &limit=501 in tests/catalogs.py; no service, endpoint or frontend changes.",
+  "verified_before_interruption": "PDO catalog suite, migration interruption/recovery, concurrency, restart, authentication and HTTP traversal of all 624 records",
+  "final_results": "preparation/phase4b-backups-catalog-regression/"
+}

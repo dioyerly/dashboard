@@ -78,7 +78,7 @@ final class FileAuthStore implements AuthStore
     }
 }
 
-// Prepared for an explicitly authorized MySQL phase; not executed by default.
+// Selected explicitly by auth_driver=mysql; never falls back to a file user store.
 final class MysqlAuthStore implements AuthStore
 {
     public function __construct(private readonly \PDO $pdo) {}
