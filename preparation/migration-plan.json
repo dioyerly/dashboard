@@ -1,0 +1,76 @@
+{
+  "phase": "Preparacion terminada; detenerse antes del backend y conexiones reales",
+  "authority": "Solicitud adjunta del usuario: PHP 8.3+, PDO, Hostinger Premium, uso personal; reemplaza la propuesta anterior Fly.io del README, que se conserva intacto.",
+  "baseline": "reference contiene copias byte a byte. No publicar reference/preparation/tools/tests ni abrir esas copias con el perfil habitual del navegador: conservan los namespaces originales de almacenamiento. Para pruebas futuras usar origen y perfil descartables distintos para original, copia y demo; nunca vincular la demo a produccion.",
+  "proposed_structure": {
+    "reference/": "HTML originales de referencia; no desplegar; sin cambios",
+    "preparation/": "Inventario, hashes, diseno y resultados tecnicos JSON, no desplegar",
+    "tools/": "Verificacion local de referencias, no desplegar",
+    "public/index.php": "Futuro punto de entrada autenticado; no creado en esta fase",
+    "public/api.php": "Futuro despachador de API usando action y metodo HTTP; evita depender de reglas rewrite en hosting compartido",
+    "public/assets/css/app.css": "Extraccion exacta del style original en siguiente fase",
+    "public/assets/js/": "Extraccion progresiva en core, domain, views, ui y api; mantener orden, selectores y delegacion de eventos",
+    "app/": "Futuros bootstrap, auth, csrf, validacion, PDO, servicios de negocio y repositorios; clases simples sin framework",
+    "config/": "Configuracion privada y credenciales fuera de public_html; no hay credenciales creadas",
+    "database/migrations/": "Futuro DDL versionado, revisado y probado en MySQL/MariaDB local",
+    "storage/private/": "Archivos privados y staging de importacion fuera del directorio publico",
+    "storage/logs/": "Errores tecnicos privados, sin contrasenas ni payloads sensibles completos",
+    "tests/": "Pruebas futuras de caracterizacion, API, transacciones y comparacion visual"
+  },
+  "migration_points": [
+    {"source":"currentEnv, DataStore._open/load/save","line":443,"target":"Elegir ambiente autorizado en servidor y cargar DTO versionado desde API. Quitar escrituras locales como autoridad; un error remoto debe mostrarse y no guardar silenciosamente en localStorage."},
+    {"source":"emptyState, normalizeState, deepMerge, boot","line":464,"target":"Contrato frontend compatible con todas las colecciones; esquema y migraciones versionados; estado vacio solo ante negocio vacio confirmado, nunca tras error de red/autenticacion."},
+    {"source":"transact y todas las mutaciones inventariadas","line":505,"target":"Comandos explicitos en PHP con validacion, permisos, CSRF, idempotencia y transaccion PDO. No enviar estado entero para reemplazar la base."},
+    {"source":"loadUI/saveUI y hash routes","line":501,"target":"Conservar preferencias en namespace propio de la version PHP; rutas, temas, lente, filtros y periodos permanecen iguales."},
+    {"source":"renderLock, lockNow, setPin","line":1292,"target":"Autenticacion real email/password; password_hash/password_verify; regenerar ID de sesion; cookies HttpOnly Secure SameSite, strict_mode, timeout, logout y CSRF. Mantener bloqueo rapido como funcion adicional si se conserva, sin usar PIN local como autorizacion."},
+    {"source":"createSale, openSale, addPay, expenseForm, newTreasury","line":1766,"target":"Servicios de venta/cobro/gasto/tesoreria atomicos; verificar cuentas y moneda; guardar movs e historial una vez; definir reversas para correcciones."},
+    {"source":"subStateAt, subPlanAt, saasMetrics, mrrAt, subPaymentForm, processEvents","line":674,"target":"Versiones de precios y eventos ordenados; suscripcion externa por ID; mantener formulas originales salvo correcciones expresas con pruebas."},
+    {"source":"parseCSV, smartNum, smartDate, fingerprints, reviewDo, processEvents","line":2250,"target":"Prevalidacion, resultados por fila, unicidad persistente por fuente/tipo/ID y rollback por evento; no perder validaciones ni revision de duplicados."},
+    {"source":"REPORTS, toCSV, toXLS, openTrace","line":2417,"target":"Conservar 15 reportes, filtros y trazabilidad; compatibilidad CSV/SpreadsheetML; marcar conversiones faltantes y neutralizar formulas de texto CSV."},
+    {"source":"backup, restoreBackup, wipe","line":2520,"target":"Respaldo versionado, validacion completa, confirmacion actual mas CSRF y transaccion; no incluir autenticacion/secretos; wipe solo ambiente autorizado."},
+    {"source":"compressImage, product.resources, expense.receipt","line":944,"target":"Inventariar usos efectivos antes de trasladar archivos; conservar enlaces y referencias; no transformar automaticamente cada ruta en archivo ni agregar interfaz de subida nueva."}
+  ],
+  "incremental_plan": [
+    {"phase":0,"status":"Preparada","work":"Copias exactas, hashes, inventario estatico, diseno conceptual y estructura; no cambios funcionales."},
+    {"phase":1,"status":"Requiere siguiente autorizacion","work":"Preparar runtimes locales y servidor MySQL/MariaDB descartable; ejecutar baseline en perfil aislado y capturar PC/movil, claro/oscuro, lentes, periodos, vacio y demo. Registrar cada boton, formulario, modal y grafico antes de sustituirlo."},
+    {"phase":2,"status":"Pendiente","work":"Extraer CSS/JS sin alterar el contenido ni orden; comprobar equivalencia visual y handlers con datos controlados. No convertir de golpe todo a ES modules: hay dependencias globales y closures."},
+    {"phase":3,"status":"Pendiente","work":"Implementar bootstrap PHP, configuracion privada, autenticacion personal sin registro publico, CSRF y esquema de todas las entidades en base local."},
+    {"phase":4,"status":"Pendiente","work":"Persistir ajustes/catalogos/proyectos/clientes; rehidratar DTO compatible; evitar autoridad dual entre IndexedDB y MySQL. Cada modulo conserva backend local anterior solo como referencia de pruebas, no doble escritura real."},
+    {"phase":5,"status":"Pendiente","work":"Migrar circuitos completos de ventas/cobros/devoluciones/anulaciones y gastos/pagos/asignaciones/transferencias; probar concurrencia baja y reintentos."},
+    {"phase":6,"status":"Pendiente","work":"Migrar planes/precios/eventos/subs, recursos/historial, usuarios agregados, horas, calendario, integraciones, imports/review, auditoria y 15 reportes."},
+    {"phase":7,"status":"Pendiente","work":"Validar respaldo completo de muestra y round-trip, integridad, totales originales y convertidos, sesion expirada, errores de red, vistas PC/movil y persistencia entre dos clientes."},
+    {"phase":8,"status":"Requiere autorizacion de despliegue/credenciales reales","work":"Revisar cuenta Hostinger, subdominio/directorio, PHP/extensiones, base independiente y HTTPS. Desplegar solo public a public_html; privados fuera, rutas absolutas seguras; verificar que los privados no sean accesibles. Importar datos reales solo con autorizacion y respaldo previo."}
+  ],
+  "behavior_cases": [
+    {"id":"B01","original":"Onboarding vacio; seed opcional carga catalogos sin ventas","expected":"Conservar opciones y textos; PIN no migra como password de usuario","test":"Configuracion con/sin seed y moneda propia; ninguna venta inventada"},
+    {"id":"B02","original":"saleCalc: qty 2, price 100, discount 20, refunded 30, commission 10, tax 5","expected":"gross 200, net 150, liquid 135","test":"Comparar JS original y futuro PHP con importes decimales y limites; no ejecutado aun"},
+    {"id":"B03","original":"createSale cobrada agrega un movimiento; pendiente no agrega","expected":"Cobrar una vez, reintentar con mismo token no agrega otro; importar respaldos no reproduce cobros","test":"Mismo comando dos veces, doble click y dos clientes; pendiente a cobrada"},
+    {"id":"B04","original":"Reembolso modifica refunded e historial; no mueve tesoreria","expected":"Correccion necesaria: registrar desembolso real vinculado y delta, sin confundir devolucion comercial con salida efectiva; correccion debe justificarse antes de implementarse","test":"Parcial, total, repetir, bajar total por correccion, pendiente sin cobro, comisiones no devueltas; cuenta/fecha no disponibles en formulario actual, definir su captura sin inventar datos"},
+    {"id":"B05","original":"Anular excluye venta de indicadores pero conserva cobros y advierte revisar Finanzas","expected":"Corregir conciliacion de errores con reversas vinculadas cuando corresponda; anular no implica siempre devolver dinero real","test":"Error duplicado vs devolucion real; no doble reversa; historial conservado; necesita criterio y posible ajuste minimo de formulario justificado"},
+    {"id":"B06","original":"Editar gasto ya pagado modifica datos pero no actualiza el movimiento si sigue pagado","expected":"Correccion necesaria: reconciliar movimiento mediante ajuste/reversa trazable; volver a pendiente no borra historial financiero","test":"Cambiar importe, moneda, cuenta o fecha; pagado/pendiente/pagado sin duplicar"},
+    {"id":"B07","original":"Gasto general solo en total, equal dividido por numero de destinos, pct exige suma cercana a 100","expected":"Conservar resultado global; validar destinos y solapamientos marca/proyecto para no contar doble","test":"Gasto 100 en dos proyectos 50/50: global 100; paquete no expande ventas por componentes"},
+    {"id":"B08","original":"rateFor elige ultima fecha <= operacion; conv sin tasa devuelve null; algunos reportes hacen ?? 0","expected":"Mismos valores con tasas conocidas; reporte incompleto explicito si falta una","test":"Moneda base, fecha exacta, anterior, posterior y ausente; nunca mezclar monedas sin convertir"},
+    {"id":"B09","original":"MRR anual usa price/12; subPlanAt consulta precio vigente del plan","expected":"Conservar formula valida pero snapshots historicos no cambian al editar precio","test":"Plan anual 120: MRR 10; subir a 240 no altera meses previos con evidencia historica"},
+    {"id":"B10","original":"Pago fallido cambia status a impaga en JSON, subStateAt historico no lo procesa","expected":"Definir politica consistente de impago y MRR historico antes de cambiarla","test":"Prueba/alta/renovacion/impago/cancelacion/cambio/reactivacion/pausa, varios eventos mismo dia"},
+    {"id":"B11","original":"Eventos JSON capturan error por evento sin revertir cada mutacion; seen recortado a 20000","expected":"Atomicidad por evento e idempotencia persistente; error no deja cliente/venta/sub parciales","test":"Evento invalido despues de crear cliente, ID repetido, dos fuentes con mismo ID, dos subs del mismo cliente/app"},
+    {"id":"B12","original":"Restaurar reemplaza todo estado con validacion minima y normalizacion","expected":"Prevalidar respaldo completo; rechazo sin escrituras parciales; mantener relaciones y versiones","test":"Round-trip todas las colecciones; IDs huerfanos, malformed, grande, duplicados, campos desconocidos, ambientes; no ejecutado aun"},
+    {"id":"B13","original":"UI usa lentes/periodos, 13 rutas, 15 reportes y multiples modales con handlers locales","expected":"Conservar todas las vistas, estilos, charts SVG, animaciones y navegacion","test":"PC 1440x900, movil 390x844, breakpoints 1180/900/520, temas, reduced-motion, teclado, busqueda y formularios; capturas comparables con reloj/datos fijos"},
+    {"id":"B14","original":"Persistencia solo en navegador y PIN local","expected":"Login email/password real, CSRF, acceso protegido, dos dispositivos comparten la misma base","test":"Sin sesion, token ausente, sesion caducada, logout, cookie flags HTTPS, regeneracion, intentos limitados y respuestas sin secretos"},
+    {"id":"B15","original":"Export CSV y Excel XML segun formato numerico y filtros","expected":"Mantener formatos/filtros, marcar tasas faltantes y neutralizar formulas de texto","test":"Comas/puntos, saltos/quotes, caracteres UTF-8, clientes, anuladas, CSV con = + - @ inicial en texto; numeros negativos siguen siendo numeros"}
+  ],
+  "hosting_preflight_pending": [
+    "Confirmar PHP >= 8.3 sin cambiar configuracion de la tienda; no dar por verificada la cuenta",
+    "Verificar PDO/pdo_mysql, session, json, mbstring si se usa, fileinfo para archivos y disponibilidad de calculo decimal elegido",
+    "Confirmar version real MariaDB/MySQL, InnoDB, charset, sql_mode estricto, soporte de restricciones e indices y transacciones",
+    "Subdominio o directorio independiente y ruta de config/storage realmente fuera de public_html; permisos minimos, sin 777",
+    "HTTPS, cookies Secure, no errores PHP ni phpinfo publicos; backups y restauracion probados",
+    "memory_limit, max_execution_time, post_max_size, upload_max_filesize, disco y limite de base de datos para respaldos/importaciones",
+    "Mismo hosting PHP/MySQL: usar hostname interno indicado por Hostinger, sin necesidad prevista de MySQL remoto ni IP Fly.io",
+    "No cron ni procesos permanentes para primera version; solo planificar tareas si una funcion futura lo necesita"
+  ],
+  "sources": [
+    "https://www.hostinger.com/support/1575755-how-to-change-the-php-version-of-your-hostinger-hosting-plan/",
+    "https://support.hostinger.com/en/articles/1583709-do-you-offer-pdo-and-pdo_mysql",
+    "https://www.php.net/manual/en/session.security.ini.php"
+  ]
+}

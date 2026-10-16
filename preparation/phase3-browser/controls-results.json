@@ -1,0 +1,984 @@
+{
+  "suite": "controls",
+  "checks": [
+    {
+      "check": "Onboarding via form without invented transactions",
+      "passed": true
+    },
+    {
+      "check": "registries",
+      "passed": true
+    },
+    {
+      "check": "syntax",
+      "passed": true
+    },
+    {
+      "check": "screen_pulso",
+      "passed": true
+    },
+    {
+      "check": "screen_marcas",
+      "passed": true
+    },
+    {
+      "check": "screen_apps",
+      "passed": true
+    },
+    {
+      "check": "screen_ventas",
+      "passed": true
+    },
+    {
+      "check": "screen_suscripciones",
+      "passed": true
+    },
+    {
+      "check": "screen_gastos",
+      "passed": true
+    },
+    {
+      "check": "screen_finanzas",
+      "passed": true
+    },
+    {
+      "check": "screen_infra",
+      "passed": true
+    },
+    {
+      "check": "screen_calendario",
+      "passed": true
+    },
+    {
+      "check": "screen_clientes",
+      "passed": true
+    },
+    {
+      "check": "screen_integraciones",
+      "passed": true
+    },
+    {
+      "check": "screen_reportes",
+      "passed": true
+    },
+    {
+      "check": "screen_ajustes",
+      "passed": true
+    },
+    {
+      "check": "tab_ventas_ventas",
+      "passed": true
+    },
+    {
+      "check": "tab_ventas_catalogo",
+      "passed": true
+    },
+    {
+      "check": "tab_ventas_canales",
+      "passed": true
+    },
+    {
+      "check": "tab_gastos_gastos",
+      "passed": true
+    },
+    {
+      "check": "tab_gastos_venc",
+      "passed": true
+    },
+    {
+      "check": "tab_gastos_prov",
+      "passed": true
+    },
+    {
+      "check": "tab_fin_resultado",
+      "passed": true
+    },
+    {
+      "check": "tab_fin_cuentas",
+      "passed": true
+    },
+    {
+      "check": "tab_fin_monedas",
+      "passed": true
+    },
+    {
+      "check": "tab_subs_lista",
+      "passed": true
+    },
+    {
+      "check": "tab_subs_eventos",
+      "passed": true
+    },
+    {
+      "check": "tab_integ_conexiones",
+      "passed": true
+    },
+    {
+      "check": "tab_integ_review",
+      "passed": true
+    },
+    {
+      "check": "tab_integ_spec",
+      "passed": true
+    },
+    {
+      "check": "report_ventas",
+      "passed": true
+    },
+    {
+      "check": "report_marca",
+      "passed": true
+    },
+    {
+      "check": "report_producto",
+      "passed": true
+    },
+    {
+      "check": "report_canal",
+      "passed": true
+    },
+    {
+      "check": "report_pais",
+      "passed": true
+    },
+    {
+      "check": "report_rentabilidad",
+      "passed": true
+    },
+    {
+      "check": "report_suscripciones",
+      "passed": true
+    },
+    {
+      "check": "report_eventos",
+      "passed": true
+    },
+    {
+      "check": "report_gastos",
+      "passed": true
+    },
+    {
+      "check": "report_asignacion",
+      "passed": true
+    },
+    {
+      "check": "report_infra",
+      "passed": true
+    },
+    {
+      "check": "report_tesoreria",
+      "passed": true
+    },
+    {
+      "check": "report_mensual",
+      "passed": true
+    },
+    {
+      "check": "report_tc",
+      "passed": true
+    },
+    {
+      "check": "report_historial",
+      "passed": true
+    },
+    {
+      "check": "lens",
+      "passed": true
+    },
+    {
+      "check": "period",
+      "passed": true
+    },
+    {
+      "check": "theme",
+      "passed": true
+    },
+    {
+      "check": "command_newSale",
+      "passed": true
+    },
+    {
+      "check": "command_newExpense",
+      "passed": true
+    },
+    {
+      "check": "command_newSub",
+      "passed": true
+    },
+    {
+      "check": "command_subPayment",
+      "passed": true
+    },
+    {
+      "check": "command_newProject",
+      "passed": true
+    },
+    {
+      "check": "command_newProduct",
+      "passed": true
+    },
+    {
+      "check": "command_newResource",
+      "passed": true
+    },
+    {
+      "check": "command_newEvent",
+      "passed": true
+    },
+    {
+      "check": "command_newCustomer",
+      "passed": true
+    },
+    {
+      "check": "command_newSupplier",
+      "passed": true
+    },
+    {
+      "check": "command_newRate",
+      "passed": true
+    },
+    {
+      "check": "command_newTreasury",
+      "passed": true
+    },
+    {
+      "check": "command_newTime",
+      "passed": true
+    },
+    {
+      "check": "command_importCSV",
+      "passed": true
+    },
+    {
+      "check": "command_importJSON",
+      "passed": true
+    },
+    {
+      "check": "sales_search",
+      "passed": true
+    },
+    {
+      "check": "catalog_search",
+      "passed": true
+    },
+    {
+      "check": "customer_search",
+      "passed": true
+    },
+    {
+      "check": "customer_persisted",
+      "passed": true
+    },
+    {
+      "check": "sale",
+      "passed": true
+    },
+    {
+      "check": "csv_preview",
+      "passed": true
+    },
+    {
+      "check": "csv_imported",
+      "passed": true
+    },
+    {
+      "check": "json_event",
+      "passed": true
+    },
+    {
+      "check": "export_csv",
+      "passed": true
+    },
+    {
+      "check": "export_xls",
+      "passed": true
+    },
+    {
+      "check": "backup_counts",
+      "passed": true
+    },
+    {
+      "check": "restore_counts",
+      "passed": true
+    },
+    {
+      "check": "wrong_pin",
+      "passed": true
+    },
+    {
+      "check": "unlocked",
+      "passed": true
+    },
+    {
+      "check": "No modular errors; original resize defect only on baseline",
+      "passed": true
+    }
+  ],
+  "errors": [],
+  "console_errors": [],
+  "failed_requests": [],
+  "contexts": "Fresh in-memory Playwright contexts, no personal browser profile",
+  "normalization": "Fixed Date only (real timers and requestAnimationFrame), identical synthetic fixture, prefers-reduced-motion for deterministic comparisons, await fonts and two frames; SMIL paused at zero; no application code changes",
+  "chromium": "153.0.8010.12",
+  "fonts_source": "Original Google Fonts CSS and binaries cached privately, requests fulfilled identically for both pages; app links unchanged",
+  "reference_transport": "Original immutable HTML fulfilled verbatim by Playwright at a separate loopback origin; modular version served by actual PHP",
+  "server_authentication": "Real PHP session authenticated via API in disposable test storage; not bypassed",
+  "fonts": [
+    [
+      {
+        "family": "Inter",
+        "status": "loaded"
+      },
+      {
+        "family": "Inter",
+        "status": "unloaded"
+      },
+      {
+        "family": "Inter",
+        "status": "loaded"
+      },
+      {
+        "family": "Inter",
+        "status": "unloaded"
+      },
+      {
+        "family": "JetBrains Mono",
+        "status": "loaded"
+      },
+      {
+        "family": "JetBrains Mono",
+        "status": "unloaded"
+      },
+      {
+        "family": "JetBrains Mono",
+        "status": "unloaded"
+      },
+      {
+        "family": "Space Grotesk",
+        "status": "unloaded"
+      },
+      {
+        "family": "Space Grotesk",
+        "status": "unloaded"
+      },
+      {
+        "family": "Space Grotesk",
+        "status": "loaded"
+      },
+      {
+        "family": "Space Grotesk",
+        "status": "unloaded"
+      }
+    ],
+    [
+      {
+        "family": "Inter",
+        "status": "loaded"
+      },
+      {
+        "family": "Inter",
+        "status": "unloaded"
+      },
+      {
+        "family": "Inter",
+        "status": "loaded"
+      },
+      {
+        "family": "Inter",
+        "status": "unloaded"
+      },
+      {
+        "family": "JetBrains Mono",
+        "status": "loaded"
+      },
+      {
+        "family": "JetBrains Mono",
+        "status": "unloaded"
+      },
+      {
+        "family": "JetBrains Mono",
+        "status": "unloaded"
+      },
+      {
+        "family": "Space Grotesk",
+        "status": "unloaded"
+      },
+      {
+        "family": "Space Grotesk",
+        "status": "unloaded"
+      },
+      {
+        "family": "Space Grotesk",
+        "status": "loaded"
+      },
+      {
+        "family": "Space Grotesk",
+        "status": "unloaded"
+      }
+    ]
+  ],
+  "results": {
+    "original": {
+      "registries": {
+        "screens": [
+          "pulso",
+          "marcas",
+          "apps",
+          "ventas",
+          "suscripciones",
+          "gastos",
+          "finanzas",
+          "infra",
+          "calendario",
+          "clientes",
+          "integraciones",
+          "reportes",
+          "ajustes"
+        ],
+        "actions": [
+          "tickerGo",
+          "go",
+          "setLens",
+          "toggleTheme",
+          "lockNow",
+          "pickPeriod",
+          "palette",
+          "openRef",
+          "ideaProject",
+          "openProjectEl",
+          "openResourceEl",
+          "setLensGo",
+          "newProject",
+          "newTime",
+          "tab",
+          "newProduct",
+          "openProductEl",
+          "newSale",
+          "openSale",
+          "newSub",
+          "openSubEl",
+          "openSub",
+          "subPayment",
+          "newExpense",
+          "openExpenseEl",
+          "openExpense",
+          "newSupplier",
+          "editSupplier",
+          "delTreasury",
+          "newTreasury",
+          "newRate",
+          "delRate",
+          "newResource",
+          "calNav",
+          "calDay",
+          "newEvent",
+          "custSeg",
+          "newCustomer",
+          "openCustomerEl",
+          "editInteg",
+          "importCSV",
+          "reviewDo",
+          "copySpec",
+          "importJSON",
+          "pickRep",
+          "exportRep",
+          "rmItem",
+          "rmGroup",
+          "rmBrand",
+          "rmCur",
+          "rmChannel",
+          "rmAccount",
+          "saveNeg",
+          "saveAl",
+          "setPin",
+          "backup",
+          "wipe"
+        ],
+        "changes": [
+          "appFilt",
+          "salesFilt",
+          "catFilt",
+          "subFilt",
+          "expFilt",
+          "toggleEnv"
+        ],
+        "inputs": [
+          "salesQ",
+          "catQ",
+          "custQ"
+        ],
+        "reports": [
+          "ventas",
+          "marca",
+          "producto",
+          "canal",
+          "pais",
+          "rentabilidad",
+          "suscripciones",
+          "eventos",
+          "gastos",
+          "asignacion",
+          "infra",
+          "tesoreria",
+          "mensual",
+          "tc",
+          "historial"
+        ]
+      },
+      "syntax": {
+        "parsed": true
+      },
+      "screen_pulso": "PULSO · ESTE MES\n◉ ECOSISTEMA\nHola, Equipo.\n\n01/10/2026 – 15/10/2026. Tocá cualquier cifra para ver de dónde sale.\n\nCrear\nRegistrar venta\nResultado del negocio i\n$ 78.226,37\n▼ 45,8% vs. período anterior\nBRUTAS\n$ 172k\nNETOS\n$ 170k\nCOMISIONES\n−$ 10k\nIMP./RET.\n$ 0\nGASTOS\n−$ 82k\nVENTAS BRUTAS\ni\n$ 172.485,06\n▼ 37,9%\n11 operaciones\nINGRESOS NETOS\ni\n$ 170.235,21\n▼ 37,9%\n−$ 2.250 desc./reemb.\nDINERO COBRADO\ni\n$ 160.226,37\n▼ 34,6%\nGASTOS OPERATIVOS\ni\n$ 82.000,00\n▼ 29,2%\n+ $ 101k inversión\nMRR\ni\n$ 47.777,50\nARR $ 573k\nSUSCRIPCIONES ACTIVAS\ni\n5\n2 en prueba ·\n2 con pago fallido\nCOMISIONES\ni\n$ 10.008,84\n5,9% de los ingresos netos\nIMPUESTOS Y RETENCIONES\ni\n$ 0,00\nIngresos netos vs. gastos\nIngresos netos (−comis./imp.)\nGastos\n$ 0\n$ 13k\n$ 25k\n$ 38k\n$ 50k\n01/10\n03/10\n05/10\n07/10\n09/10\n11/10\n13/10\n15/10\nAlertas\nCalendario →\nPago vencido: Publicidad en redes #18\nVenció el 28/09/2026 · $ 40.900,00\nPago vencido: Suscripción de software #35\nVenció el 01/10/2026 · $ 36.100,00\nRenovación vencida: Hostinger Premium\nEra el 10/10/2026\nRenovación próxima: Dominio del ecosistema\n17/10/2026 (en 2 días) · $ 19.999,00\nRenovación vencida: Servicio de correos\nEra el 10/10/2026\nRenovación próxima: Base de datos\n17/10/2026 (en 2 días) · US$ 15,00\ny 23 más →\nVentas por marca\nTotal\n$ 170k\nEbooks para la vida · 44,8%\nEstrategIA · 31,1%\nYOYI'R · 24,1%\nEbooks para la vida →\nYOYI'R →\nEstrategIA →\nRecurrente vs. única\ni\nTotal\n$ 170k\nRecurrente · 11,9%\nÚnica / externa · 88,1%\nRecurrente →\nÚnica →\nGastos por categoría\nRecursos gráficos\n$ 36k\nOtros gastos administrativos\n$ 27k\nPublicidad otras plataformas\n$ 12k\nHerramientas de IA\n$ 7.300\nRentabilidad por aplicación\nresultado operativo del período\nRemember ingresos $ 20k\n$ 19k\nAgenda digital YOYI’R ingresos $ 16k\n$ 15k\nRomance Reader Kit ingresos $ 14k\n$ 14k\nFinanzas inteligentes ingresos $ 13k\n$ 12k\nPULSO QA ingresos $ 13k\n$ 12k\nConciliador ARCA ingresos $ 20k\n$ 6.699\nPanel de inventario B2B ingresos $ 0\n−$ 27k\nADMINFLOW ingresos $ 0\n−$ 43k\nProductos que más venden\ningresos netos\nLove Without Losing You 2 u.\n$ 37k\nPack organización digital 1 u.\n$ 25k\nConciliador ARCA 1 u.\n$ 20k\nAgenda interactiva YOYI’R 1 u.\n$ 16k\nRomance Reader Kit 1 u.\n$ 14k\nTu dinero, sin enredos 1 u.\n$ 13k\nPULSO QA · Tester 1 u.\n$ 13k\nComisiones por plataforma\nAplicaciones web independientes 5,4%\n$ 3.326\nEtsy 6%\n$ 2.246\nAmazon 6%\n$ 1.979\nApple Books 6,6%\n$ 1.593\nSitio web propio 6%\n$ 866\nClientes\ni\nTotal\n11\nNuevos · 0%\nRecurrentes · 100%\nSuscripciones ganadas y perdidas\n-2\n1\n4\n7\n10\nmay\njun\njul\nago\nsep\noct\nGanadas\nPerdidas\nResultado mensual\núltimos 12 meses\n−$ 100k\n−$ 25k\n$ 50k\n$ 125k\n$ 200k\nnov\ndic\nene\nfeb\nmar\nabr\nmay\njun\njul\nago\nsep\noct\nMapa del ecosistema\nAmpliar →\nEstrategIA\nYOYI'R\nEbooks para la vida",
+      "screen_marcas": "MIS MARCAS\n◉ ECOSISTEMA\nMarcas\n\nRendimiento individual de cada marca. Los gastos se atribuyen según su asignación (directa o vía aplicaciones).\n\nEditar marcas\nEstrategIA\n\nTecnología, productividad y soluciones digitales\n\nINGRESOS NETOS\n$ 52.921,29\nGASTOS ATRIBUIDOS\n$ 82.000,00\nRESULTADO\n−$ 32.044,39\nMRR\n$ 47.777,50\nPRODUCTOS\n3\nAPPS\n5\nMÁS VENDIDOS\nConciliador ARCA\n$ 20k\nPULSO QA · Tester\n$ 13k\nVer todo con esta lente\nYOYI'R\n\nOrganización, bienestar y planificación\n\nINGRESOS NETOS\n$ 40.998,00\nGASTOS ATRIBUIDOS\n$ 0,00\nRESULTADO\n$ 38.538,12\nMRR\n$ 0,00\nPRODUCTOS\n3\nAPPS\n1\nMÁS VENDIDOS\nPack organización digital\n$ 25k\nAgenda interactiva YOYI’R\n$ 16k\nVer todo con esta lente\nEbooks para la vida\n\nEducación y recursos editoriales\n\nINGRESOS NETOS\n$ 76.315,92\nGASTOS ATRIBUIDOS\n$ 0,00\nRESULTADO\n$ 71.732,64\nMRR\n$ 0,00\nPRODUCTOS\n4\nAPPS\n2\nMÁS VENDIDOS\nLove Without Losing You\n$ 37k\nRomance Reader Kit\n$ 14k\nTu dinero, sin enredos\n$ 13k\nCómo estudio esto\n$ 12k\nVer todo con esta lente\nMapa del ecosistema\nMarcas → aplicaciones y catálogos → infraestructura. Tamaño según ingresos históricos.\nCentro de Operaciones…\nEstrategIA\nYOYI'R\nEbooks para la vida\nRemember\nADMINFLOW\nConciliador ARCA\nPULSO QA\nPanel de inventario B…\nAgenda digital YOYI’R\n2 productos\nRomance Reader Kit\nFinanzas inteligentes\n2 productos\nHostinger Premium\nDominio del ecosistema\nHerramienta de IA\nCanva Pro\nServicio de correos\nBase de datos\nRepositorio de código\nEcosistema\nApp con resultado ≥ 0\nApp con resultado negativo\nInfraestructura\nRecurso sin uso\nComparación de marcas\nMARCA\tVENTAS BRUTAS\tINGRESOS NETOS\tCOMISIONES\tGASTOS\tRESULTADO\t% DEL TOTAL\n\nEstrategIA\t$ 55.171,14\t$ 52.921,29\t$ 2.965,68\t$ 82.000,00\t−$ 32.044,39\t31,1%\n\nYOYI'R\t$ 40.998,00\t$ 40.998,00\t$ 2.459,88\t$ 0,00\t$ 38.538,12\t24,1%\n\nEbooks para la vida\t$ 76.315,92\t$ 76.315,92\t$ 4.583,28\t$ 0,00\t$ 71.732,64\t44,8%",
+      "screen_apps": "MIS APLICACIONES\n◉ ECOSISTEMA\nAplicaciones y proyectos\n\nCada app con su ficha técnica, monetización, usuarios, costos asignados y recuperación de la inversión — esté o no dentro de la tienda principal.\n\nNueva app / proyecto\nTodos los estados\nIdea\nDesarrollo\nPruebas\nPublicada\nPausada\nRetirada\nTodos los tipos\nProducto descargable\nApp web de pago único\nApp por suscripción\nEn desarrollo (aún sin ingresos)\nHerramienta interna\n8 de 8\nRemember\nApp por suscripción\nPublicada\nINGRESOS\n$ 20k\nRESULTADO\n$ 19k\nSUSCRIPT.\n5\nRecuperación de inversión\n0%\n110 registrados · 53 activos (15/10)\nADMINFLOW\nApp web de pago único\nPublicada\nINGRESOS\n$ 0\nRESULTADO\n−$ 43k\nCLIENTES\n6\nRecuperación de inversión\n96,4%\n125 registrados · 61 activos (15/10)\nConciliador ARCA\nProducto descargable\nPruebas\nINGRESOS\n$ 20k\nRESULTADO\n$ 6.699\nCLIENTES\n6\nRecuperación de inversión\n14,5%\n140 registrados · 69 activos (15/10)\nPULSO QA\nHerramienta interna\nPublicada\nINGRESOS\n$ 13k\nRESULTADO\n$ 12k\nCLIENTES\n6\nRecuperación de inversión\n12,2%\n155 registrados · 77 activos (15/10)\nRomance Reader Kit\nProducto descargable\nPublicada\nINGRESOS\n$ 14k\nRESULTADO\n$ 14k\nCLIENTES\n6\nRecuperación de inversión\n1,9%\n170 registrados · 85 activos (15/10)\nAgenda digital YOYI’R\nProducto descargable\nPublicada\nINGRESOS\n$ 16k\nRESULTADO\n$ 15k\nCLIENTES\n6\nRecuperación de inversión\n18,1%\n185 registrados · 93 activos (15/10)\nFinanzas inteligentes\nProducto descargable\nDesarrollo\nINGRESOS\n$ 13k\nRESULTADO\n$ 12k\nCLIENTES\n6\nRecuperación de inversión\n13,3%\n200 registrados · 101 activos (15/10)\nPanel de inventario B2B\nEn desarrollo (aún sin ingresos)\nIdea\nINGRESOS\n$ 0\nRESULTADO\n−$ 27k\nCLIENTES\n0\nRecuperación de inversión\n0%\n215 registrados · 109 activos (15/10)",
+      "screen_ventas": "PRODUCTOS Y VENTAS\n◉ ECOSISTEMA\nProductos y ventas\n\nCatálogo con versiones, formatos e idiomas; cada venta conserva su canal, moneda, comisiones y entrega.\n\nProducto\nRegistrar venta\nVentas\nCatálogo\nCanales y países\nTodos los canales\nSitio web propio\nEtsy\nAmazon\nApple Books\nAplicaciones web independientes\nTodos los tipos\nVenta única\nCobro de suscripción\nIngreso externo\nCobro: todos\nA cobrar\nCobrado\nEntrega: todas\nNo aplica\nEntregado\nEntrega pendiente\nIncidencia\n11 ventas\n$ 170.235,21 netos\nFECHA\tCONCEPTO\tMARCA\tCANAL\tPAÍS\tNETO ORIGINAL\tARS\tCOBRO\tENTREGA\t\n15/10/2026\tRomance Reader Kit · HTML interactivo · Español · v1.0 reemb.\nLucía Fernández · cupón DEMO10\n\t\nEbooks para la vida\tSitio web propio\tArgentina\tUS$ 17,48\t$ 25.346,00\t\nA cobrar\t\nIncidencia\t\n14/10/2026\tConciliador ARCA · HTML interactivo · Español · v1.0\nLucas Herrera\n\t\nEstrategIA\tAmazon\tEspaña\t$ 19.999,00\t$ 19.999,00\t\nCobrado\t\nEntregado\tIMPORTADO\n12/10/2026\tLove Without Losing You · PDF · Español · v1.0\nAlejandro Ruiz\n\t\nEbooks para la vida\tEtsy\tItalia\tUS$ 12,99\t$ 18.744,57\t\nCobrado\t\nEntregado\tIMPORTADO\n11/10/2026\tPULSO QA · Tester · HTML interactivo · Español · v1.0 reemb.\nMarcos Torres\n\t\nEstrategIA\tApple Books\tEstados Unidos\t$ 12.749,15\t$ 12.749,15\t\nCobrado\t\nEntregado\tINTEGRACIÓN\n09/10/2026\tTu dinero, sin enredos · EPUB · Español · v1.0\nLiam Wilson\n\t\nEbooks para la vida\tAmazon\tUruguay\tUS$ 8,99\t$ 12.972,57\t\nCobrado\t\nEntregado\tINTEGRACIÓN\n08/10/2026\tPack organización digital · ZIP · Español · v1.0\nGabriel López\n\t\nYOYI'R\tAplicaciones web independientes\tMéxico\t$ 24.999,00\t$ 24.999,00\t\nCobrado\t\nEntregado\t\n06/10/2026\tCómo estudio esto · PDF · Español · v1.0\nDiego Castillo\n\t\nEbooks para la vida\tApple Books\tColombia\tUS$ 7,99\t$ 11.529,57\t\nCobrado\t\nEntregado\t\n06/10/2026\tRemember · Remember Personal recurrente\nLucía Fernández\n\t\nEstrategIA\tAplicaciones web independientes\tArgentina\tUS$ 4,99\t$ 7.200,57\t\nCobrado\t\t\n05/10/2026\tRomance Reader Kit · HTML interactivo · Español · v1.0\nNoah Smith\n\t\nEbooks para la vida\tSitio web propio\tArgentina\tUS$ 9,99\t$ 14.415,57\t\nCobrado\t\nEntregado\tIMPORTADO\n05/10/2026\tRemember · Remember Plus recurrente\nSofía Martínez\n\t\nEstrategIA\tAplicaciones web independientes\tMéxico\tUS$ 8,99\t$ 12.972,57\t\nCobrado\t\t\n03/10/2026\tAgenda interactiva YOYI’R · PDF interactivo · Español · v1.0\nCamila Pérez\n\t\nYOYI'R\tAplicaciones web independientes\tChile\t$ 15.999,00\t$ 15.999,00\t\nCobrado\t\nEntregado\tIMPORTADO\n02/10/2026\tLove Without Losing You · PDF · Español · v1.0\nTomás Vidal\n\t\nEbooks para la vida\tEtsy\tItalia\tUS$ 12,99\t$ 18.653,64\t\nCobrado\t\nEntregado\tINTEGRACIÓN",
+      "screen_suscripciones": "SUSCRIPCIONES\n◉ ECOSISTEMA\nSuscripciones\n\nPlanes, renovaciones, cancelaciones e ingreso recurrente. Los indicadores se calculan solo cuando hay datos confiables.\n\nRegistrar cobro\nNueva suscripción\nMRR\ni\n$ 47.777,50\nARR $ 573.330,00\nACTIVAS · PAGAN\ni\n5\n2 en prueba · 2 pago fallido\nCHURN DEL PERÍODO\ni\n18,2%\n2 cancelaciones · 11 al inicio · 18,2%/mes\nARPU\ni\n$ 9.555,50\npor suscriptor / mes\nLTV ESTIMADO\ni\n$ 52.555,25\nESTIMADO\nCAC\ni\nDatos insuficientes\n$ 0,00 comercialización · 0 clientes nuevos\nPRUEBA → PAGO\ni\nDatos insuficientes\n0 pruebas iniciadas · 0 convertidas\nRENOVACIONES\n3 / 2 fallidas\n60% de éxito\nEvolución del MRR\nfin de cada mes · 12 meses\n$ 0\n$ 25k\n$ 50k\n$ 75k\n$ 100k\nnov\nene\nmar\nmay\njul\nsep\noct\nRegistrados · activos · pagan\ni\nRemember\nRegistrados\n110\nActivos\n53\nPagan\n5\nConversión a pago: 4,5%\nSuscripciones\nEventos\nTodas las apps\nRemember\nTodos los estados\nEn prueba\nActiva\nPago fallido\nPausada\nCancelada\nSUSCRIPTOR\tAPP\tPLAN\tPRECIO\tALTA\tPRÓXIMA RENOVACIÓN\tESTADO\nLucía Fernández\t\nEstrategIA Remember\tRemember Personal\tUS$ 4,99/mes\t06/08/2026\t21/10/2026\t\nActiva\nSofía Martínez\t\nEstrategIA Remember\tRemember Plus\tUS$ 8,99/mes\t10/08/2026\t23/10/2026\t\nActiva\nMarcos Torres\t\nEstrategIA Remember\tRemember anual\tUS$ 49,00/año\t14/08/2026\t25/10/2026\t\nEn prueba\nValentina Gómez\t\nEstrategIA Remember\tRemember Personal\tUS$ 4,99/mes\t18/08/2026\t27/10/2026\t\nPago fallido\nCamila Pérez\t\nEstrategIA Remember\tRemember Plus\tUS$ 8,99/mes\t22/08/2026\t—\t\nCancelada\nDaniel Silva\t\nEstrategIA Remember\tRemember anual\tUS$ 49,00/año\t26/08/2026\t—\t\nPausada\nEmma Johnson\t\nEstrategIA Remember\tRemember Personal\tUS$ 4,99/mes\t30/08/2026\t02/11/2026\t\nActiva\nAlejandro Ruiz\t\nEstrategIA Remember\tRemember Plus\tUS$ 8,99/mes\t03/09/2026\t04/11/2026\t\nActiva\nMia Robinson\t\nEstrategIA Remember\tRemember anual\tUS$ 49,00/año\t07/09/2026\t06/11/2026\t\nEn prueba\nGabriel López\t\nEstrategIA Remember\tRemember Personal\tUS$ 4,99/mes\t11/09/2026\t08/11/2026\t\nPago fallido\nIsabella Costa\t\nEstrategIA Remember\tRemember Plus\tUS$ 8,99/mes\t15/09/2026\t—\t\nCancelada\nMateo Díaz\t\nEstrategIA Remember\tRemember anual\tUS$ 49,00/año\t19/09/2026\t—\t\nPausada\nOlivia Brown\t\nEstrategIA Remember\tRemember Personal\tUS$ 4,99/mes\t23/09/2026\t14/11/2026\t\nActiva",
+      "screen_gastos": "GASTOS Y PROVEEDORES\n◉ ECOSISTEMA\nGastos\n\nInfraestructura, desarrollo, comercialización y administración. Un gasto compartido se registra una vez y se reparte entre apps o marcas sin duplicarse.\n\nProveedor\nRegistrar gasto\nGastos\nA pagar\nProveedores\nTodos los estados\nPendiente\nPagado\nVencido\nTodas las categorías\nInfraestructura tecnológica\nDesarrollo y producción\nComercialización\nAdministración\nTodas las apps\nRemember · EstrategIA\nADMINFLOW · EstrategIA\nConciliador ARCA · EstrategIA\nPULSO QA · EstrategIA\nRomance Reader Kit · Ebooks para la vida\nAgenda digital YOYI’R · YOYI'R\nFinanzas inteligentes · Ebooks para la vida\nPanel de inventario B2B · EstrategIA\nOperativo e inversión\nSolo operativos\nSolo inversión\nGASTOS OPERATIVOS DEL PERÍODO\n$ 82.000,00\n6 registros\nINVERSIÓN DEL PERÍODO\n$ 101.115,00\nno resta al resultado operativo\nPor categoría\nRecursos gráficos\n$ 36k\nOtros gastos administrativos\n$ 27k\nPublicidad otras plataformas\n$ 12k\nHerramientas de IA\n$ 7.300\nFECHA\tCONCEPTO\tCATEGORÍA\tASIGNACIÓN\tVENCE\tIMPORTE\tARS\tESTADO\n15/10/2026\tHosting mensual #1 inversión Mensual\nHostinger\n\tHosting\tEstrategIA 50%Ebooks para la vida 50%\t19/10/2026\tUS$ 15,00\t$ 21.750,00\t\nPendiente\n15/10/2026\tAsesoría profesional #24\nCanva\n\tOtros gastos administrativos\tPanel de inventario B2B\t12/10/2026\t$ 26.500,00\t$ 26.500,00\t\nPagado ESTIMADO\n10/10/2026\tPublicidad en redes #2\nProveedor IA\n\tHerramientas de IA\tADMINFLOW\t14/10/2026\t$ 7.300,00\t$ 7.300,00\t\nPagado IMPORTADO\n10/10/2026\tHosting mensual #25 inversión Mensual\nServicio de email\n\tCertificados / servicios técnicos\tRemember\t19/10/2026\tUS$ 55,00\t$ 79.365,00\t\nPendiente\n05/10/2026\tSuscripción de software #3\nCanva\n\tPublicidad otras plataformas\tConciliador ARCA\t13/10/2026\t$ 12.100,00\t$ 12.100,00\t\nPagado ESTIMADO\n05/10/2026\tPublicidad en redes #26\nPublicidad digital\n\tRecursos gráficos\tADMINFLOW\t10/10/2026\t$ 36.100,00\t$ 36.100,00\t\nPagado IMPORTADO",
+      "screen_finanzas": "FINANZAS\n◉ ECOSISTEMA\nFinanzas\n\nVentas, cobros, transferencias y retiros separados para no contar dos veces el mismo dinero. Cada importe conserva su moneda original.\n\nTipo de cambio\nMovimiento\nResultado\nCuentas y movimientos\nMonedas y tipos de cambio\nEstado de resultados consolidado\nARS · 01/10/2026–15/10/2026\nVentas brutas\n$ 172.485,06\n− Descuentos y cupones\n$ 0,00\n− Reembolsos\n−$ 2.249,85\n= Ingresos netos\n$ 170.235,21\n− Comisiones de plataformas\n−$ 10.008,84\n− Impuestos y retenciones\n$ 0,00\n− Gastos operativos\n−$ 82.000,00\n= Resultado del negocio\n$ 78.226,37\nAparte: inversión $ 101.115,00 · retiros personales y transferencias no afectan el resultado.\nCobrado vs. a cobrar\nCOBRADO EN EL PERÍODO\n$ 160.226,37\nNETO LIQUIDADO DEL PERÍODO\n$ 160.226,37\nSALDO PENDIENTE DE COBRO (TODAS LAS FECHAS)\nUSD\nUS$ 28,17\nARS\n$ 27.258,12\nPOR MONEDA ORIGINAL (PERÍODO)\nMONEDA\tINGRESOS NETOS\tGASTOS\nUSD\tUS$ 66,93\tUS$ 70,00\nARS\t$ 73.746,15\t$ 82.000,00",
+      "screen_infra": "INFRAESTRUCTURA\n◉ ECOSISTEMA\nInfraestructura\n\nInventario técnico y económico: hosting, dominios, bases de datos, repositorios y servicios, con qué apps dependen de cada uno y cuándo vencen.\n\nNuevo recurso\nCOSTO MENSUAL EQUIVALENTE\ni\n$ 103.464,58\nanuales ÷ 12, trimestrales ÷ 3…\nRENUEVAN EN 30 DÍAS\n7\nSIN USO\n1\nevaluá cancelarlos\nAUMENTARON DE PRECIO\n7\nHostinger Premium, Dominio del ecosistema, Herramienta de IA, Canva Pro, Servicio de correos, Base de datos, Almacenamiento y respaldos\nApps sin ingresos que generan gastos (últimos 30 días): Panel de inventario B2B\nHosting / servidor\n1\nHostinger Premium\nHostinger\nEn uso\nCOSTO\n$ 25k\nFRECUENCIA\nMensual\nRENUEVA\nvencido\nRemember\nADMINFLOW\nRomance Reader Kit\nDominio\n1\nDominio del ecosistema\nHostinger\nEn uso\nCOSTO\n$ 20k\nFRECUENCIA\nAnual\nRENUEVA\n2 días\nRemember\nRomance Reader Kit\nBase de datos\n1\nBase de datos\nHostinger\nEn uso\nCOSTO\nUS$ 15\nFRECUENCIA\nMensual\nRENUEVA\n2 días\nRemember\nAlmacenamiento\n1\nAlmacenamiento y respaldos\nHostinger\nCancelado\nCOSTO\n$ 5.999\nFRECUENCIA\nMensual\nRENUEVA\n16 días\nAgenda digital YOYI’R\nRepositorio\n1\nRepositorio de código\nHostinger\nEn uso\nCOSTO\n—\nFRECUENCIA\nMensual\nRENUEVA\n9 días\nADMINFLOW\nPULSO QA\nCorreo transaccional\n1\nServicio de correos\nServicio de email\nSin uso\nCOSTO\nUS$ 9\nFRECUENCIA\nMensual\nRENUEVA\nvencido\nRemember\nHerramienta / software\n2\nHerramienta de IA\nProveedor IA\nEn uso\nCOSTO\nUS$ 20\nFRECUENCIA\nMensual\nRENUEVA\n9 días\nRemember\nADMINFLOW\nCanva Pro\nCanva\nEn uso\nCOSTO\n$ 13k\nFRECUENCIA\nMensual\nRENUEVA\n16 días\nAgenda digital YOYI’R",
+      "screen_calendario": "CALENDARIO FINANCIERO\n◉ ECOSISTEMA\nCalendario y alertas\n\nVencimientos, renovaciones, cobros esperados, campañas y lanzamientos en un solo lugar.\n\nEvento\n‹\nOctubre 2026\n›\nHoy\nCampaña publicitaria\nLanzamiento\nActualización de app\nPago / factura\nOtro\nLUN\nMAR\nMIÉ\nJUE\nVIE\nSÁB\nDOM\n28\nVence: Publicidad en redes #18\n29\n30\n1\nVence: Suscripción de software #35\n2\nLanzamiento de producto · DEMO\n3\nRevisar campaña de anuncios · DEMO\n4\nRenovación de hosting · DEMO\n5\nActualizar aplicación · DEMO\n6\nEnviar facturación · DEMO\n7\nReunión de planificación · DEMO\n8\nAuditoría de ventas · DEMO\n9\nPublicación de contenido · DEMO\n10\nRenovación: Hostinger Premium\nRenovación: Servicio de correos\nLanzamiento de producto · DEMO\n11\nRevisar campaña de anuncios · DEMO\n12\nRenovación de hosting · DEMO\n13\nActualizar aplicación · DEMO\n14\nEnviar facturación · DEMO\n15\nReunión de planificación · DEMO\n16\nAuditoría de ventas · DEMO\n17\nRenovación: Dominio del ecosistema\nRenovación: Base de datos\nPublicación de contenido · DEMO\n18\nLanzamiento de producto · DEMO\n19\nVence: Hosting mensual #1\nVence: Hosting mensual #9\nVence: Hosting mensual #17\n+4\n20\nRenovación de hosting · DEMO\n21\nRenueva: Lucía Fernández · Remember\nActualizar aplicación · DEMO\n22\nEnviar facturación · DEMO\n23\nRenueva: Sofía Martínez · Remember\nReunión de planificación · DEMO\n24\nRenovación: Herramienta de IA\nRenovación: Repositorio de código\nAuditoría de ventas · DEMO\n25\nPublicación de contenido · DEMO\n26\nLanzamiento de producto · DEMO\n27\nRenueva: Valentina Gómez · Remember\nRevisar campaña de anuncios · DEMO\n28\nRenovación de hosting · DEMO\n29\nActualizar aplicación · DEMO\n30\nEnviar facturación · DEMO\n31\nRenovación: Canva Pro\nReunión de planificación · DEMO\n1\n2\nRenueva: Emma Johnson · Remember\n3\n4\nRenueva: Alejandro Ruiz · Remember\n5\n6\n7\n8\nRenueva: Gabriel López · Remember\nAlertas\n29\nPago vencido: Publicidad en redes #18\nVenció el 28/09/2026 · $ 40.900,00\nPago vencido: Suscripción de software #35\nVenció el 01/10/2026 · $ 36.100,00\nRenovación vencida: Hostinger Premium\nEra el 10/10/2026\nRenovación próxima: Dominio del ecosistema\n17/10/2026 (en 2 días) · $ 19.999,00\nRenovación vencida: Servicio de correos\nEra el 10/10/2026\nRenovación próxima: Base de datos\n17/10/2026 (en 2 días) · US$ 15,00\nSuscripción con pago fallido\nValentina Gómez · Remember\nSuscripción con pago fallido\nGabriel López · Remember\nIntegración con errores: Pagos externos (DEMO)\nError simulado: evento sin referencia de pago\nVence pronto: Hosting mensual #1\n19/10/2026 (en 4 días) · US$ 15,00\nVence pronto: Hosting mensual #9\n19/10/2026 (en 4 días) · $ 40.900,00\nVence pronto: Hosting mensual #17\n19/10/2026 (en 4 días) · $ 36.100,00\nVence pronto: Hosting mensual #25\n19/10/2026 (en 4 días) · US$ 55,00\nVence pronto: Hosting mensual #33\n19/10/2026 (en 4 días) · $ 26.500,00\nVence pronto: Hosting mensual #41\n19/10/2026 (en 4 días) · $ 21.700,00\nAumentó de precio: Hostinger Premium\n$ 20.499,18 → $ 24.999,00 (+22%)\nAumentó de precio: Dominio del ecosistema\n$ 16.399,18 → $ 19.999,00 (+22%)\nRenovación próxima: Herramienta de IA\n24/10/2026 (en 9 días) · US$ 20,00\nAumentó de precio: Herramienta de IA\nUS$ 16,40 → US$ 20,00 (+22%)\nAumentó de precio: Canva Pro\n$ 10.659,18 → $ 12.999,00 (+22%)\nAumentó de precio: Servicio de correos\nUS$ 7,38 → US$ 9,00 (+22%)\nServicio sin uso que sigue costando: Servicio de correos\nEvaluá cancelarlo.\nAumentó de precio: Base de datos\nUS$ 12,30 → US$ 15,00 (+22%)\nRenovación próxima: Repositorio de código\n24/10/2026 (en 9 días)\nAumentó de precio: Almacenamiento y respaldos\n$ 4.919,18 → $ 5.999,00 (+22%)\nCuesta más de lo que genera: Conciliador ARCA\nÚltimos 30 días: ingresos $ 37.998,10 vs. costos $ 55.399,88\nCuesta más de lo que genera: Romance Reader Kit\nÚltimos 30 días: ingresos $ 14.415,57 vs. costos $ 22.565,80\n1 posible(s) duplicado(s) para revisar\nImportaciones que coinciden con registros existentes.\nCuesta más de lo que genera: Panel de inventario B2B\nÚltimos 30 días: ingresos $ 0,00 vs. costos $ 26.500,00\nPróximos 30 días\n15/10\nReunión de planificación · DEMO Actualización de app\n16/10\nAuditoría de ventas · DEMO Otro\n17/10\nRenovación: Dominio del ecosistema Pago / factura\n$ 19.999,00\n17/10\nRenovación: Base de datos Pago / factura\nUS$ 15,00\n17/10\nPublicación de contenido · DEMO Lanzamiento\n18/10\nLanzamiento de producto · DEMO Campaña publicitaria\n19/10\nVence: Hosting mensual #1 Pago / factura\nUS$ 15,00\n19/10\nVence: Hosting mensual #9 Pago / factura\n$ 40.900,00\n19/10\nVence: Hosting mensual #17 Pago / factura\n$ 36.100,00\n19/10\nVence: Hosting mensual #25 Pago / factura\nUS$ 55,00\n19/10\nVence: Hosting mensual #33 Pago / factura\n$ 26.500,00\n19/10\nVence: Hosting mensual #41 Pago / factura\n$ 21.700,00\n19/10\nRevisar campaña de anuncios · DEMO Pago / factura\n20/10\nRenovación de hosting · DEMO Actualización de app\n21/10\nRenueva: Lucía Fernández · Remember Actualización de app\n21/10\nActualizar aplicación · DEMO Otro\n22/10\nEnviar facturación · DEMO Lanzamiento\n23/10\nRenueva: Sofía Martínez · Remember Actualización de app\n23/10\nReunión de planificación · DEMO Campaña publicitaria\n24/10\nRenovación: Herramienta de IA Pago / factura\nUS$ 20,00\n24/10\nRenovación: Repositorio de código Pago / factura\n24/10\nAuditoría de ventas · DEMO Pago / factura\n25/10\nPublicación de contenido · DEMO Actualización de app\n26/10\nLanzamiento de producto · DEMO Otro\n27/10\nRenueva: Valentina Gómez · Remember Actualización de app\n27/10\nRevisar campaña de anuncios · DEMO Lanzamiento\n28/10\nRenovación de hosting · DEMO Campaña publicitaria\n29/10\nActualizar aplicación · DEMO Pago / factura\n30/10\nEnviar facturación · DEMO Actualización de app\n31/10\nRenovación: Canva Pro Pago / factura\n$ 12.999,00\n31/10\nReunión de planificación · DEMO Otro\n02/11\nRenueva: Emma Johnson · Remember Actualización de app\n04/11\nRenueva: Alejandro Ruiz · Remember Actualización de app\n08/11\nRenueva: Gabriel López · Remember Actualización de app\n14/11\nRenueva: Olivia Brown · Remember Actualización de app",
+      "screen_clientes": "CLIENTES Y USUARIOS\n◉ ECOSISTEMA\nClientes\n\nQuién compra qué en todo el ecosistema. Los datos de contacto se muestran enmascarados en la lista y completos solo en la ficha.\n\nCliente\nTodos\nNuevos del período\nRecurrentes\nCon suscripción\nCon reembolsos\n24 cliente(s)\nCLIENTE\tEMAIL\tPAÍS\tMARCAS\tCOMPRAS\tTOTAL (ARS)\tSUSCRIPCIONES\tÚLTIMA COMPRA\nOlivia Brown\tcl•••@ejemplo.test\tChile\t\t4\t$ 117.270,53\t1 activa(s)\t24/09/2026\nRenata García\tcl•••@ejemplo.test\tEstados Unidos\t\t3\t$ 88.989,70\t—\t27/09/2026\nAna Méndez\tcl•••@ejemplo.test\tItalia\t\t3\t$ 78.079,28\t—\t18/09/2026\nDiego Castillo\tcl•••@ejemplo.test\tColombia\t\t3\t$ 69.999,35\t—\t06/10/2026\nLiam Wilson INTEGRACIÓN\tcl•••@ejemplo.test\tUruguay\t\t3\t$ 69.194,34\t—\t09/10/2026\nAlejandro Ruiz IMPORTADO\tcl•••@ejemplo.test\tItalia\t\t4\t$ 67.152,31\t1 activa(s)\t12/10/2026\nMia Robinson INTEGRACIÓN\tcl•••@ejemplo.test\tArgentina\t\t3\t$ 65.721,91\t—\t21/09/2026\nGabriel López\tcl•••@ejemplo.test\tMéxico\t\t3\t$ 59.265,18\t—\t08/10/2026\nNoah Smith IMPORTADO\tcl•••@ejemplo.test\tArgentina\t\t2\t$ 57.061,35\t—\t05/10/2026\nIsabella Costa IMPORTADO\tcl•••@ejemplo.test\tEstados Unidos\t\t2\t$ 55.513,63\t—\t17/09/2026\nDaniel Silva INTEGRACIÓN\tcl•••@ejemplo.test\tColombia\t\t3\t$ 55.260,81\t—\t12/09/2026\nLucas Herrera IMPORTADO\tcl•••@ejemplo.test\tEspaña\t\t3\t$ 49.559,77\t—\t14/10/2026\nMateo Díaz INTEGRACIÓN\tcl•••@ejemplo.test\tEspaña\t\t3\t$ 49.303,85\t—\t30/09/2026\nEmma Johnson\tcl•••@ejemplo.test\tUruguay\t\t3\t$ 48.780,88\t1 activa(s)\t30/09/2026\nElena Vargas IMPORTADO\tcl•••@ejemplo.test\tUruguay\t\t3\t$ 45.273,71\t—\t15/09/2026\nSofía Martínez IMPORTADO\tcl•••@ejemplo.test\tMéxico\t\t3\t$ 43.970,67\t1 activa(s)\t05/10/2026\nValentina Gómez\tcl•••@ejemplo.test\tEspaña\t\t2\t$ 42.457,52\t—\t20/09/2026\nCamila Pérez IMPORTADO\tcl•••@ejemplo.test\tChile\t\t3\t$ 42.281,88\t—\t03/10/2026\nTomás Vidal INTEGRACIÓN\tcl•••@ejemplo.test\tItalia\t\t2\t$ 38.652,64\t—\t02/10/2026\nLucía Fernández\tcl•••@ejemplo.test\tArgentina\t\t3\t$ 38.198,57\t1 activa(s)\t06/10/2026\nMartina Rossi IMPORTADO\tcl•••@ejemplo.test\tColombia\t\t2\t$ 32.722,79\t—\t26/09/2026\nPaula Ortega INTEGRACIÓN\tcl•••@ejemplo.test\tMéxico\t\t2\t$ 31.248,92\t—\t14/09/2026\nSara Núñez INTEGRACIÓN\tcl•••@ejemplo.test\tChile\t\t2\t$ 30.134,85\t—\t23/09/2026\nMarcos Torres INTEGRACIÓN\tcl•••@ejemplo.test\tEstados Unidos\t\t2\t$ 27.148,25\t—\t11/10/2026",
+      "screen_integraciones": "INTEGRACIONES\n◉ ECOSISTEMA\nIntegraciones\n\nEmpezá manual, importá archivos y conectá tus apps de a poco. Cada fuente indica su última sincronización, errores y posibles duplicados.\n\nEventos JSON\nImportar CSV\nFuentes de datos\nRevisión de duplicados (1)\nEspecificación para apps\nTienda del ecosistema (DEMO)\nTienda principal · Archivo CSV / Excel\nActiva\nÚLTIMA SINC.\n15/10\nIMPORTADOS\n48\nPENDIENTES\n0\nFuente ficticia · sin conexión real\nEtsy (DEMO)\nMarketplace · Archivo CSV / Excel\nActiva\nÚLTIMA SINC.\n15/10\nIMPORTADOS\n17\nPENDIENTES\n1\nImportaciones simuladas\nApple Books (DEMO)\nMarketplace · Carga manual\nPausada\nÚLTIMA SINC.\n01/10\nIMPORTADOS\n8\nPENDIENTES\n0\nConexión simulada\nPagos externos (DEMO)\nProcesador de pagos · Eventos JSON\nCon errores\nÚLTIMA SINC.\n13/10\nIMPORTADOS\n5\nPENDIENTES\n0\nError simulado: evento sin referencia de pago\nApp: Remember\nError intencional para probar el panel\nNueva fuente de datos\nCÓMO SE EVITA CONTAR DOS VECES\n\n1) Si un registro trae el mismo ID externo que uno existente, se omite. 2) Si coincide fecha, importe, moneda y producto/concepto con otro registro de otra fuente, va a “Revisión de duplicados” en vez de importarse. 3) Los gastos compartidos se registran una vez y se reparten. 4) Los paquetes suman solo como paquete.",
+      "screen_reportes": "REPORTES\n◉ ECOSISTEMA\nReportes\n\nTablas filtradas por la lente y el período elegido. La exportación respeta los mismos filtros.\n\nCSV\nExcel\nVentas (detalle)\nVentas por marca\nVentas por producto y versión\nVentas por canal\nVentas por país\nRentabilidad por aplicación\nSuscripciones\nEventos de suscripción\nGastos (detalle)\nAsignación de gastos por app\nInfraestructura\nMovimientos de tesorería\nResultado mensual (12 meses)\nTipos de cambio\nHistorial de operaciones\n\nLas ventas anuladas aparecen con neto en ARS = 0. Sin tipo de cambio, el convertido queda en 0.\n\nFECHA\tTIPO\tMARCA\tPRODUCTO / CONCEPTO\tAPP\tCANAL\tPAÍS\tCLIENTE\tMONEDA\tBRUTO\tDESCUENTO\tREEMBOLSO\tNETO\tCOMISIÓN\tIMP./RET.\tLIQUIDADO\tTC\tNETO ARS\tCOBRO\tENTREGA\tCUPÓN\tESTADO\tORIGEN\tFUENTE\tID EXTERNO\n02/10/2026\tVenta única\tEbooks para la vida\tLove Without Losing You · PDF · Español · v1.0\t\tEtsy\tItalia\tTomás Vidal\tUSD\t12,99\t0,00\t0,00\t12,99\t0,78\t0,00\t12,21\t1.436,0000\t$ 18.653,64\tCobrado\tEntregado\t\tvalida\tintegracion\tDataset DEMO\tDEMO-ORD-1041\n03/10/2026\tVenta única\tYOYI'R\tAgenda interactiva YOYI’R · PDF interactivo · Español · v1.0\tAgenda digital YOYI’R\tAplicaciones web independientes\tChile\tCamila Pérez\tARS\t15.999,00\t0,00\t0,00\t15.999,00\t959,94\t0,00\t15.039,06\t1,0000\t$ 15.999,00\tCobrado\tEntregado\t\tvalida\timportado\tDataset DEMO\tDEMO-ORD-1004\n05/10/2026\tVenta única\tEbooks para la vida\tRomance Reader Kit · HTML interactivo · Español · v1.0\tRomance Reader Kit\tSitio web propio\tArgentina\tNoah Smith\tUSD\t9,99\t0,00\t0,00\t9,99\t0,60\t0,00\t9,39\t1.443,0000\t$ 14.415,57\tCobrado\tEntregado\t\tvalida\timportado\tDataset DEMO\tDEMO-ORD-1040\n05/10/2026\tCobro de suscripción\tEstrategIA\tRemember · Remember Plus\tRemember\tAplicaciones web independientes\tMéxico\tSofía Martínez\tUSD\t8,99\t0,00\t0,00\t8,99\t0,30\t0,00\t8,69\t1.443,0000\t$ 12.972,57\tCobrado\tNo aplica\t\tvalida\tmanual\t\t\n06/10/2026\tVenta única\tEbooks para la vida\tCómo estudio esto · PDF · Español · v1.0\t\tApple Books\tColombia\tDiego Castillo\tUSD\t7,99\t0,00\t0,00\t7,99\t0,48\t0,00\t7,51\t1.443,0000\t$ 11.529,57\tCobrado\tEntregado\t\tvalida\tmanual\tDataset DEMO\tDEMO-ORD-1003\n06/10/2026\tCobro de suscripción\tEstrategIA\tRemember · Remember Personal\tRemember\tAplicaciones web independientes\tArgentina\tLucía Fernández\tUSD\t4,99\t0,00\t0,00\t4,99\t0,30\t0,00\t4,69\t1.443,0000\t$ 7.200,57\tCobrado\tNo aplica\t\tvalida\tmanual\t\t\n08/10/2026\tIngreso externo\tYOYI'R\tPack organización digital · ZIP · Español · v1.0\t\tAplicaciones web independientes\tMéxico\tGabriel López\tARS\t24.999,00\t0,00\t0,00\t24.999,00\t1.499,94\t0,00\t23.499,06\t1,0000\t$ 24.999,00\tCobrado\tEntregado\t\tvalida\tmanual\tDataset DEMO\tDEMO-ORD-1039\n09/10/2026\tVenta única\tEbooks para la vida\tTu dinero, sin enredos · EPUB · Español · v1.0\tFinanzas inteligentes\tAmazon\tUruguay\tLiam Wilson\tUSD\t8,99\t0,00\t0,00\t8,99\t0,54\t0,00\t8,45\t1.443,0000\t$ 12.972,57\tCobrado\tEntregado\t\tvalida\tintegracion\tDataset DEMO\tDEMO-ORD-1002\n11/10/2026\tVenta única\tEstrategIA\tPULSO QA · Tester · HTML interactivo · Español · v1.0\tPULSO QA\tApple Books\tEstados Unidos\tMarcos Torres\tARS\t14.999,00\t0,00\t2.249,85\t12.749,15\t899,94\t0,00\t11.849,21\t1,0000\t$ 12.749,15\tCobrado\tEntregado\t\tvalida\tintegracion\tDataset DEMO\tDEMO-ORD-1038\n12/10/2026\tVenta única\tEbooks para la vida\tLove Without Losing You · PDF · Español · v1.0\t\tEtsy\tItalia\tAlejandro Ruiz\tUSD\t12,99\t0,00\t0,00\t12,99\t0,78\t0,00\t12,21\t1.443,0000\t$ 18.744,57\tCobrado\tEntregado\t\tvalida\timportado\tDataset DEMO\tDEMO-ORD-1001\n14/10/2026\tVenta única\tEstrategIA\tConciliador ARCA · HTML interactivo · Español · v1.0\tConciliador ARCA\tAmazon\tEspaña\tLucas Herrera\tARS\t19.999,00\t0,00\t0,00\t19.999,00\t1.199,94\t0,00\t18.799,06\t1,0000\t$ 19.999,00\tCobrado\tEntregado\t\tvalida\timportado\tDataset DEMO\tDEMO-ORD-1037\n15/10/2026\tIngreso externo\tEbooks para la vida\tRomance Reader Kit · HTML interactivo · Español · v1.0\tRomance Reader Kit\tSitio web propio\tArgentina\tLucía Fernández\tUSD\t19,98\t1,00\t1,50\t17,48\t0,60\t0,00\t16,88\t1.450,0000\t$ 0,00\tA cobrar\tIncidencia\tDEMO10\tanulada\tmanual\tDataset DEMO\tDEMO-ORD-1000\nTotal\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t$ 170.235,21\t\t\t\t\t\t\t\n\n12 fila(s).",
+      "screen_ajustes": "AJUSTES\n◉ ECOSISTEMA\nAjustes\n\nTodo lo del negocio se edita acá. Nada viene inventado.\n\nNegocio\nNombre\nPropietario\nSitio principal\nFormato de números\n1.234,56\n1,234.56\nMoneda de referencia\nARS\nUSD\nNo se puede cambiar: hay tipos de cambio cargados contra ella.\nGuardar\nMarcas\n\nColor principal (gráficos e identificadores), oscuro (lente) y secundario.\n\nMonedas\n\nMonedas en que vendés o pagás.\n\nARS · $\nUSD · US$\n×\nCanales de venta\n\nLa comisión % es una sugerencia que se precarga en cada venta (editable).\n\nCategorías de productos\n\nPor marca.\n\nEstrategIA\nMicroaplicaciones HTML\n×\nHerramientas para empresas\n×\nConciliación y facturación\n×\nAnálisis de Excel y CSV\n×\nFinanzas, ventas e inventario\n×\nHerramientas para freelancers\n×\nProductividad\n×\nAutomatización\n×\nYOYI'R\nAgendas digitales\n×\nPlanificadores\n×\nPDF interactivos\n×\nRecursos para tablet\n×\nOrganización personal\n×\nPlanificadores financieros\n×\nEstudio, hábitos y bienestar\n×\nPaquetes digitales\n×\nEbooks para la vida\nVida y bienestar\n×\nAprender y dominar\n×\nDinero inteligente\n×\nTrabajo y carrera\n×\nCreatividad y pasiones\n×\nFormatos e idiomas\nFormatos\nPDF\n×\nPDF interactivo\n×\nEPUB\n×\nHTML interactivo\n×\nZIP\n×\nApp web\n×\nMicroapp HTML descargable\n×\nIdiomas\nEspañol\n×\nInglés\n×\nPortugués\n×\nCategorías de gastos\n\nGrupos y subcategorías.\n\nInfraestructura tecnológica\nHosting\n×\nServidores\n×\nDominios\n×\nBases de datos\n×\nAlmacenamiento\n×\nCopias de seguridad\n×\nCertificados / servicios técnicos\n×\nCorreo transaccional\n×\nServicios externos y APIs\n×\nDesarrollo y producción\nHerramientas de programación\n×\nHerramientas de IA\n×\nSoftware de diseño\n×\nServicios de edición\n×\nRecursos gráficos\n×\nHerramientas de pruebas\n×\nServicios técnicos externos\n×\nComercialización\nPublicidad Google Ads\n×\nPublicidad Meta\n×\nPublicidad otras plataformas\n×\nComisiones de marketplaces\n×\nComisiones de pasarelas de pago\n×\nPromociones y campañas\n×\nAdquisición de clientes\n×\nAdministración\nServicios contables\n×\nImpuestos\n×\nComisiones bancarias\n×\nOtros gastos administrativos\n×\nMedios de pago y cuentas\n\nMedios con que pagás gastos; cuentas donde entra y sale el dinero.\n\nMedios de pago\nTransferencia\n×\nTarjeta de crédito\n×\nMercado Pago\n×\nPayPal\n×\nEfectivo\n×\nCuentas\nBanco empresa · ARS\nARS\n$ 1.063.231,62\nMercado Pago · ARS\nARS\n$ 305.438,01\nCuenta internacional · USD\nUSD\nUS$ 257,27\nARS\nUSD\nAlertas y valor hora\n\nUmbrales de las alertas automáticas.\n\nAvisar vencimientos con (días)\nApp sin ventas tras (días)\nCaída de canal mayor a (%)\nValor de tu hora (opcional)\nARS\nUSD\nPara estimar el costo del tiempo de mantenimiento.\nGuardar\nSeguridad y ambiente\n\nEl PIN bloquea el panel en este navegador. El ambiente de pruebas usa datos totalmente separados.\n\nDefinir PIN\nAmbiente de pruebas\nAhora: producción\nRespaldo de datos\n\nDatos guardados en este navegador · producción. Descargá respaldos seguido.\n\nDescargar .json\nRestaurar\nBorrar todo\n\n69 ventas · 45 gastos · 13 suscripciones · 8 apps · ~0,12 MB",
+      "tab_ventas_ventas": "PRODUCTOS Y VENTAS\n◉ ECOSISTEMA\nProductos y ventas\n\nCatálogo con versiones, formatos e idiomas; cada venta conserva su canal, moneda, comisiones y entrega.\n\nProducto\nRegistrar venta\nVentas\nCatálogo\nCanales y países\nTodos los canales\nSitio web propio\nEtsy\nAmazon\nApple Books\nAplicaciones web independientes\nTodos los tipos\nVenta única\nCobro de suscripción\nIngreso externo\nCobro: todos\nA cobrar\nCobrado\nEntrega: todas\nNo aplica\nEntregado\nEntrega pendiente\nIncidencia\n11 ventas\n$ 170.235,21 netos\nFECHA\tCONCEPTO\tMARCA\tCANAL\tPAÍS\tNETO ORIGINAL\tARS\tCOBRO\tENTREGA\t\n15/10/2026\tRomance Reader Kit · HTML interactivo · Español · v1.0 reemb.\nLucía Fernández · cupón DEMO10\n\t\nEbooks para la vida\tSitio web propio\tArgentina\tUS$ 17,48\t$ 25.346,00\t\nA cobrar\t\nIncidencia\t\n14/10/2026\tConciliador ARCA · HTML interactivo · Español · v1.0\nLucas Herrera\n\t\nEstrategIA\tAmazon\tEspaña\t$ 19.999,00\t$ 19.999,00\t\nCobrado\t\nEntregado\tIMPORTADO\n12/10/2026\tLove Without Losing You · PDF · Español · v1.0\nAlejandro Ruiz\n\t\nEbooks para la vida\tEtsy\tItalia\tUS$ 12,99\t$ 18.744,57\t\nCobrado\t\nEntregado\tIMPORTADO\n11/10/2026\tPULSO QA · Tester · HTML interactivo · Español · v1.0 reemb.\nMarcos Torres\n\t\nEstrategIA\tApple Books\tEstados Unidos\t$ 12.749,15\t$ 12.749,15\t\nCobrado\t\nEntregado\tINTEGRACIÓN\n09/10/2026\tTu dinero, sin enredos · EPUB · Español · v1.0\nLiam Wilson\n\t\nEbooks para la vida\tAmazon\tUruguay\tUS$ 8,99\t$ 12.972,57\t\nCobrado\t\nEntregado\tINTEGRACIÓN\n08/10/2026\tPack organización digital · ZIP · Español · v1.0\nGabriel López\n\t\nYOYI'R\tAplicaciones web independientes\tMéxico\t$ 24.999,00\t$ 24.999,00\t\nCobrado\t\nEntregado\t\n06/10/2026\tCómo estudio esto · PDF · Español · v1.0\nDiego Castillo\n\t\nEbooks para la vida\tApple Books\tColombia\tUS$ 7,99\t$ 11.529,57\t\nCobrado\t\nEntregado\t\n06/10/2026\tRemember · Remember Personal recurrente\nLucía Fernández\n\t\nEstrategIA\tAplicaciones web independientes\tArgentina\tUS$ 4,99\t$ 7.200,57\t\nCobrado\t\t\n05/10/2026\tRomance Reader Kit · HTML interactivo · Español · v1.0\nNoah Smith\n\t\nEbooks para la vida\tSitio web propio\tArgentina\tUS$ 9,99\t$ 14.415,57\t\nCobrado\t\nEntregado\tIMPORTADO\n05/10/2026\tRemember · Remember Plus recurrente\nSofía Martínez\n\t\nEstrategIA\tAplicaciones web independientes\tMéxico\tUS$ 8,99\t$ 12.972,57\t\nCobrado\t\t\n03/10/2026\tAgenda interactiva YOYI’R · PDF interactivo · Español · v1.0\nCamila Pérez\n\t\nYOYI'R\tAplicaciones web independientes\tChile\t$ 15.999,00\t$ 15.999,00\t\nCobrado\t\nEntregado\tIMPORTADO\n02/10/2026\tLove Without Losing You · PDF · Español · v1.0\nTomás Vidal\n\t\nEbooks para la vida\tEtsy\tItalia\tUS$ 12,99\t$ 18.653,64\t\nCobrado\t\nEntregado\tINTEGRACIÓN",
+      "tab_ventas_catalogo": "PRODUCTOS Y VENTAS\n◉ ECOSISTEMA\nProductos y ventas\n\nCatálogo con versiones, formatos e idiomas; cada venta conserva su canal, moneda, comisiones y entrega.\n\nProducto\nRegistrar venta\nVentas\nCatálogo\nCanales y países\nTodos los estados\nBorrador\nPublicado\nRequiere actualización\nPausado\nRetirado\nEbooks para la vida\n4 producto(s)\nRomance Reader Kit\nVida y bienestar\nPublicado\nHTML INTERACTIVO · ESPAÑOL\nHTML INTERACTIVO · INGLÉS\nVENTAS\n6\nINGRESOS\n$ 85k\nVERSIONES\n2\nLove Without Losing You\nVida y bienestar\nPublicado\nPDF · ESPAÑOL\nPDF · INGLÉS\nVENTAS\n6\nINGRESOS\n$ 109k\nVERSIONES\n2\nTu dinero, sin enredos\nDinero inteligente\nRequiere actualización\nEPUB · ESPAÑOL\nEPUB · INGLÉS\nVENTAS\n6\nINGRESOS\n$ 75k\nVERSIONES\n2\n⟳ Revisar ejemplos del capítulo 4\nCómo estudio esto\nAprender y dominar\nPublicado\nPDF · ESPAÑOL\nPDF · INGLÉS\nVENTAS\n7\nINGRESOS\n$ 89k\nVERSIONES\n2\nYOYI'R\n3 producto(s)\nAgenda interactiva YOYI’R\nAgendas digitales\nPublicado\nPDF INTERACTIVO · ESPAÑOL\nPDF INTERACTIVO · INGLÉS\nVENTAS\n6\nINGRESOS\n$ 110k\nVERSIONES\n2\nHoy, solo lo posible\nOrganización personal\nPublicado\nHTML INTERACTIVO · ESPAÑOL\nHTML INTERACTIVO · INGLÉS\nVENTAS\n6\nINGRESOS\n$ 90k\nVERSIONES\n2\nPack organización digital\nPaquetes digitales · Paquete\nPublicado\nZIP · ESPAÑOL\nZIP · INGLÉS\nVENTAS\n6\nINGRESOS\n$ 169k\nVERSIONES\n2\nEstrategIA\n3 producto(s)\nADMINFLOW · Gestión\nHerramientas para empresas\nPublicado\nMICROAPP HTML DESCARGABLE · ESPAÑOL\nMICROAPP HTML DESCARGABLE · INGLÉS\nVENTAS\n6\nINGRESOS\n$ 292k\nVERSIONES\n2\nConciliador ARCA\nConciliación y facturación\nBorrador\nHTML INTERACTIVO · ESPAÑOL\nHTML INTERACTIVO · INGLÉS\nVENTAS\n6\nINGRESOS\n$ 135k\nVERSIONES\n2\nPULSO QA · Tester\nMicroaplicaciones HTML\nPublicado\nHTML INTERACTIVO · ESPAÑOL\nHTML INTERACTIVO · INGLÉS\nVENTAS\n6\nINGRESOS\n$ 101k\nVERSIONES\n2",
+      "tab_ventas_canales": "PRODUCTOS Y VENTAS\n◉ ECOSISTEMA\nProductos y ventas\n\nCatálogo con versiones, formatos e idiomas; cada venta conserva su canal, moneda, comisiones y entrega.\n\nProducto\nRegistrar venta\nVentas\nCatálogo\nCanales y países\nComparación de canales\ni\nCANAL\tVENTAS\tBRUTAS\tNETAS\tCOMISIONES\t% COMIS.\tNETO LIQUIDADO\nAplicaciones web independientes\t4\t$ 61.171,14\t$ 61.171,14\t$ 3.325,68\t5,4%\t$ 57.845,46\nEtsy\t2\t$ 37.398,21\t$ 37.398,21\t$ 2.245,62\t6%\t$ 35.152,59\nAmazon\t2\t$ 32.971,57\t$ 32.971,57\t$ 1.979,16\t6%\t$ 30.992,41\nApple Books\t2\t$ 26.528,57\t$ 24.278,72\t$ 1.592,58\t6,6%\t$ 22.686,14\nSitio web propio\t1\t$ 14.415,57\t$ 14.415,57\t$ 865,80\t6%\t$ 13.549,77\nVentas por país\nMéxico\n$ 38k\nItalia\n$ 37k\nArgentina\n$ 22k\nEspaña\n$ 20k\nChile\n$ 16k\nUruguay\n$ 13k\nEstados Unidos\n$ 13k\nColombia\n$ 12k",
+      "tab_gastos_gastos": "GASTOS Y PROVEEDORES\n◉ ECOSISTEMA\nGastos\n\nInfraestructura, desarrollo, comercialización y administración. Un gasto compartido se registra una vez y se reparte entre apps o marcas sin duplicarse.\n\nProveedor\nRegistrar gasto\nGastos\nA pagar\nProveedores\nTodos los estados\nPendiente\nPagado\nVencido\nTodas las categorías\nInfraestructura tecnológica\nDesarrollo y producción\nComercialización\nAdministración\nTodas las apps\nRemember · EstrategIA\nADMINFLOW · EstrategIA\nConciliador ARCA · EstrategIA\nPULSO QA · EstrategIA\nRomance Reader Kit · Ebooks para la vida\nAgenda digital YOYI’R · YOYI'R\nFinanzas inteligentes · Ebooks para la vida\nPanel de inventario B2B · EstrategIA\nOperativo e inversión\nSolo operativos\nSolo inversión\nGASTOS OPERATIVOS DEL PERÍODO\n$ 82.000,00\n6 registros\nINVERSIÓN DEL PERÍODO\n$ 101.115,00\nno resta al resultado operativo\nPor categoría\nRecursos gráficos\n$ 36k\nOtros gastos administrativos\n$ 27k\nPublicidad otras plataformas\n$ 12k\nHerramientas de IA\n$ 7.300\nFECHA\tCONCEPTO\tCATEGORÍA\tASIGNACIÓN\tVENCE\tIMPORTE\tARS\tESTADO\n15/10/2026\tHosting mensual #1 inversión Mensual\nHostinger\n\tHosting\tEstrategIA 50%Ebooks para la vida 50%\t19/10/2026\tUS$ 15,00\t$ 21.750,00\t\nPendiente\n15/10/2026\tAsesoría profesional #24\nCanva\n\tOtros gastos administrativos\tPanel de inventario B2B\t12/10/2026\t$ 26.500,00\t$ 26.500,00\t\nPagado ESTIMADO\n10/10/2026\tPublicidad en redes #2\nProveedor IA\n\tHerramientas de IA\tADMINFLOW\t14/10/2026\t$ 7.300,00\t$ 7.300,00\t\nPagado IMPORTADO\n10/10/2026\tHosting mensual #25 inversión Mensual\nServicio de email\n\tCertificados / servicios técnicos\tRemember\t19/10/2026\tUS$ 55,00\t$ 79.365,00\t\nPendiente\n05/10/2026\tSuscripción de software #3\nCanva\n\tPublicidad otras plataformas\tConciliador ARCA\t13/10/2026\t$ 12.100,00\t$ 12.100,00\t\nPagado ESTIMADO\n05/10/2026\tPublicidad en redes #26\nPublicidad digital\n\tRecursos gráficos\tADMINFLOW\t10/10/2026\t$ 36.100,00\t$ 36.100,00\t\nPagado IMPORTADO",
+      "tab_gastos_venc": "GASTOS Y PROVEEDORES\n◉ ECOSISTEMA\nGastos\n\nInfraestructura, desarrollo, comercialización y administración. Un gasto compartido se registra una vez y se reparte entre apps o marcas sin duplicarse.\n\nProveedor\nRegistrar gasto\nGastos\nA pagar\nProveedores\n$ 202.200,00 pendiente\nUS$ 70,00 pendiente\n2 vencidos\nFECHA\tCONCEPTO\tCATEGORÍA\tASIGNACIÓN\tVENCE\tIMPORTE\tARS\tESTADO\n22/07/2026\tPublicidad en redes #18\nServicio de email\n\tServicios de edición\tADMINFLOW\t28/09/2026\t$ 40.900,00\t$ 40.900,00\t\nVencido ESTIMADO\n21/08/2026\tSuscripción de software #35\nEstudio contable\n\tAdquisición de clientes\tConciliador ARCA\t01/10/2026\t$ 36.100,00\t$ 36.100,00\t\nVencido IMPORTADO\n15/10/2026\tHosting mensual #1 inversión Mensual\nHostinger\n\tHosting\tEstrategIA 50%Ebooks para la vida 50%\t19/10/2026\tUS$ 15,00\t$ 21.750,00\t\nPendiente\n05/09/2026\tHosting mensual #9\nProveedor IA\n\tServicios externos y APIs\tRemember\t19/10/2026\t$ 40.900,00\t$ 40.900,00\t\nPendiente ESTIMADO\n27/07/2026\tHosting mensual #17\nCanva\n\tCorreo transaccional\tRemember\t19/10/2026\t$ 36.100,00\t$ 36.100,00\t\nPendiente IMPORTADO\n10/10/2026\tHosting mensual #25 inversión Mensual\nServicio de email\n\tCertificados / servicios técnicos\tRemember\t19/10/2026\tUS$ 55,00\t$ 79.365,00\t\nPendiente\n31/08/2026\tHosting mensual #33\nPublicidad digital\n\tCopias de seguridad\tRemember\t19/10/2026\t$ 26.500,00\t$ 26.500,00\t\nPendiente ESTIMADO\n22/07/2026\tHosting mensual #41\nProcesador de pagos\n\tAlmacenamiento\tRemember\t19/10/2026\t$ 21.700,00\t$ 21.700,00\t\nPendiente IMPORTADO",
+      "tab_gastos_prov": "GASTOS Y PROVEEDORES\n◉ ECOSISTEMA\nGastos\n\nInfraestructura, desarrollo, comercialización y administración. Un gasto compartido se registra una vez y se reparte entre apps o marcas sin duplicarse.\n\nProveedor\nRegistrar gasto\nGastos\nA pagar\nProveedores\nPROVEEDOR\tTIPO\tCONTACTO\tGASTOS 12 MESES\tRECURSOS\t\nHostinger\nhttps://ejemplo.test/proveedor-0\n\tHosting\tcontacto0@ejemplo.test\t$ 198.240,00\tHostinger Premium Dominio del ecosistema Base de datos Repositorio de código Almacenamiento y respaldos\tEditar\nProveedor IA\nhttps://ejemplo.test/proveedor-1\n\tInteligencia artificial\tcontacto1@ejemplo.test\t$ 184.600,00\tHerramienta de IA\tEditar\nCanva\nhttps://ejemplo.test/proveedor-2\n\tDiseño\tcontacto2@ejemplo.test\t$ 146.835,00\tCanva Pro\tEditar\nServicio de email\nhttps://ejemplo.test/proveedor-3\n\tComunicación\tcontacto3@ejemplo.test\t$ 178.265,00\tServicio de correos\tEditar\nPublicidad digital\nhttps://ejemplo.test/proveedor-4\n\tMarketing\tcontacto4@ejemplo.test\t$ 176.030,00\t—\tEditar\nProcesador de pagos\nhttps://ejemplo.test/proveedor-5\n\tPagos\tcontacto5@ejemplo.test\t$ 177.225,00\t—\tEditar\nEstudio contable\nhttps://ejemplo.test/proveedor-6\n\tAdministración\tcontacto6@ejemplo.test\t$ 134.625,00\t—\tEditar",
+      "tab_fin_resultado": "FINANZAS\n◉ ECOSISTEMA\nFinanzas\n\nVentas, cobros, transferencias y retiros separados para no contar dos veces el mismo dinero. Cada importe conserva su moneda original.\n\nTipo de cambio\nMovimiento\nResultado\nCuentas y movimientos\nMonedas y tipos de cambio\nEstado de resultados consolidado\nARS · 01/10/2026–15/10/2026\nVentas brutas\n$ 172.485,06\n− Descuentos y cupones\n$ 0,00\n− Reembolsos\n−$ 2.249,85\n= Ingresos netos\n$ 170.235,21\n− Comisiones de plataformas\n−$ 10.008,84\n− Impuestos y retenciones\n$ 0,00\n− Gastos operativos\n−$ 82.000,00\n= Resultado del negocio\n$ 78.226,37\nAparte: inversión $ 101.115,00 · retiros personales y transferencias no afectan el resultado.\nCobrado vs. a cobrar\nCOBRADO EN EL PERÍODO\n$ 160.226,37\nNETO LIQUIDADO DEL PERÍODO\n$ 160.226,37\nSALDO PENDIENTE DE COBRO (TODAS LAS FECHAS)\nUSD\nUS$ 28,17\nARS\n$ 27.258,12\nPOR MONEDA ORIGINAL (PERÍODO)\nMONEDA\tINGRESOS NETOS\tGASTOS\nUSD\tUS$ 66,93\tUS$ 70,00\nARS\t$ 73.746,15\t$ 82.000,00",
+      "tab_fin_cuentas": "FINANZAS\n◉ ECOSISTEMA\nFinanzas\n\nVentas, cobros, transferencias y retiros separados para no contar dos veces el mismo dinero. Cada importe conserva su moneda original.\n\nTipo de cambio\nMovimiento\nResultado\nCuentas y movimientos\nMonedas y tipos de cambio\nBANCO EMPRESA · ARS\n$ 1.063.231,62\nARS · saldo según movimientos registrados\nMERCADO PAGO · ARS\n$ 305.438,01\nARS · saldo según movimientos registrados\nCUENTA INTERNACIONAL · USD\nUS$ 257,27\nUSD · saldo según movimientos registrados\nFECHA\tTIPO\tDETALLE\tDESDE\tHACIA\tIMPORTE\t\n15/10/2026\tPago de gasto\tAsesoría profesional #24\tBanco empresa · ARS\t—\t$ 26.500,00\t\n14/10/2026\tCobro de venta\tConciliador ARCA · HTML interactivo · Español · v1.0\t—\tBanco empresa · ARS\t$ 18.799,06\t\n12/10/2026\tCobro de venta\tLove Without Losing You · PDF · Español · v1.0\t—\tCuenta internacional · USD\tUS$ 12,21\t\n11/10/2026\tCobro de venta\tPULSO QA · Tester · HTML interactivo · Español · v1.0\t—\tMercado Pago · ARS\t$ 11.849,21\t\n11/10/2026\tRetiro personal\tRetiro ficticio\tBanco empresa · ARS\t—\t$ 38.000,00\t\n\n10/10/2026\tPago de gasto\tPublicidad en redes #2\tBanco empresa · ARS\t—\t$ 7.300,00\t\n09/10/2026\tCobro de venta\tTu dinero, sin enredos · EPUB · Español · v1.0\t—\tCuenta internacional · USD\tUS$ 8,45\t\n08/10/2026\tCobro de venta\tPack organización digital · ZIP · Español · v1.0\t—\tBanco empresa · ARS\t$ 23.499,06\t\n06/10/2026\tCobro de venta\tCómo estudio esto · PDF · Español · v1.0\t—\tCuenta internacional · USD\tUS$ 7,51\t\n06/10/2026\tCobro de venta\tRemember · Remember Personal\t—\tCuenta internacional · USD\tUS$ 4,69\t\n05/10/2026\tCobro de venta\tRomance Reader Kit · HTML interactivo · Español · v1.0\t—\tCuenta internacional · USD\tUS$ 9,39\t\n05/10/2026\tCobro de venta\tRemember · Remember Plus\t—\tCuenta internacional · USD\tUS$ 8,69\t\n05/10/2026\tPago de gasto\tSuscripción de software #3\tBanco empresa · ARS\t—\t$ 12.100,00\t\n05/10/2026\tPago de gasto\tPublicidad en redes #26\tBanco empresa · ARS\t—\t$ 36.100,00\t\n03/10/2026\tCobro de venta\tAgenda interactiva YOYI’R · PDF interactivo · Español · v1.0\t—\tMercado Pago · ARS\t$ 15.039,06\t\n02/10/2026\tCobro de venta\tLove Without Losing You · PDF · Español · v1.0\t—\tCuenta internacional · USD\tUS$ 12,21\t",
+      "tab_fin_monedas": "FINANZAS\n◉ ECOSISTEMA\nFinanzas\n\nVentas, cobros, transferencias y retiros separados para no contar dos veces el mismo dinero. Cada importe conserva su moneda original.\n\nTipo de cambio\nMovimiento\nResultado\nCuentas y movimientos\nMonedas y tipos de cambio\n\nMoneda de referencia: ARS. Cada importe se convierte con el tipo de cambio más reciente con fecha igual o anterior a su operación. Si no hay ninguno, el importe queda fuera del consolidado y se avisa.\n\n1 USD =\n1.450,0000 ARS\n15/10/2026 · Cotización DEMO\nFECHA\tMONEDA\t1 UNIDAD =\tFUENTE\t\n15/10/2026\tUSD\t1.450,0000 ARS\tCotización DEMO\t\n\n03/10/2026\tUSD\t1.443,0000 ARS\tCotización DEMO\t\n\n21/09/2026\tUSD\t1.436,0000 ARS\tCotización DEMO\t\n\n09/09/2026\tUSD\t1.429,0000 ARS\tCotización DEMO\t\n\n28/08/2026\tUSD\t1.422,0000 ARS\tCotización DEMO\t\n\n16/08/2026\tUSD\t1.415,0000 ARS\tCotización DEMO\t\n\n04/08/2026\tUSD\t1.408,0000 ARS\tCotización DEMO\t\n\n23/07/2026\tUSD\t1.401,0000 ARS\tCotización DEMO\t\n\n11/07/2026\tUSD\t1.394,0000 ARS\tCotización DEMO\t\n\n29/06/2026\tUSD\t1.387,0000 ARS\tCotización DEMO\t\n\n17/06/2026\tUSD\t1.380,0000 ARS\tCotización DEMO\t\n\n05/06/2026\tUSD\t1.373,0000 ARS\tCotización DEMO\t\n\n24/05/2026\tUSD\t1.366,0000 ARS\tCotización DEMO\t\n\n12/05/2026\tUSD\t1.359,0000 ARS\tCotización DEMO\t",
+      "tab_subs_lista": "SUSCRIPCIONES\n◉ ECOSISTEMA\nSuscripciones\n\nPlanes, renovaciones, cancelaciones e ingreso recurrente. Los indicadores se calculan solo cuando hay datos confiables.\n\nRegistrar cobro\nNueva suscripción\nMRR\ni\n$ 47.777,50\nARR $ 573.330,00\nACTIVAS · PAGAN\ni\n5\n2 en prueba · 2 pago fallido\nCHURN DEL PERÍODO\ni\n18,2%\n2 cancelaciones · 11 al inicio · 18,2%/mes\nARPU\ni\n$ 9.555,50\npor suscriptor / mes\nLTV ESTIMADO\ni\n$ 52.555,25\nESTIMADO\nCAC\ni\nDatos insuficientes\n$ 0,00 comercialización · 0 clientes nuevos\nPRUEBA → PAGO\ni\nDatos insuficientes\n0 pruebas iniciadas · 0 convertidas\nRENOVACIONES\n3 / 2 fallidas\n60% de éxito\nEvolución del MRR\nfin de cada mes · 12 meses\n$ 0\n$ 25k\n$ 50k\n$ 75k\n$ 100k\nnov\nene\nmar\nmay\njul\nsep\noct\nRegistrados · activos · pagan\ni\nRemember\nRegistrados\n110\nActivos\n53\nPagan\n5\nConversión a pago: 4,5%\nSuscripciones\nEventos\nTodas las apps\nRemember\nTodos los estados\nEn prueba\nActiva\nPago fallido\nPausada\nCancelada\nSUSCRIPTOR\tAPP\tPLAN\tPRECIO\tALTA\tPRÓXIMA RENOVACIÓN\tESTADO\nLucía Fernández\t\nEstrategIA Remember\tRemember Personal\tUS$ 4,99/mes\t06/08/2026\t21/10/2026\t\nActiva\nSofía Martínez\t\nEstrategIA Remember\tRemember Plus\tUS$ 8,99/mes\t10/08/2026\t23/10/2026\t\nActiva\nMarcos Torres\t\nEstrategIA Remember\tRemember anual\tUS$ 49,00/año\t14/08/2026\t25/10/2026\t\nEn prueba\nValentina Gómez\t\nEstrategIA Remember\tRemember Personal\tUS$ 4,99/mes\t18/08/2026\t27/10/2026\t\nPago fallido\nCamila Pérez\t\nEstrategIA Remember\tRemember Plus\tUS$ 8,99/mes\t22/08/2026\t—\t\nCancelada\nDaniel Silva\t\nEstrategIA Remember\tRemember anual\tUS$ 49,00/año\t26/08/2026\t—\t\nPausada\nEmma Johnson\t\nEstrategIA Remember\tRemember Personal\tUS$ 4,99/mes\t30/08/2026\t02/11/2026\t\nActiva\nAlejandro Ruiz\t\nEstrategIA Remember\tRemember Plus\tUS$ 8,99/mes\t03/09/2026\t04/11/2026\t\nActiva\nMia Robinson\t\nEstrategIA Remember\tRemember anual\tUS$ 49,00/año\t07/09/2026\t06/11/2026\t\nEn prueba\nGabriel López\t\nEstrategIA Remember\tRemember Personal\tUS$ 4,99/mes\t11/09/2026\t08/11/2026\t\nPago fallido\nIsabella Costa\t\nEstrategIA Remember\tRemember Plus\tUS$ 8,99/mes\t15/09/2026\t—\t\nCancelada\nMateo Díaz\t\nEstrategIA Remember\tRemember anual\tUS$ 49,00/año\t19/09/2026\t—\t\nPausada\nOlivia Brown\t\nEstrategIA Remember\tRemember Personal\tUS$ 4,99/mes\t23/09/2026\t14/11/2026\t\nActiva",
+      "tab_subs_eventos": "SUSCRIPCIONES\n◉ ECOSISTEMA\nSuscripciones\n\nPlanes, renovaciones, cancelaciones e ingreso recurrente. Los indicadores se calculan solo cuando hay datos confiables.\n\nRegistrar cobro\nNueva suscripción\nMRR\ni\n$ 47.777,50\nARR $ 573.330,00\nACTIVAS · PAGAN\ni\n5\n2 en prueba · 2 pago fallido\nCHURN DEL PERÍODO\ni\n18,2%\n2 cancelaciones · 11 al inicio · 18,2%/mes\nARPU\ni\n$ 9.555,50\npor suscriptor / mes\nLTV ESTIMADO\ni\n$ 52.555,25\nESTIMADO\nCAC\ni\nDatos insuficientes\n$ 0,00 comercialización · 0 clientes nuevos\nPRUEBA → PAGO\ni\nDatos insuficientes\n0 pruebas iniciadas · 0 convertidas\nRENOVACIONES\n3 / 2 fallidas\n60% de éxito\nEvolución del MRR\nfin de cada mes · 12 meses\n$ 0\n$ 25k\n$ 50k\n$ 75k\n$ 100k\nnov\nene\nmar\nmay\njul\nsep\noct\nRegistrados · activos · pagan\ni\nRemember\nRegistrados\n110\nActivos\n53\nPagan\n5\nConversión a pago: 4,5%\nSuscripciones\nEventos\nFECHA\tEVENTO\tSUSCRIPTOR\tAPP · PLAN\tIMPORTE\n13/10/2026\tPago fallido\tValentina Gómez\tRemember · Remember Personal\t\n13/10/2026\tPago fallido\tGabriel López\tRemember · Remember Personal\t\n10/10/2026\tPausa\tDaniel Silva\tRemember · Remember anual\t\n10/10/2026\tPausa\tMateo Díaz\tRemember · Remember anual\t\n07/10/2026\tCancelación\tCamila Pérez\tRemember · Remember Plus\t\n07/10/2026\tCancelación\tIsabella Costa\tRemember · Remember Plus\t\n06/10/2026\tRenovación cobrada\tLucía Fernández\tRemember · Remember Personal\tUS$ 4,99\n06/10/2026\tRenovación cobrada\tEmma Johnson\tRemember · Remember Personal\tUS$ 4,99\n06/10/2026\tRenovación cobrada\tOlivia Brown\tRemember · Remember Personal\tUS$ 4,99",
+      "tab_integ_conexiones": "INTEGRACIONES\n◉ ECOSISTEMA\nIntegraciones\n\nEmpezá manual, importá archivos y conectá tus apps de a poco. Cada fuente indica su última sincronización, errores y posibles duplicados.\n\nEventos JSON\nImportar CSV\nFuentes de datos\nRevisión de duplicados (1)\nEspecificación para apps\nTienda del ecosistema (DEMO)\nTienda principal · Archivo CSV / Excel\nActiva\nÚLTIMA SINC.\n15/10\nIMPORTADOS\n48\nPENDIENTES\n0\nFuente ficticia · sin conexión real\nEtsy (DEMO)\nMarketplace · Archivo CSV / Excel\nActiva\nÚLTIMA SINC.\n15/10\nIMPORTADOS\n17\nPENDIENTES\n1\nImportaciones simuladas\nApple Books (DEMO)\nMarketplace · Carga manual\nPausada\nÚLTIMA SINC.\n01/10\nIMPORTADOS\n8\nPENDIENTES\n0\nConexión simulada\nPagos externos (DEMO)\nProcesador de pagos · Eventos JSON\nCon errores\nÚLTIMA SINC.\n13/10\nIMPORTADOS\n5\nPENDIENTES\n0\nError simulado: evento sin referencia de pago\nApp: Remember\nError intencional para probar el panel\nNueva fuente de datos\nCÓMO SE EVITA CONTAR DOS VECES\n\n1) Si un registro trae el mismo ID externo que uno existente, se omite. 2) Si coincide fecha, importe, moneda y producto/concepto con otro registro de otra fuente, va a “Revisión de duplicados” en vez de importarse. 3) Los gastos compartidos se registran una vez y se reparten. 4) Los paquetes suman solo como paquete.",
+      "tab_integ_review": "INTEGRACIONES\n◉ ECOSISTEMA\nIntegraciones\n\nEmpezá manual, importá archivos y conectá tus apps de a poco. Cada fuente indica su última sincronización, errores y posibles duplicados.\n\nEventos JSON\nImportar CSV\nFuentes de datos\nRevisión de duplicados (1)\nEspecificación para apps\nVenta de Etsy (DEMO)\nPosible duplicado ficticio para revisar\nDescartar\nImportar igual\nNUEVO\nLove Without Losing You\n13/10/2026 · US$ 12,99 · ID —\nEXISTENTE (DATASET DEMO)\nTu dinero, sin enredos · EPUB · Español · v1.0\n09/10/2026 · US$ 8,99 · ID DEMO-ORD-1002",
+      "tab_integ_spec": "INTEGRACIONES\n◉ ECOSISTEMA\nIntegraciones\n\nEmpezá manual, importá archivos y conectá tus apps de a poco. Cada fuente indica su última sincronización, errores y posibles duplicados.\n\nEventos JSON\nImportar CSV\nFuentes de datos\nRevisión de duplicados (1)\nEspecificación para apps\nFormato de eventos para tus apps\nCopiar ejemplo\n\nCada app (Flask, HTML, etc.) puede exportar o enviar sus eventos en este formato. Hoy los pegás en “Eventos JSON”; más adelante el mismo formato sirve para un webhook. Los external_id repetidos se ignoran.\n\n[\n  { \"source\": \"remember\", \"external_id\": \"evt_001\", \"type\": \"subscription_started\",\n    \"app\": \"Remember\", \"plan\": \"Pro mensual\", \"date\": \"2026-10-01\",\n    \"amount\": 4000, \"currency\": \"ARS\", \"commission\": 280,\n    \"customer_email\": \"ana@ejemplo.com\", \"customer_name\": \"Ana\", \"country\": \"Argentina\" },\n  { \"source\": \"remember\", \"external_id\": \"evt_002\", \"type\": \"renewal\",\n    \"app\": \"Remember\", \"date\": \"2026-11-01\", \"amount\": 4000, \"currency\": \"ARS\",\n    \"customer_email\": \"ana@ejemplo.com\" },\n  { \"source\": \"remember\", \"external_id\": \"evt_003\", \"type\": \"users\",\n    \"app\": \"Remember\", \"date\": \"2026-11-01\", \"registered\": 120, \"active\": 45 }\n]\nTIPOS DE EVENTO\nsale — Venta de pago único (amount, currency, product o app)\nsubscription_started — Alta con primer pago (plan obligatorio)\ntrial_started — Inicio de prueba\nrenewal — Renovación cobrada\npayment_failed — Pago fallido\ncancellation — Cancelación\nplan_changed — Cambio de plan (plan)\nusers — Foto de usuarios (registered, active)\n\nCampos comunes: source, external_id, type, app (nombre exacto de la app registrada), date (AAAA-MM-DD), customer_email. Opcionales: commission, tax, country, channel.",
+      "report_ventas": "REPORTES\n◉ ECOSISTEMA\nReportes\n\nTablas filtradas por la lente y el período elegido. La exportación respeta los mismos filtros.\n\nCSV\nExcel\nVentas (detalle)\nVentas por marca\nVentas por producto y versión\nVentas por canal\nVentas por país\nRentabilidad por aplicación\nSuscripciones\nEventos de suscripción\nGastos (detalle)\nAsignación de gastos por app\nInfraestructura\nMovimientos de tesorería\nResultado mensual (12 meses)\nTipos de cambio\nHistorial de operaciones\n\nLas ventas anuladas aparecen con neto en ARS = 0. Sin tipo de cambio, el convertido queda en 0.\n\nFECHA\tTIPO\tMARCA\tPRODUCTO / CONCEPTO\tAPP\tCANAL\tPAÍS\tCLIENTE\tMONEDA\tBRUTO\tDESCUENTO\tREEMBOLSO\tNETO\tCOMISIÓN\tIMP./RET.\tLIQUIDADO\tTC\tNETO ARS\tCOBRO\tENTREGA\tCUPÓN\tESTADO\tORIGEN\tFUENTE\tID EXTERNO\n02/10/2026\tVenta única\tEbooks para la vida\tLove Without Losing You · PDF · Español · v1.0\t\tEtsy\tItalia\tTomás Vidal\tUSD\t12,99\t0,00\t0,00\t12,99\t0,78\t0,00\t12,21\t1.436,0000\t$ 18.653,64\tCobrado\tEntregado\t\tvalida\tintegracion\tDataset DEMO\tDEMO-ORD-1041\n03/10/2026\tVenta única\tYOYI'R\tAgenda interactiva YOYI’R · PDF interactivo · Español · v1.0\tAgenda digital YOYI’R\tAplicaciones web independientes\tChile\tCamila Pérez\tARS\t15.999,00\t0,00\t0,00\t15.999,00\t959,94\t0,00\t15.039,06\t1,0000\t$ 15.999,00\tCobrado\tEntregado\t\tvalida\timportado\tDataset DEMO\tDEMO-ORD-1004\n05/10/2026\tVenta única\tEbooks para la vida\tRomance Reader Kit · HTML interactivo · Español · v1.0\tRomance Reader Kit\tSitio web propio\tArgentina\tNoah Smith\tUSD\t9,99\t0,00\t0,00\t9,99\t0,60\t0,00\t9,39\t1.443,0000\t$ 14.415,57\tCobrado\tEntregado\t\tvalida\timportado\tDataset DEMO\tDEMO-ORD-1040\n05/10/2026\tCobro de suscripción\tEstrategIA\tRemember · Remember Plus\tRemember\tAplicaciones web independientes\tMéxico\tSofía Martínez\tUSD\t8,99\t0,00\t0,00\t8,99\t0,30\t0,00\t8,69\t1.443,0000\t$ 12.972,57\tCobrado\tNo aplica\t\tvalida\tmanual\t\t\n06/10/2026\tVenta única\tEbooks para la vida\tCómo estudio esto · PDF · Español · v1.0\t\tApple Books\tColombia\tDiego Castillo\tUSD\t7,99\t0,00\t0,00\t7,99\t0,48\t0,00\t7,51\t1.443,0000\t$ 11.529,57\tCobrado\tEntregado\t\tvalida\tmanual\tDataset DEMO\tDEMO-ORD-1003\n06/10/2026\tCobro de suscripción\tEstrategIA\tRemember · Remember Personal\tRemember\tAplicaciones web independientes\tArgentina\tLucía Fernández\tUSD\t4,99\t0,00\t0,00\t4,99\t0,30\t0,00\t4,69\t1.443,0000\t$ 7.200,57\tCobrado\tNo aplica\t\tvalida\tmanual\t\t\n08/10/2026\tIngreso externo\tYOYI'R\tPack organización digital · ZIP · Español · v1.0\t\tAplicaciones web independientes\tMéxico\tGabriel López\tARS\t24.999,00\t0,00\t0,00\t24.999,00\t1.499,94\t0,00\t23.499,06\t1,0000\t$ 24.999,00\tCobrado\tEntregado\t\tvalida\tmanual\tDataset DEMO\tDEMO-ORD-1039\n09/10/2026\tVenta única\tEbooks para la vida\tTu dinero, sin enredos · EPUB · Español · v1.0\tFinanzas inteligentes\tAmazon\tUruguay\tLiam Wilson\tUSD\t8,99\t0,00\t0,00\t8,99\t0,54\t0,00\t8,45\t1.443,0000\t$ 12.972,57\tCobrado\tEntregado\t\tvalida\tintegracion\tDataset DEMO\tDEMO-ORD-1002\n11/10/2026\tVenta única\tEstrategIA\tPULSO QA · Tester · HTML interactivo · Español · v1.0\tPULSO QA\tApple Books\tEstados Unidos\tMarcos Torres\tARS\t14.999,00\t0,00\t2.249,85\t12.749,15\t899,94\t0,00\t11.849,21\t1,0000\t$ 12.749,15\tCobrado\tEntregado\t\tvalida\tintegracion\tDataset DEMO\tDEMO-ORD-1038\n12/10/2026\tVenta única\tEbooks para la vida\tLove Without Losing You · PDF · Español · v1.0\t\tEtsy\tItalia\tAlejandro Ruiz\tUSD\t12,99\t0,00\t0,00\t12,99\t0,78\t0,00\t12,21\t1.443,0000\t$ 18.744,57\tCobrado\tEntregado\t\tvalida\timportado\tDataset DEMO\tDEMO-ORD-1001\n14/10/2026\tVenta única\tEstrategIA\tConciliador ARCA · HTML interactivo · Español · v1.0\tConciliador ARCA\tAmazon\tEspaña\tLucas Herrera\tARS\t19.999,00\t0,00\t0,00\t19.999,00\t1.199,94\t0,00\t18.799,06\t1,0000\t$ 19.999,00\tCobrado\tEntregado\t\tvalida\timportado\tDataset DEMO\tDEMO-ORD-1037\n15/10/2026\tIngreso externo\tEbooks para la vida\tRomance Reader Kit · HTML interactivo · Español · v1.0\tRomance Reader Kit\tSitio web propio\tArgentina\tLucía Fernández\tUSD\t19,98\t1,00\t1,50\t17,48\t0,60\t0,00\t16,88\t1.450,0000\t$ 0,00\tA cobrar\tIncidencia\tDEMO10\tanulada\tmanual\tDataset DEMO\tDEMO-ORD-1000\nTotal\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t$ 170.235,21\t\t\t\t\t\t\t\n\n12 fila(s).",
+      "report_marca": "REPORTES\n◉ ECOSISTEMA\nReportes\n\nTablas filtradas por la lente y el período elegido. La exportación respeta los mismos filtros.\n\nCSV\nExcel\nVentas (detalle)\nVentas por marca\nVentas por producto y versión\nVentas por canal\nVentas por país\nRentabilidad por aplicación\nSuscripciones\nEventos de suscripción\nGastos (detalle)\nAsignación de gastos por app\nInfraestructura\nMovimientos de tesorería\nResultado mensual (12 meses)\nTipos de cambio\nHistorial de operaciones\nMARCA\tVENTAS\tUNIDADES\tBRUTAS ARS\tNETAS ARS\tCOMISIONES\tIMP./RET.\tLIQUIDADO\nEbooks para la vida\t5\t5\t$ 76.315,92\t$ 76.315,92\t$ 4.583,28\t$ 0,00\t$ 71.732,64\nEstrategIA\t4\t4\t$ 55.171,14\t$ 52.921,29\t$ 2.965,68\t$ 0,00\t$ 49.955,61\nYOYI'R\t2\t2\t$ 40.998,00\t$ 40.998,00\t$ 2.459,88\t$ 0,00\t$ 38.538,12\nTotal\t11\t11\t$ 172.485,06\t$ 170.235,21\t$ 10.008,84\t$ 0,00\t$ 160.226,37\n\n3 fila(s).",
+      "report_producto": "REPORTES\n◉ ECOSISTEMA\nReportes\n\nTablas filtradas por la lente y el período elegido. La exportación respeta los mismos filtros.\n\nCSV\nExcel\nVentas (detalle)\nVentas por marca\nVentas por producto y versión\nVentas por canal\nVentas por país\nRentabilidad por aplicación\nSuscripciones\nEventos de suscripción\nGastos (detalle)\nAsignación de gastos por app\nInfraestructura\nMovimientos de tesorería\nResultado mensual (12 meses)\nTipos de cambio\nHistorial de operaciones\nPRODUCTO · VERSIÓN\tVENTAS\tUNIDADES\tBRUTAS ARS\tNETAS ARS\tCOMISIONES\tIMP./RET.\tLIQUIDADO\nLove Without Losing You · PDF · Español · v1.0\t2\t2\t$ 37.398,21\t$ 37.398,21\t$ 2.245,62\t$ 0,00\t$ 35.152,59\nPack organización digital · ZIP · Español · v1.0\t1\t1\t$ 24.999,00\t$ 24.999,00\t$ 1.499,94\t$ 0,00\t$ 23.499,06\nSin producto (apps / externos)\t2\t2\t$ 20.173,14\t$ 20.173,14\t$ 865,80\t$ 0,00\t$ 19.307,34\nConciliador ARCA · HTML interactivo · Español · v1.0\t1\t1\t$ 19.999,00\t$ 19.999,00\t$ 1.199,94\t$ 0,00\t$ 18.799,06\nAgenda interactiva YOYI’R · PDF interactivo · Español · v1.0\t1\t1\t$ 15.999,00\t$ 15.999,00\t$ 959,94\t$ 0,00\t$ 15.039,06\nRomance Reader Kit · HTML interactivo · Español · v1.0\t1\t1\t$ 14.415,57\t$ 14.415,57\t$ 865,80\t$ 0,00\t$ 13.549,77\nTu dinero, sin enredos · EPUB · Español · v1.0\t1\t1\t$ 12.972,57\t$ 12.972,57\t$ 779,22\t$ 0,00\t$ 12.193,35\nPULSO QA · Tester · HTML interactivo · Español · v1.0\t1\t1\t$ 14.999,00\t$ 12.749,15\t$ 899,94\t$ 0,00\t$ 11.849,21\nCómo estudio esto · PDF · Español · v1.0\t1\t1\t$ 11.529,57\t$ 11.529,57\t$ 692,64\t$ 0,00\t$ 10.836,93\nTotal\t11\t11\t$ 172.485,06\t$ 170.235,21\t$ 10.008,84\t$ 0,00\t$ 160.226,37\n\n9 fila(s).",
+      "report_canal": "REPORTES\n◉ ECOSISTEMA\nReportes\n\nTablas filtradas por la lente y el período elegido. La exportación respeta los mismos filtros.\n\nCSV\nExcel\nVentas (detalle)\nVentas por marca\nVentas por producto y versión\nVentas por canal\nVentas por país\nRentabilidad por aplicación\nSuscripciones\nEventos de suscripción\nGastos (detalle)\nAsignación de gastos por app\nInfraestructura\nMovimientos de tesorería\nResultado mensual (12 meses)\nTipos de cambio\nHistorial de operaciones\nCANAL\tVENTAS\tUNIDADES\tBRUTAS ARS\tNETAS ARS\tCOMISIONES\tIMP./RET.\tLIQUIDADO\nAplicaciones web independientes\t4\t4\t$ 61.171,14\t$ 61.171,14\t$ 3.325,68\t$ 0,00\t$ 57.845,46\nEtsy\t2\t2\t$ 37.398,21\t$ 37.398,21\t$ 2.245,62\t$ 0,00\t$ 35.152,59\nAmazon\t2\t2\t$ 32.971,57\t$ 32.971,57\t$ 1.979,16\t$ 0,00\t$ 30.992,41\nApple Books\t2\t2\t$ 26.528,57\t$ 24.278,72\t$ 1.592,58\t$ 0,00\t$ 22.686,14\nSitio web propio\t1\t1\t$ 14.415,57\t$ 14.415,57\t$ 865,80\t$ 0,00\t$ 13.549,77\nTotal\t11\t11\t$ 172.485,06\t$ 170.235,21\t$ 10.008,84\t$ 0,00\t$ 160.226,37\n\n5 fila(s).",
+      "report_pais": "REPORTES\n◉ ECOSISTEMA\nReportes\n\nTablas filtradas por la lente y el período elegido. La exportación respeta los mismos filtros.\n\nCSV\nExcel\nVentas (detalle)\nVentas por marca\nVentas por producto y versión\nVentas por canal\nVentas por país\nRentabilidad por aplicación\nSuscripciones\nEventos de suscripción\nGastos (detalle)\nAsignación de gastos por app\nInfraestructura\nMovimientos de tesorería\nResultado mensual (12 meses)\nTipos de cambio\nHistorial de operaciones\nPAÍS\tVENTAS\tUNIDADES\tBRUTAS ARS\tNETAS ARS\tCOMISIONES\tIMP./RET.\tLIQUIDADO\nMéxico\t2\t2\t$ 37.971,57\t$ 37.971,57\t$ 1.932,84\t$ 0,00\t$ 36.038,73\nItalia\t2\t2\t$ 37.398,21\t$ 37.398,21\t$ 2.245,62\t$ 0,00\t$ 35.152,59\nArgentina\t2\t2\t$ 21.616,14\t$ 21.616,14\t$ 1.298,70\t$ 0,00\t$ 20.317,44\nEspaña\t1\t1\t$ 19.999,00\t$ 19.999,00\t$ 1.199,94\t$ 0,00\t$ 18.799,06\nChile\t1\t1\t$ 15.999,00\t$ 15.999,00\t$ 959,94\t$ 0,00\t$ 15.039,06\nUruguay\t1\t1\t$ 12.972,57\t$ 12.972,57\t$ 779,22\t$ 0,00\t$ 12.193,35\nEstados Unidos\t1\t1\t$ 14.999,00\t$ 12.749,15\t$ 899,94\t$ 0,00\t$ 11.849,21\nColombia\t1\t1\t$ 11.529,57\t$ 11.529,57\t$ 692,64\t$ 0,00\t$ 10.836,93\nTotal\t11\t11\t$ 172.485,06\t$ 170.235,21\t$ 10.008,84\t$ 0,00\t$ 160.226,37\n\n8 fila(s).",
+      "report_rentabilidad": "REPORTES\n◉ ECOSISTEMA\nReportes\n\nTablas filtradas por la lente y el período elegido. La exportación respeta los mismos filtros.\n\nCSV\nExcel\nVentas (detalle)\nVentas por marca\nVentas por producto y versión\nVentas por canal\nVentas por país\nRentabilidad por aplicación\nSuscripciones\nEventos de suscripción\nGastos (detalle)\nAsignación de gastos por app\nInfraestructura\nMovimientos de tesorería\nResultado mensual (12 meses)\nTipos de cambio\nHistorial de operaciones\n\nPeríodo para ingresos y costos; acumulados históricos para inversión y recuperación.\n\nAPP\tMARCA\tTIPO\tESTADO\tINGRESOS NETOS\tCOMISIONES\tIMP./RET.\tCOSTOS ASIGNADOS\tRESULTADO OPERATIVO\tINVERSIÓN ACUMULADA\tRESULTADO ACUMULADO\tRECUPERACIÓN %\tHORAS\nRemember\tEstrategIA\tApp por suscripción\tPublicada\t$ 20.173,14\t$ 865,80\t$ 0,00\t$ 0,00\t$ 19.307,34\t$ 199.365,00\t−$ 79.944,14\t40,10\t10\nADMINFLOW\tEstrategIA\tApp web de pago único\tPublicada\t$ 0,00\t$ 0,00\t$ 0,00\t$ 43.400,00\t−$ 43.400,00\t$ 137.000,00\t$ 132.084,23\t96,41\t14\nConciliador ARCA\tEstrategIA\tProducto descargable\tPruebas\t$ 19.999,00\t$ 1.199,94\t$ 0,00\t$ 12.100,00\t$ 6.699,06\t$ 216.730,00\t$ 31.393,61\t14,49\t9\nPULSO QA\tEstrategIA\tHerramienta interna\tPublicada\t$ 12.749,15\t$ 899,94\t$ 0,00\t$ 0,00\t$ 11.849,21\t$ 171.000,00\t$ 20.943,61\t12,25\t12\nRomance Reader Kit\tEbooks para la vida\tProducto descargable\tPublicada\t$ 14.415,57\t$ 865,80\t$ 0,00\t$ 0,00\t$ 13.549,77\t$ 272.725,00\t$ 5.218,29\t1,91\t9\nAgenda digital YOYI’R\tYOYI'R\tProducto descargable\tPublicada\t$ 15.999,00\t$ 959,94\t$ 0,00\t$ 0,00\t$ 15.039,06\t$ 205.000,00\t$ 37.033,46\t18,07\t12\nFinanzas inteligentes\tEbooks para la vida\tProducto descargable\tDesarrollo\t$ 12.972,57\t$ 779,22\t$ 0,00\t$ 0,00\t$ 12.193,35\t$ 279.160,00\t$ 37.003,00\t13,26\t9\nPanel de inventario B2B\tEstrategIA\tEn desarrollo (aún sin ingresos)\tIdea\t$ 0,00\t$ 0,00\t$ 0,00\t$ 26.500,00\t−$ 26.500,00\t$ 239.000,00\t−$ 96.400,00\t40,33\t12\nTotal\t\t\t\t$ 96.308,43\t$ 5.570,64\t$ 0,00\t$ 82.000,00\t$ 8.737,79\t$ 1.719.980,00\t$ 87.332,06\t\t87\n\n8 fila(s).",
+      "report_suscripciones": "REPORTES\n◉ ECOSISTEMA\nReportes\n\nTablas filtradas por la lente y el estado actual. La exportación respeta los mismos filtros.\n\nCSV\nExcel\nVentas (detalle)\nVentas por marca\nVentas por producto y versión\nVentas por canal\nVentas por país\nRentabilidad por aplicación\nSuscripciones\nEventos de suscripción\nGastos (detalle)\nAsignación de gastos por app\nInfraestructura\nMovimientos de tesorería\nResultado mensual (12 meses)\nTipos de cambio\nHistorial de operaciones\n\nContiene datos personales.\n\nAPP\tPLAN\tCLIENTE\tEMAIL\tESTADO\tALTA\tPRÓXIMA RENOVACIÓN\tPRECIO\tMONEDA\tPERIODICIDAD\tMRR ARS\nRemember\tRemember Personal\tLucía Fernández\tcliente01@ejemplo.test\tActiva\t06/08/2026\t21/10/2026\t4,99\tUSD\tmensual\t$ 7.235,50\nRemember\tRemember Plus\tSofía Martínez\tcliente02@ejemplo.test\tActiva\t10/08/2026\t23/10/2026\t8,99\tUSD\tmensual\t$ 13.035,50\nRemember\tRemember anual\tMarcos Torres\tcliente03@ejemplo.test\tEn prueba\t14/08/2026\t25/10/2026\t49,00\tUSD\tanual\t$ 0,00\nRemember\tRemember Personal\tValentina Gómez\tcliente04@ejemplo.test\tPago fallido\t18/08/2026\t27/10/2026\t4,99\tUSD\tmensual\t$ 0,00\nRemember\tRemember Plus\tCamila Pérez\tcliente05@ejemplo.test\tCancelada\t22/08/2026\t29/10/2026\t8,99\tUSD\tmensual\t$ 0,00\nRemember\tRemember anual\tDaniel Silva\tcliente06@ejemplo.test\tPausada\t26/08/2026\t31/10/2026\t49,00\tUSD\tanual\t$ 0,00\nRemember\tRemember Personal\tEmma Johnson\tcliente07@ejemplo.test\tActiva\t30/08/2026\t02/11/2026\t4,99\tUSD\tmensual\t$ 7.235,50\nRemember\tRemember Plus\tAlejandro Ruiz\tcliente08@ejemplo.test\tActiva\t03/09/2026\t04/11/2026\t8,99\tUSD\tmensual\t$ 13.035,50\nRemember\tRemember anual\tMia Robinson\tcliente09@ejemplo.test\tEn prueba\t07/09/2026\t06/11/2026\t49,00\tUSD\tanual\t$ 0,00\nRemember\tRemember Personal\tGabriel López\tcliente10@ejemplo.test\tPago fallido\t11/09/2026\t08/11/2026\t4,99\tUSD\tmensual\t$ 0,00\nRemember\tRemember Plus\tIsabella Costa\tcliente11@ejemplo.test\tCancelada\t15/09/2026\t10/11/2026\t8,99\tUSD\tmensual\t$ 0,00\nRemember\tRemember anual\tMateo Díaz\tcliente12@ejemplo.test\tPausada\t19/09/2026\t12/11/2026\t49,00\tUSD\tanual\t$ 0,00\nRemember\tRemember Personal\tOlivia Brown\tcliente13@ejemplo.test\tActiva\t23/09/2026\t14/11/2026\t4,99\tUSD\tmensual\t$ 7.235,50\nTotal\t\t\t\t\t\t\t\t\t\t$ 47.777,50\n\n13 fila(s).",
+      "report_eventos": "REPORTES\n◉ ECOSISTEMA\nReportes\n\nTablas filtradas por la lente y el período elegido. La exportación respeta los mismos filtros.\n\nCSV\nExcel\nVentas (detalle)\nVentas por marca\nVentas por producto y versión\nVentas por canal\nVentas por país\nRentabilidad por aplicación\nSuscripciones\nEventos de suscripción\nGastos (detalle)\nAsignación de gastos por app\nInfraestructura\nMovimientos de tesorería\nResultado mensual (12 meses)\nTipos de cambio\nHistorial de operaciones\nFECHA\tEVENTO\tAPP\tPLAN\tCLIENTE\tIMPORTE\tMONEDA\n06/10/2026\tRenovación cobrada\tRemember\tRemember Personal\tLucía Fernández\t4,99\tUSD\n06/10/2026\tRenovación cobrada\tRemember\tRemember Personal\tEmma Johnson\t4,99\tUSD\n06/10/2026\tRenovación cobrada\tRemember\tRemember Personal\tOlivia Brown\t4,99\tUSD\n07/10/2026\tCancelación\tRemember\tRemember Plus\tCamila Pérez\t\t\n07/10/2026\tCancelación\tRemember\tRemember Plus\tIsabella Costa\t\t\n10/10/2026\tPausa\tRemember\tRemember anual\tDaniel Silva\t\t\n10/10/2026\tPausa\tRemember\tRemember anual\tMateo Díaz\t\t\n13/10/2026\tPago fallido\tRemember\tRemember Personal\tValentina Gómez\t\t\n13/10/2026\tPago fallido\tRemember\tRemember Personal\tGabriel López\t\t\n\n9 fila(s).",
+      "report_gastos": "REPORTES\n◉ ECOSISTEMA\nReportes\n\nTablas filtradas por la lente y el período elegido. La exportación respeta los mismos filtros.\n\nCSV\nExcel\nVentas (detalle)\nVentas por marca\nVentas por producto y versión\nVentas por canal\nVentas por país\nRentabilidad por aplicación\nSuscripciones\nEventos de suscripción\nGastos (detalle)\nAsignación de gastos por app\nInfraestructura\nMovimientos de tesorería\nResultado mensual (12 meses)\nTipos de cambio\nHistorial de operaciones\nFECHA\tCONCEPTO\tPROVEEDOR\tCATEGORÍA\tNATURALEZA\tIMPORTE\tMONEDA\tPARTE (LENTE)\tIMPORTE ARS\tESTADO\tVENCIMIENTO\tFRECUENCIA\tASIGNACIÓN\tCOMPROBANTE\tORIGEN\n05/10/2026\tSuscripción de software #3\tCanva\tPublicidad otras plataformas\toperativo\t12.100,00\tARS\t100,00\t$ 12.100,00\tPagado\t13/10/2026\tÚnico\tConciliador ARCA 100%\tDEMO-FACT-102\testimado\n05/10/2026\tPublicidad en redes #26\tPublicidad digital\tRecursos gráficos\toperativo\t36.100,00\tARS\t100,00\t$ 36.100,00\tPagado\t10/10/2026\tÚnico\tADMINFLOW 100%\tDEMO-FACT-125\timportado\n10/10/2026\tPublicidad en redes #2\tProveedor IA\tHerramientas de IA\toperativo\t7.300,00\tARS\t100,00\t$ 7.300,00\tPagado\t14/10/2026\tÚnico\tADMINFLOW 100%\tDEMO-FACT-101\timportado\n10/10/2026\tHosting mensual #25\tServicio de email\tCertificados / servicios técnicos\tinversion\t55,00\tUSD\t100,00\t$ 79.365,00\tPendiente\t19/10/2026\tMensual\tRemember 100%\tDEMO-FACT-124\tmanual\n15/10/2026\tHosting mensual #1\tHostinger\tHosting\tinversion\t15,00\tUSD\t100,00\t$ 21.750,00\tPendiente\t19/10/2026\tMensual\tEstrategIA 50%; Ebooks para la vida 50%\tDEMO-FACT-100\tmanual\n15/10/2026\tAsesoría profesional #24\tCanva\tOtros gastos administrativos\toperativo\t26.500,00\tARS\t100,00\t$ 26.500,00\tPagado\t12/10/2026\tÚnico\tPanel de inventario B2B 100%\tDEMO-FACT-123\testimado\nTotal\t\t\t\t\t\t\t\t$ 183.115,00\t\t\t\t\t\t\n\n6 fila(s).",
+      "report_asignacion": "REPORTES\n◉ ECOSISTEMA\nReportes\n\nTablas filtradas por la lente y el período elegido. La exportación respeta los mismos filtros.\n\nCSV\nExcel\nVentas (detalle)\nVentas por marca\nVentas por producto y versión\nVentas por canal\nVentas por país\nRentabilidad por aplicación\nSuscripciones\nEventos de suscripción\nGastos (detalle)\nAsignación de gastos por app\nInfraestructura\nMovimientos de tesorería\nResultado mensual (12 meses)\nTipos de cambio\nHistorial de operaciones\nAPP\tGASTO\tFECHA\tPARTE %\tASIGNADO ARS\nADMINFLOW\tPublicidad en redes #2\t10/10/2026\t100,00\t$ 7.300,00\nADMINFLOW\tPublicidad en redes #26\t05/10/2026\t100,00\t$ 36.100,00\nConciliador ARCA\tSuscripción de software #3\t05/10/2026\t100,00\t$ 12.100,00\nPanel de inventario B2B\tAsesoría profesional #24\t15/10/2026\t100,00\t$ 26.500,00\nRemember\tHosting mensual #25\t10/10/2026\t100,00\t$ 79.365,00\nTotal\t\t\t\t$ 161.365,00\n\n5 fila(s).",
+      "report_infra": "REPORTES\n◉ ECOSISTEMA\nReportes\n\nTablas filtradas por la lente y el estado actual. La exportación respeta los mismos filtros.\n\nCSV\nExcel\nVentas (detalle)\nVentas por marca\nVentas por producto y versión\nVentas por canal\nVentas por país\nRentabilidad por aplicación\nSuscripciones\nEventos de suscripción\nGastos (detalle)\nAsignación de gastos por app\nInfraestructura\nMovimientos de tesorería\nResultado mensual (12 meses)\nTipos de cambio\nHistorial de operaciones\nTIPO\tNOMBRE\tPROVEEDOR\tCOSTO\tMONEDA\tFRECUENCIA\tMENSUAL EQ. ARS\tRENOVACIÓN\tESTADO\tAPPS\nHosting / servidor\tHostinger Premium\tHostinger\t24.999,00\tARS\tMensual\t$ 24.999,00\t10/10/2026\tEn uso\tRemember; ADMINFLOW; Romance Reader Kit\nDominio\tDominio del ecosistema\tHostinger\t19.999,00\tARS\tAnual\t$ 1.666,58\t17/10/2026\tEn uso\tRemember; Romance Reader Kit\nHerramienta / software\tHerramienta de IA\tProveedor IA\t20,00\tUSD\tMensual\t$ 29.000,00\t24/10/2026\tEn uso\tRemember; ADMINFLOW\nHerramienta / software\tCanva Pro\tCanva\t12.999,00\tARS\tMensual\t$ 12.999,00\t31/10/2026\tEn uso\tAgenda digital YOYI’R\nCorreo transaccional\tServicio de correos\tServicio de email\t9,00\tUSD\tMensual\t$ 13.050,00\t10/10/2026\tSin uso\tRemember\nBase de datos\tBase de datos\tHostinger\t15,00\tUSD\tMensual\t$ 21.750,00\t17/10/2026\tEn uso\tRemember\nRepositorio\tRepositorio de código\tHostinger\t0,00\tUSD\tMensual\t$ 0,00\t24/10/2026\tEn uso\tADMINFLOW; PULSO QA\nAlmacenamiento\tAlmacenamiento y respaldos\tHostinger\t5.999,00\tARS\tMensual\t$ 0,00\t31/10/2026\tCancelado\tAgenda digital YOYI’R\nTotal\t\t\t\t\t\t$ 103.464,58\t\t\t\n\n8 fila(s).",
+      "report_tesoreria": "REPORTES\n◉ ECOSISTEMA\nReportes\n\nTablas filtradas por la lente y el período elegido. La exportación respeta los mismos filtros.\n\nCSV\nExcel\nVentas (detalle)\nVentas por marca\nVentas por producto y versión\nVentas por canal\nVentas por país\nRentabilidad por aplicación\nSuscripciones\nEventos de suscripción\nGastos (detalle)\nAsignación de gastos por app\nInfraestructura\nMovimientos de tesorería\nResultado mensual (12 meses)\nTipos de cambio\nHistorial de operaciones\nFECHA\tTIPO\tDESDE\tHACIA\tIMPORTE\tMONEDA\tDETALLE\n02/10/2026\tCobro de venta\t\tCuenta internacional · USD\t12,21\tUSD\tCobro DEMO\n03/10/2026\tCobro de venta\t\tMercado Pago · ARS\t15.039,06\tARS\tCobro DEMO\n05/10/2026\tCobro de venta\t\tCuenta internacional · USD\t9,39\tUSD\tCobro DEMO\n05/10/2026\tCobro de venta\t\tCuenta internacional · USD\t8,69\tUSD\tRemember · Remember Plus\n05/10/2026\tPago de gasto\tBanco empresa · ARS\t\t12.100,00\tARS\tSuscripción de software #3\n05/10/2026\tPago de gasto\tBanco empresa · ARS\t\t36.100,00\tARS\tPublicidad en redes #26\n06/10/2026\tCobro de venta\t\tCuenta internacional · USD\t7,51\tUSD\tCobro DEMO\n06/10/2026\tCobro de venta\t\tCuenta internacional · USD\t4,69\tUSD\tRemember · Remember Personal\n08/10/2026\tCobro de venta\t\tBanco empresa · ARS\t23.499,06\tARS\tCobro DEMO\n09/10/2026\tCobro de venta\t\tCuenta internacional · USD\t8,45\tUSD\tCobro DEMO\n10/10/2026\tPago de gasto\tBanco empresa · ARS\t\t7.300,00\tARS\tPublicidad en redes #2\n11/10/2026\tCobro de venta\t\tMercado Pago · ARS\t11.849,21\tARS\tCobro DEMO\n11/10/2026\tRetiro personal\tBanco empresa · ARS\t\t38.000,00\tARS\tRetiro ficticio\n12/10/2026\tCobro de venta\t\tCuenta internacional · USD\t12,21\tUSD\tCobro DEMO\n14/10/2026\tCobro de venta\t\tBanco empresa · ARS\t18.799,06\tARS\tCobro DEMO\n15/10/2026\tPago de gasto\tBanco empresa · ARS\t\t26.500,00\tARS\tAsesoría profesional #24\n\n16 fila(s).",
+      "report_mensual": "REPORTES\n◉ ECOSISTEMA\nReportes\n\nTablas filtradas por la lente y el estado actual. La exportación respeta los mismos filtros.\n\nCSV\nExcel\nVentas (detalle)\nVentas por marca\nVentas por producto y versión\nVentas por canal\nVentas por país\nRentabilidad por aplicación\nSuscripciones\nEventos de suscripción\nGastos (detalle)\nAsignación de gastos por app\nInfraestructura\nMovimientos de tesorería\nResultado mensual (12 meses)\nTipos de cambio\nHistorial de operaciones\nMES\tBRUTAS\tNETAS\tCOMISIONES\tIMP./RET.\tGASTOS\tRESULTADO\tCOBRADO\tINVERSIÓN\nnoviembre 2025\t$ 0,00\t$ 0,00\t$ 0,00\t$ 0,00\t$ 0,00\t$ 0,00\t$ 0,00\t$ 0,00\ndiciembre 2025\t$ 0,00\t$ 0,00\t$ 0,00\t$ 0,00\t$ 0,00\t$ 0,00\t$ 0,00\t$ 0,00\nenero 2026\t$ 0,00\t$ 0,00\t$ 0,00\t$ 0,00\t$ 0,00\t$ 0,00\t$ 0,00\t$ 0,00\nfebrero 2026\t$ 0,00\t$ 0,00\t$ 0,00\t$ 0,00\t$ 0,00\t$ 0,00\t$ 0,00\t$ 0,00\nmarzo 2026\t$ 0,00\t$ 0,00\t$ 0,00\t$ 0,00\t$ 0,00\t$ 0,00\t$ 0,00\t$ 0,00\nabril 2026\t$ 0,00\t$ 0,00\t$ 0,00\t$ 0,00\t$ 0,00\t$ 0,00\t$ 0,00\t$ 0,00\nmayo 2026\t$ 0,00\t$ 0,00\t$ 0,00\t$ 0,00\t$ 0,00\t$ 0,00\t$ 0,00\t$ 0,00\njunio 2026\t$ 83.192,26\t$ 83.192,26\t$ 2.496,60\t$ 0,00\t$ 21.700,00\t$ 58.995,66\t$ 80.695,66\t$ 0,00\njulio 2026\t$ 210.938,22\t$ 207.017,62\t$ 10.788,90\t$ 0,00\t$ 255.400,00\t−$ 59.171,28\t$ 185.812,35\t$ 111.520,00\nagosto 2026\t$ 419.756,78\t$ 406.931,68\t$ 23.334,00\t$ 0,00\t$ 255.600,00\t$ 127.997,68\t$ 359.481,02\t$ 84.725,00\nseptiembre 2026\t$ 443.258,02\t$ 435.865,92\t$ 23.982,12\t$ 0,00\t$ 226.600,00\t$ 185.283,80\t$ 379.396,65\t$ 57.160,00\noctubre 2026\t$ 172.485,06\t$ 170.235,21\t$ 10.008,84\t$ 0,00\t$ 82.000,00\t$ 78.226,37\t$ 160.226,37\t$ 101.115,00\nTotal\t$ 1.329.630,34\t$ 1.303.242,69\t$ 70.610,46\t$ 0,00\t$ 841.300,00\t$ 391.332,23\t$ 1.165.612,05\t$ 354.520,00\n\n12 fila(s).",
+      "report_tc": "REPORTES\n◉ ECOSISTEMA\nReportes\n\nTablas filtradas por la lente y el estado actual. La exportación respeta los mismos filtros.\n\nCSV\nExcel\nVentas (detalle)\nVentas por marca\nVentas por producto y versión\nVentas por canal\nVentas por país\nRentabilidad por aplicación\nSuscripciones\nEventos de suscripción\nGastos (detalle)\nAsignación de gastos por app\nInfraestructura\nMovimientos de tesorería\nResultado mensual (12 meses)\nTipos de cambio\nHistorial de operaciones\nFECHA\tMONEDA\t1 UNIDAD EN ARS\tFUENTE\n12/05/2026\tUSD\t1.359,0000\tCotización DEMO\n24/05/2026\tUSD\t1.366,0000\tCotización DEMO\n05/06/2026\tUSD\t1.373,0000\tCotización DEMO\n17/06/2026\tUSD\t1.380,0000\tCotización DEMO\n29/06/2026\tUSD\t1.387,0000\tCotización DEMO\n11/07/2026\tUSD\t1.394,0000\tCotización DEMO\n23/07/2026\tUSD\t1.401,0000\tCotización DEMO\n04/08/2026\tUSD\t1.408,0000\tCotización DEMO\n16/08/2026\tUSD\t1.415,0000\tCotización DEMO\n28/08/2026\tUSD\t1.422,0000\tCotización DEMO\n09/09/2026\tUSD\t1.429,0000\tCotización DEMO\n21/09/2026\tUSD\t1.436,0000\tCotización DEMO\n03/10/2026\tUSD\t1.443,0000\tCotización DEMO\n15/10/2026\tUSD\t1.450,0000\tCotización DEMO\n\n14 fila(s).",
+      "report_historial": "REPORTES\n◉ ECOSISTEMA\nReportes\n\nTablas filtradas por la lente y el período elegido. La exportación respeta los mismos filtros.\n\nCSV\nExcel\nVentas (detalle)\nVentas por marca\nVentas por producto y versión\nVentas por canal\nVentas por país\nRentabilidad por aplicación\nSuscripciones\nEventos de suscripción\nGastos (detalle)\nAsignación de gastos por app\nInfraestructura\nMovimientos de tesorería\nResultado mensual (12 meses)\nTipos de cambio\nHistorial de operaciones\nFECHA Y HORA\tACCIÓN\tDETALLE\n15/10/2026, 12:00:00\tDatos de demostración\tDataset ficticio precargado, aislado de producción\n\n1 fila(s).",
+      "lens": "br_estrategia",
+      "period": {
+        "from": "2026-09-01",
+        "to": "2026-10-15"
+      },
+      "theme": "dark",
+      "command_newSale": [
+        "Registrar venta o ingreso"
+      ],
+      "command_newExpense": [
+        "Registrar gasto"
+      ],
+      "command_newSub": [
+        "Nueva suscripción"
+      ],
+      "command_subPayment": [
+        "Registrar cobro de suscripción"
+      ],
+      "command_newProject": [
+        "Nueva aplicación o proyecto"
+      ],
+      "command_newProduct": [
+        "Nuevo producto digital"
+      ],
+      "command_newResource": [
+        "Nuevo recurso de infraestructura"
+      ],
+      "command_newEvent": [
+        "Nuevo evento"
+      ],
+      "command_newCustomer": [
+        "Nuevo cliente"
+      ],
+      "command_newSupplier": [
+        "Nuevo proveedor"
+      ],
+      "command_newRate": [
+        "Tipo de cambio"
+      ],
+      "command_newTreasury": [
+        "Movimiento de tesorería"
+      ],
+      "command_newTime": [
+        "Registrar horas"
+      ],
+      "command_importCSV": [
+        "Importar CSV"
+      ],
+      "command_importJSON": [
+        "Importar eventos JSON"
+      ],
+      "sales_search": "PRODUCTOS Y VENTAS\n◉ ECOSISTEMA\nProductos y ventas\n\nCatálogo con versiones, formatos e idiomas; cada venta conserva su canal, moneda, comisiones y entrega.\n\nProducto\nRegistrar venta\nVentas\nCatálogo\nCanales y países\nTodos los canales\nSitio web propio\nEtsy\nAmazon\nApple Books\nAplicaciones web independientes\nTodos los tipos\nVenta única\nCobro de suscripción\nIngreso externo\nCobro: todos\nA cobrar\nCobrado\nEntrega: todas\nNo aplica\nEntregado\nEntrega pendiente\nIncidencia\n0 ventas\n$ 0,00 netos\n\nSin ventas con estos filtros en el período.",
+      "catalog_search": "PRODUCTOS Y VENTAS\n◉ ECOSISTEMA\nProductos y ventas\n\nCatálogo con versiones, formatos e idiomas; cada venta conserva su canal, moneda, comisiones y entrega.\n\nProducto\nRegistrar venta\nVentas\nCatálogo\nCanales y países\nTodos los estados\nBorrador\nPublicado\nRequiere actualización\nPausado\nRetirado\n\nSin productos con estos filtros.",
+      "customer_search": "CLIENTES Y USUARIOS\n◉ ECOSISTEMA\nClientes\n\nQuién compra qué en todo el ecosistema. Los datos de contacto se muestran enmascarados en la lista y completos solo en la ficha.\n\nCliente\nTodos\nNuevos del período\nRecurrentes\nCon suscripción\nCon reembolsos\n0 cliente(s)\n\nSin clientes con estos filtros.",
+      "customer_persisted": [
+        {
+          "name": "Prueba Fase 2",
+          "email": "fase2@ejemplo.test"
+        }
+      ],
+      "sale": {
+        "calc": {
+          "gross": 200,
+          "discount": 20,
+          "refunded": 30,
+          "net": 150,
+          "commission": 10,
+          "tax": 5,
+          "liquid": 135
+        },
+        "receipts": [
+          135
+        ]
+      },
+      "csv_preview": "Importar CSV\nQué importás *\nVentas / ingresos\nGastos\nFuente *\nArchivo CSV *\nDesde Excel: Guardar como → CSV.\nCOLUMNAS (1 FILAS DETECTADAS)\nFecha *\n— no importar —\nfecha\nproducto\nimporte\nmoneda\nid\nImporte / precio *\n— no importar —\nfecha\nproducto\nimporte\nmoneda\nid\nCantidad\n— no importar —\nfecha\nproducto\nimporte\nmoneda\nid\nMoneda\n— no importar —\nfecha\nproducto\nimporte\nmoneda\nid\nProducto (nombre)\n— no importar —\nfecha\nproducto\nimporte\nmoneda\nid\nID externo\n— no importar —\nfecha\nproducto\nimporte\nmoneda\nid\nCanal\n— no importar —\nfecha\nproducto\nimporte\nmoneda\nid\nPaís\n— no importar —\nfecha\nproducto\nimporte\nmoneda\nid\nCliente (nombre)\n— no importar —\nfecha\nproducto\nimporte\nmoneda\nid\nCliente (email)\n— no importar —\nfecha\nproducto\nimporte\nmoneda\nid\nDescuento\n— no importar —\nfecha\nproducto\nimporte\nmoneda\nid\nCupón\n— no importar —\nfecha\nproducto\nimporte\nmoneda\nid\nComisión\n— no importar —\nfecha\nproducto\nimporte\nmoneda\nid\nImpuestos / retenciones\n— no importar —\nfecha\nproducto\nimporte\nmoneda\nid\nReembolso\n— no importar —\nfecha\nproducto\nimporte\nmoneda\nid\nVALORES FIJOS (SI EL ARCHIVO NO LOS TRAE)\nMoneda por defecto *\nARS\nUSD\nFormato de fecha\nAutomático\ndd/mm/aaaa\nmm/dd/aaaa\nCanal por defecto\nSin canal\nSitio web propio\nEtsy\nAmazon\nApple Books\nAplicaciones web independientes\nMarca por defecto\nElegí una marca…\nEstrategIA\nYOYI'R\nEbooks para la vida\nSi el producto no se reconoce.\nApp vinculada\nNinguna\nRemember · EstrategIA\nADMINFLOW · EstrategIA\nConciliador ARCA · EstrategIA\nPULSO QA · EstrategIA\nRomance Reader Kit · Ebooks para la vida\nAgenda digital YOYI’R · YOYI'R\nFinanzas inteligentes · Ebooks para la vida\nPanel de inventario B2B · EstrategIA\n¿Ya cobradas?\nA cobrar\nCobrado\n1 listas para importar\n0 a revisión (posible duplicado)\n0 omitidas\n0 con errores\nFILA\tFECHA\tPRODUCTO / CONCEPTO\tIMPORTE\tCANAL\n2\t15/10/2026\tRomance Reader Kit\t$ 321,00\t—\nCancelar\nImportar",
+      "csv_imported": 1,
+      "json_event": {
+        "feedback": "0 procesados\n1 ya existían\n0 con error",
+        "sales": 1
+      },
+      "export_csv": {
+        "extension": ".csv",
+        "sha256": "159c2d2d197ce8a351e8ff4d060786314ccdc83dbfbb2cfbe67814ba27ba0d72",
+        "bytes": 9918
+      },
+      "export_xls": {
+        "extension": ".xls",
+        "sha256": "d5d906f80765dfe6a9490bc60c73de5aeba732855e86d0bd56cd6dce60c8b4d8",
+        "bytes": 51647
+      },
+      "backup_counts": {
+        "rates": 14,
+        "projects": 8,
+        "plans": 3,
+        "products": 10,
+        "customers": 25,
+        "sales": 72,
+        "subs": 13,
+        "expenses": 45,
+        "resources": 8,
+        "suppliers": 7,
+        "events": 30,
+        "treasury": 104,
+        "integrations": 6,
+        "review": 1,
+        "timeLogs": 26,
+        "log": 8
+      },
+      "restore_counts": {
+        "rates": 14,
+        "projects": 8,
+        "plans": 3,
+        "products": 10,
+        "customers": 25,
+        "sales": 72,
+        "subs": 13,
+        "expenses": 45,
+        "resources": 8,
+        "suppliers": 7,
+        "events": 30,
+        "treasury": 104,
+        "integrations": 6,
+        "review": 1,
+        "timeLogs": 26,
+        "log": 9
+      },
+      "wrong_pin": "PIN incorrecto",
+      "unlocked": true
+    },
+    "modular": {
+      "registries": {
+        "screens": [
+          "pulso",
+          "marcas",
+          "apps",
+          "ventas",
+          "suscripciones",
+          "gastos",
+          "finanzas",
+          "infra",
+          "calendario",
+          "clientes",
+          "integraciones",
+          "reportes",
+          "ajustes"
+        ],
+        "actions": [
+          "tickerGo",
+          "go",
+          "setLens",
+          "toggleTheme",
+          "lockNow",
+          "pickPeriod",
+          "palette",
+          "openRef",
+          "ideaProject",
+          "openProjectEl",
+          "openResourceEl",
+          "setLensGo",
+          "newProject",
+          "newTime",
+          "tab",
+          "newProduct",
+          "openProductEl",
+          "newSale",
+          "openSale",
+          "newSub",
+          "openSubEl",
+          "openSub",
+          "subPayment",
+          "newExpense",
+          "openExpenseEl",
+          "openExpense",
+          "newSupplier",
+          "editSupplier",
+          "delTreasury",
+          "newTreasury",
+          "newRate",
+          "delRate",
+          "newResource",
+          "calNav",
+          "calDay",
+          "newEvent",
+          "custSeg",
+          "newCustomer",
+          "openCustomerEl",
+          "editInteg",
+          "importCSV",
+          "reviewDo",
+          "copySpec",
+          "importJSON",
+          "pickRep",
+          "exportRep",
+          "rmItem",
+          "rmGroup",
+          "rmBrand",
+          "rmCur",
+          "rmChannel",
+          "rmAccount",
+          "saveNeg",
+          "saveAl",
+          "setPin",
+          "backup",
+          "wipe"
+        ],
+        "changes": [
+          "appFilt",
+          "salesFilt",
+          "catFilt",
+          "subFilt",
+          "expFilt",
+          "toggleEnv"
+        ],
+        "inputs": [
+          "salesQ",
+          "catQ",
+          "custQ"
+        ],
+        "reports": [
+          "ventas",
+          "marca",
+          "producto",
+          "canal",
+          "pais",
+          "rentabilidad",
+          "suscripciones",
+          "eventos",
+          "gastos",
+          "asignacion",
+          "infra",
+          "tesoreria",
+          "mensual",
+          "tc",
+          "historial"
+        ]
+      },
+      "syntax": {
+        "parsed": true
+      },
+      "screen_pulso": "PULSO · ESTE MES\n◉ ECOSISTEMA\nHola, Equipo.\n\n01/10/2026 – 15/10/2026. Tocá cualquier cifra para ver de dónde sale.\n\nCrear\nRegistrar venta\nResultado del negocio i\n$ 78.226,37\n▼ 45,8% vs. período anterior\nBRUTAS\n$ 172k\nNETOS\n$ 170k\nCOMISIONES\n−$ 10k\nIMP./RET.\n$ 0\nGASTOS\n−$ 82k\nVENTAS BRUTAS\ni\n$ 172.485,06\n▼ 37,9%\n11 operaciones\nINGRESOS NETOS\ni\n$ 170.235,21\n▼ 37,9%\n−$ 2.250 desc./reemb.\nDINERO COBRADO\ni\n$ 160.226,37\n▼ 34,6%\nGASTOS OPERATIVOS\ni\n$ 82.000,00\n▼ 29,2%\n+ $ 101k inversión\nMRR\ni\n$ 47.777,50\nARR $ 573k\nSUSCRIPCIONES ACTIVAS\ni\n5\n2 en prueba ·\n2 con pago fallido\nCOMISIONES\ni\n$ 10.008,84\n5,9% de los ingresos netos\nIMPUESTOS Y RETENCIONES\ni\n$ 0,00\nIngresos netos vs. gastos\nIngresos netos (−comis./imp.)\nGastos\n$ 0\n$ 13k\n$ 25k\n$ 38k\n$ 50k\n01/10\n03/10\n05/10\n07/10\n09/10\n11/10\n13/10\n15/10\nAlertas\nCalendario →\nPago vencido: Publicidad en redes #18\nVenció el 28/09/2026 · $ 40.900,00\nPago vencido: Suscripción de software #35\nVenció el 01/10/2026 · $ 36.100,00\nRenovación vencida: Hostinger Premium\nEra el 10/10/2026\nRenovación próxima: Dominio del ecosistema\n17/10/2026 (en 2 días) · $ 19.999,00\nRenovación vencida: Servicio de correos\nEra el 10/10/2026\nRenovación próxima: Base de datos\n17/10/2026 (en 2 días) · US$ 15,00\ny 23 más →\nVentas por marca\nTotal\n$ 170k\nEbooks para la vida · 44,8%\nEstrategIA · 31,1%\nYOYI'R · 24,1%\nEbooks para la vida →\nYOYI'R →\nEstrategIA →\nRecurrente vs. única\ni\nTotal\n$ 170k\nRecurrente · 11,9%\nÚnica / externa · 88,1%\nRecurrente →\nÚnica →\nGastos por categoría\nRecursos gráficos\n$ 36k\nOtros gastos administrativos\n$ 27k\nPublicidad otras plataformas\n$ 12k\nHerramientas de IA\n$ 7.300\nRentabilidad por aplicación\nresultado operativo del período\nRemember ingresos $ 20k\n$ 19k\nAgenda digital YOYI’R ingresos $ 16k\n$ 15k\nRomance Reader Kit ingresos $ 14k\n$ 14k\nFinanzas inteligentes ingresos $ 13k\n$ 12k\nPULSO QA ingresos $ 13k\n$ 12k\nConciliador ARCA ingresos $ 20k\n$ 6.699\nPanel de inventario B2B ingresos $ 0\n−$ 27k\nADMINFLOW ingresos $ 0\n−$ 43k\nProductos que más venden\ningresos netos\nLove Without Losing You 2 u.\n$ 37k\nPack organización digital 1 u.\n$ 25k\nConciliador ARCA 1 u.\n$ 20k\nAgenda interactiva YOYI’R 1 u.\n$ 16k\nRomance Reader Kit 1 u.\n$ 14k\nTu dinero, sin enredos 1 u.\n$ 13k\nPULSO QA · Tester 1 u.\n$ 13k\nComisiones por plataforma\nAplicaciones web independientes 5,4%\n$ 3.326\nEtsy 6%\n$ 2.246\nAmazon 6%\n$ 1.979\nApple Books 6,6%\n$ 1.593\nSitio web propio 6%\n$ 866\nClientes\ni\nTotal\n11\nNuevos · 0%\nRecurrentes · 100%\nSuscripciones ganadas y perdidas\n-2\n1\n4\n7\n10\nmay\njun\njul\nago\nsep\noct\nGanadas\nPerdidas\nResultado mensual\núltimos 12 meses\n−$ 100k\n−$ 25k\n$ 50k\n$ 125k\n$ 200k\nnov\ndic\nene\nfeb\nmar\nabr\nmay\njun\njul\nago\nsep\noct\nMapa del ecosistema\nAmpliar →\nEstrategIA\nYOYI'R\nEbooks para la vida",
+      "screen_marcas": "MIS MARCAS\n◉ ECOSISTEMA\nMarcas\n\nRendimiento individual de cada marca. Los gastos se atribuyen según su asignación (directa o vía aplicaciones).\n\nEditar marcas\nEstrategIA\n\nTecnología, productividad y soluciones digitales\n\nINGRESOS NETOS\n$ 52.921,29\nGASTOS ATRIBUIDOS\n$ 82.000,00\nRESULTADO\n−$ 32.044,39\nMRR\n$ 47.777,50\nPRODUCTOS\n3\nAPPS\n5\nMÁS VENDIDOS\nConciliador ARCA\n$ 20k\nPULSO QA · Tester\n$ 13k\nVer todo con esta lente\nYOYI'R\n\nOrganización, bienestar y planificación\n\nINGRESOS NETOS\n$ 40.998,00\nGASTOS ATRIBUIDOS\n$ 0,00\nRESULTADO\n$ 38.538,12\nMRR\n$ 0,00\nPRODUCTOS\n3\nAPPS\n1\nMÁS VENDIDOS\nPack organización digital\n$ 25k\nAgenda interactiva YOYI’R\n$ 16k\nVer todo con esta lente\nEbooks para la vida\n\nEducación y recursos editoriales\n\nINGRESOS NETOS\n$ 76.315,92\nGASTOS ATRIBUIDOS\n$ 0,00\nRESULTADO\n$ 71.732,64\nMRR\n$ 0,00\nPRODUCTOS\n4\nAPPS\n2\nMÁS VENDIDOS\nLove Without Losing You\n$ 37k\nRomance Reader Kit\n$ 14k\nTu dinero, sin enredos\n$ 13k\nCómo estudio esto\n$ 12k\nVer todo con esta lente\nMapa del ecosistema\nMarcas → aplicaciones y catálogos → infraestructura. Tamaño según ingresos históricos.\nCentro de Operaciones…\nEstrategIA\nYOYI'R\nEbooks para la vida\nRemember\nADMINFLOW\nConciliador ARCA\nPULSO QA\nPanel de inventario B…\nAgenda digital YOYI’R\n2 productos\nRomance Reader Kit\nFinanzas inteligentes\n2 productos\nHostinger Premium\nDominio del ecosistema\nHerramienta de IA\nCanva Pro\nServicio de correos\nBase de datos\nRepositorio de código\nEcosistema\nApp con resultado ≥ 0\nApp con resultado negativo\nInfraestructura\nRecurso sin uso\nComparación de marcas\nMARCA\tVENTAS BRUTAS\tINGRESOS NETOS\tCOMISIONES\tGASTOS\tRESULTADO\t% DEL TOTAL\n\nEstrategIA\t$ 55.171,14\t$ 52.921,29\t$ 2.965,68\t$ 82.000,00\t−$ 32.044,39\t31,1%\n\nYOYI'R\t$ 40.998,00\t$ 40.998,00\t$ 2.459,88\t$ 0,00\t$ 38.538,12\t24,1%\n\nEbooks para la vida\t$ 76.315,92\t$ 76.315,92\t$ 4.583,28\t$ 0,00\t$ 71.732,64\t44,8%",
+      "screen_apps": "MIS APLICACIONES\n◉ ECOSISTEMA\nAplicaciones y proyectos\n\nCada app con su ficha técnica, monetización, usuarios, costos asignados y recuperación de la inversión — esté o no dentro de la tienda principal.\n\nNueva app / proyecto\nTodos los estados\nIdea\nDesarrollo\nPruebas\nPublicada\nPausada\nRetirada\nTodos los tipos\nProducto descargable\nApp web de pago único\nApp por suscripción\nEn desarrollo (aún sin ingresos)\nHerramienta interna\n8 de 8\nRemember\nApp por suscripción\nPublicada\nINGRESOS\n$ 20k\nRESULTADO\n$ 19k\nSUSCRIPT.\n5\nRecuperación de inversión\n0%\n110 registrados · 53 activos (15/10)\nADMINFLOW\nApp web de pago único\nPublicada\nINGRESOS\n$ 0\nRESULTADO\n−$ 43k\nCLIENTES\n6\nRecuperación de inversión\n96,4%\n125 registrados · 61 activos (15/10)\nConciliador ARCA\nProducto descargable\nPruebas\nINGRESOS\n$ 20k\nRESULTADO\n$ 6.699\nCLIENTES\n6\nRecuperación de inversión\n14,5%\n140 registrados · 69 activos (15/10)\nPULSO QA\nHerramienta interna\nPublicada\nINGRESOS\n$ 13k\nRESULTADO\n$ 12k\nCLIENTES\n6\nRecuperación de inversión\n12,2%\n155 registrados · 77 activos (15/10)\nRomance Reader Kit\nProducto descargable\nPublicada\nINGRESOS\n$ 14k\nRESULTADO\n$ 14k\nCLIENTES\n6\nRecuperación de inversión\n1,9%\n170 registrados · 85 activos (15/10)\nAgenda digital YOYI’R\nProducto descargable\nPublicada\nINGRESOS\n$ 16k\nRESULTADO\n$ 15k\nCLIENTES\n6\nRecuperación de inversión\n18,1%\n185 registrados · 93 activos (15/10)\nFinanzas inteligentes\nProducto descargable\nDesarrollo\nINGRESOS\n$ 13k\nRESULTADO\n$ 12k\nCLIENTES\n6\nRecuperación de inversión\n13,3%\n200 registrados · 101 activos (15/10)\nPanel de inventario B2B\nEn desarrollo (aún sin ingresos)\nIdea\nINGRESOS\n$ 0\nRESULTADO\n−$ 27k\nCLIENTES\n0\nRecuperación de inversión\n0%\n215 registrados · 109 activos (15/10)",
+      "screen_ventas": "PRODUCTOS Y VENTAS\n◉ ECOSISTEMA\nProductos y ventas\n\nCatálogo con versiones, formatos e idiomas; cada venta conserva su canal, moneda, comisiones y entrega.\n\nProducto\nRegistrar venta\nVentas\nCatálogo\nCanales y países\nTodos los canales\nSitio web propio\nEtsy\nAmazon\nApple Books\nAplicaciones web independientes\nTodos los tipos\nVenta única\nCobro de suscripción\nIngreso externo\nCobro: todos\nA cobrar\nCobrado\nEntrega: todas\nNo aplica\nEntregado\nEntrega pendiente\nIncidencia\n11 ventas\n$ 170.235,21 netos\nFECHA\tCONCEPTO\tMARCA\tCANAL\tPAÍS\tNETO ORIGINAL\tARS\tCOBRO\tENTREGA\t\n15/10/2026\tRomance Reader Kit · HTML interactivo · Español · v1.0 reemb.\nLucía Fernández · cupón DEMO10\n\t\nEbooks para la vida\tSitio web propio\tArgentina\tUS$ 17,48\t$ 25.346,00\t\nA cobrar\t\nIncidencia\t\n14/10/2026\tConciliador ARCA · HTML interactivo · Español · v1.0\nLucas Herrera\n\t\nEstrategIA\tAmazon\tEspaña\t$ 19.999,00\t$ 19.999,00\t\nCobrado\t\nEntregado\tIMPORTADO\n12/10/2026\tLove Without Losing You · PDF · Español · v1.0\nAlejandro Ruiz\n\t\nEbooks para la vida\tEtsy\tItalia\tUS$ 12,99\t$ 18.744,57\t\nCobrado\t\nEntregado\tIMPORTADO\n11/10/2026\tPULSO QA · Tester · HTML interactivo · Español · v1.0 reemb.\nMarcos Torres\n\t\nEstrategIA\tApple Books\tEstados Unidos\t$ 12.749,15\t$ 12.749,15\t\nCobrado\t\nEntregado\tINTEGRACIÓN\n09/10/2026\tTu dinero, sin enredos · EPUB · Español · v1.0\nLiam Wilson\n\t\nEbooks para la vida\tAmazon\tUruguay\tUS$ 8,99\t$ 12.972,57\t\nCobrado\t\nEntregado\tINTEGRACIÓN\n08/10/2026\tPack organización digital · ZIP · Español · v1.0\nGabriel López\n\t\nYOYI'R\tAplicaciones web independientes\tMéxico\t$ 24.999,00\t$ 24.999,00\t\nCobrado\t\nEntregado\t\n06/10/2026\tCómo estudio esto · PDF · Español · v1.0\nDiego Castillo\n\t\nEbooks para la vida\tApple Books\tColombia\tUS$ 7,99\t$ 11.529,57\t\nCobrado\t\nEntregado\t\n06/10/2026\tRemember · Remember Personal recurrente\nLucía Fernández\n\t\nEstrategIA\tAplicaciones web independientes\tArgentina\tUS$ 4,99\t$ 7.200,57\t\nCobrado\t\t\n05/10/2026\tRomance Reader Kit · HTML interactivo · Español · v1.0\nNoah Smith\n\t\nEbooks para la vida\tSitio web propio\tArgentina\tUS$ 9,99\t$ 14.415,57\t\nCobrado\t\nEntregado\tIMPORTADO\n05/10/2026\tRemember · Remember Plus recurrente\nSofía Martínez\n\t\nEstrategIA\tAplicaciones web independientes\tMéxico\tUS$ 8,99\t$ 12.972,57\t\nCobrado\t\t\n03/10/2026\tAgenda interactiva YOYI’R · PDF interactivo · Español · v1.0\nCamila Pérez\n\t\nYOYI'R\tAplicaciones web independientes\tChile\t$ 15.999,00\t$ 15.999,00\t\nCobrado\t\nEntregado\tIMPORTADO\n02/10/2026\tLove Without Losing You · PDF · Español · v1.0\nTomás Vidal\n\t\nEbooks para la vida\tEtsy\tItalia\tUS$ 12,99\t$ 18.653,64\t\nCobrado\t\nEntregado\tINTEGRACIÓN",
+      "screen_suscripciones": "SUSCRIPCIONES\n◉ ECOSISTEMA\nSuscripciones\n\nPlanes, renovaciones, cancelaciones e ingreso recurrente. Los indicadores se calculan solo cuando hay datos confiables.\n\nRegistrar cobro\nNueva suscripción\nMRR\ni\n$ 47.777,50\nARR $ 573.330,00\nACTIVAS · PAGAN\ni\n5\n2 en prueba · 2 pago fallido\nCHURN DEL PERÍODO\ni\n18,2%\n2 cancelaciones · 11 al inicio · 18,2%/mes\nARPU\ni\n$ 9.555,50\npor suscriptor / mes\nLTV ESTIMADO\ni\n$ 52.555,25\nESTIMADO\nCAC\ni\nDatos insuficientes\n$ 0,00 comercialización · 0 clientes nuevos\nPRUEBA → PAGO\ni\nDatos insuficientes\n0 pruebas iniciadas · 0 convertidas\nRENOVACIONES\n3 / 2 fallidas\n60% de éxito\nEvolución del MRR\nfin de cada mes · 12 meses\n$ 0\n$ 25k\n$ 50k\n$ 75k\n$ 100k\nnov\nene\nmar\nmay\njul\nsep\noct\nRegistrados · activos · pagan\ni\nRemember\nRegistrados\n110\nActivos\n53\nPagan\n5\nConversión a pago: 4,5%\nSuscripciones\nEventos\nTodas las apps\nRemember\nTodos los estados\nEn prueba\nActiva\nPago fallido\nPausada\nCancelada\nSUSCRIPTOR\tAPP\tPLAN\tPRECIO\tALTA\tPRÓXIMA RENOVACIÓN\tESTADO\nLucía Fernández\t\nEstrategIA Remember\tRemember Personal\tUS$ 4,99/mes\t06/08/2026\t21/10/2026\t\nActiva\nSofía Martínez\t\nEstrategIA Remember\tRemember Plus\tUS$ 8,99/mes\t10/08/2026\t23/10/2026\t\nActiva\nMarcos Torres\t\nEstrategIA Remember\tRemember anual\tUS$ 49,00/año\t14/08/2026\t25/10/2026\t\nEn prueba\nValentina Gómez\t\nEstrategIA Remember\tRemember Personal\tUS$ 4,99/mes\t18/08/2026\t27/10/2026\t\nPago fallido\nCamila Pérez\t\nEstrategIA Remember\tRemember Plus\tUS$ 8,99/mes\t22/08/2026\t—\t\nCancelada\nDaniel Silva\t\nEstrategIA Remember\tRemember anual\tUS$ 49,00/año\t26/08/2026\t—\t\nPausada\nEmma Johnson\t\nEstrategIA Remember\tRemember Personal\tUS$ 4,99/mes\t30/08/2026\t02/11/2026\t\nActiva\nAlejandro Ruiz\t\nEstrategIA Remember\tRemember Plus\tUS$ 8,99/mes\t03/09/2026\t04/11/2026\t\nActiva\nMia Robinson\t\nEstrategIA Remember\tRemember anual\tUS$ 49,00/año\t07/09/2026\t06/11/2026\t\nEn prueba\nGabriel López\t\nEstrategIA Remember\tRemember Personal\tUS$ 4,99/mes\t11/09/2026\t08/11/2026\t\nPago fallido\nIsabella Costa\t\nEstrategIA Remember\tRemember Plus\tUS$ 8,99/mes\t15/09/2026\t—\t\nCancelada\nMateo Díaz\t\nEstrategIA Remember\tRemember anual\tUS$ 49,00/año\t19/09/2026\t—\t\nPausada\nOlivia Brown\t\nEstrategIA Remember\tRemember Personal\tUS$ 4,99/mes\t23/09/2026\t14/11/2026\t\nActiva",
+      "screen_gastos": "GASTOS Y PROVEEDORES\n◉ ECOSISTEMA\nGastos\n\nInfraestructura, desarrollo, comercialización y administración. Un gasto compartido se registra una vez y se reparte entre apps o marcas sin duplicarse.\n\nProveedor\nRegistrar gasto\nGastos\nA pagar\nProveedores\nTodos los estados\nPendiente\nPagado\nVencido\nTodas las categorías\nInfraestructura tecnológica\nDesarrollo y producción\nComercialización\nAdministración\nTodas las apps\nRemember · EstrategIA\nADMINFLOW · EstrategIA\nConciliador ARCA · EstrategIA\nPULSO QA · EstrategIA\nRomance Reader Kit · Ebooks para la vida\nAgenda digital YOYI’R · YOYI'R\nFinanzas inteligentes · Ebooks para la vida\nPanel de inventario B2B · EstrategIA\nOperativo e inversión\nSolo operativos\nSolo inversión\nGASTOS OPERATIVOS DEL PERÍODO\n$ 82.000,00\n6 registros\nINVERSIÓN DEL PERÍODO\n$ 101.115,00\nno resta al resultado operativo\nPor categoría\nRecursos gráficos\n$ 36k\nOtros gastos administrativos\n$ 27k\nPublicidad otras plataformas\n$ 12k\nHerramientas de IA\n$ 7.300\nFECHA\tCONCEPTO\tCATEGORÍA\tASIGNACIÓN\tVENCE\tIMPORTE\tARS\tESTADO\n15/10/2026\tHosting mensual #1 inversión Mensual\nHostinger\n\tHosting\tEstrategIA 50%Ebooks para la vida 50%\t19/10/2026\tUS$ 15,00\t$ 21.750,00\t\nPendiente\n15/10/2026\tAsesoría profesional #24\nCanva\n\tOtros gastos administrativos\tPanel de inventario B2B\t12/10/2026\t$ 26.500,00\t$ 26.500,00\t\nPagado ESTIMADO\n10/10/2026\tPublicidad en redes #2\nProveedor IA\n\tHerramientas de IA\tADMINFLOW\t14/10/2026\t$ 7.300,00\t$ 7.300,00\t\nPagado IMPORTADO\n10/10/2026\tHosting mensual #25 inversión Mensual\nServicio de email\n\tCertificados / servicios técnicos\tRemember\t19/10/2026\tUS$ 55,00\t$ 79.365,00\t\nPendiente\n05/10/2026\tSuscripción de software #3\nCanva\n\tPublicidad otras plataformas\tConciliador ARCA\t13/10/2026\t$ 12.100,00\t$ 12.100,00\t\nPagado ESTIMADO\n05/10/2026\tPublicidad en redes #26\nPublicidad digital\n\tRecursos gráficos\tADMINFLOW\t10/10/2026\t$ 36.100,00\t$ 36.100,00\t\nPagado IMPORTADO",
+      "screen_finanzas": "FINANZAS\n◉ ECOSISTEMA\nFinanzas\n\nVentas, cobros, transferencias y retiros separados para no contar dos veces el mismo dinero. Cada importe conserva su moneda original.\n\nTipo de cambio\nMovimiento\nResultado\nCuentas y movimientos\nMonedas y tipos de cambio\nEstado de resultados consolidado\nARS · 01/10/2026–15/10/2026\nVentas brutas\n$ 172.485,06\n− Descuentos y cupones\n$ 0,00\n− Reembolsos\n−$ 2.249,85\n= Ingresos netos\n$ 170.235,21\n− Comisiones de plataformas\n−$ 10.008,84\n− Impuestos y retenciones\n$ 0,00\n− Gastos operativos\n−$ 82.000,00\n= Resultado del negocio\n$ 78.226,37\nAparte: inversión $ 101.115,00 · retiros personales y transferencias no afectan el resultado.\nCobrado vs. a cobrar\nCOBRADO EN EL PERÍODO\n$ 160.226,37\nNETO LIQUIDADO DEL PERÍODO\n$ 160.226,37\nSALDO PENDIENTE DE COBRO (TODAS LAS FECHAS)\nUSD\nUS$ 28,17\nARS\n$ 27.258,12\nPOR MONEDA ORIGINAL (PERÍODO)\nMONEDA\tINGRESOS NETOS\tGASTOS\nUSD\tUS$ 66,93\tUS$ 70,00\nARS\t$ 73.746,15\t$ 82.000,00",
+      "screen_infra": "INFRAESTRUCTURA\n◉ ECOSISTEMA\nInfraestructura\n\nInventario técnico y económico: hosting, dominios, bases de datos, repositorios y servicios, con qué apps dependen de cada uno y cuándo vencen.\n\nNuevo recurso\nCOSTO MENSUAL EQUIVALENTE\ni\n$ 103.464,58\nanuales ÷ 12, trimestrales ÷ 3…\nRENUEVAN EN 30 DÍAS\n7\nSIN USO\n1\nevaluá cancelarlos\nAUMENTARON DE PRECIO\n7\nHostinger Premium, Dominio del ecosistema, Herramienta de IA, Canva Pro, Servicio de correos, Base de datos, Almacenamiento y respaldos\nApps sin ingresos que generan gastos (últimos 30 días): Panel de inventario B2B\nHosting / servidor\n1\nHostinger Premium\nHostinger\nEn uso\nCOSTO\n$ 25k\nFRECUENCIA\nMensual\nRENUEVA\nvencido\nRemember\nADMINFLOW\nRomance Reader Kit\nDominio\n1\nDominio del ecosistema\nHostinger\nEn uso\nCOSTO\n$ 20k\nFRECUENCIA\nAnual\nRENUEVA\n2 días\nRemember\nRomance Reader Kit\nBase de datos\n1\nBase de datos\nHostinger\nEn uso\nCOSTO\nUS$ 15\nFRECUENCIA\nMensual\nRENUEVA\n2 días\nRemember\nAlmacenamiento\n1\nAlmacenamiento y respaldos\nHostinger\nCancelado\nCOSTO\n$ 5.999\nFRECUENCIA\nMensual\nRENUEVA\n16 días\nAgenda digital YOYI’R\nRepositorio\n1\nRepositorio de código\nHostinger\nEn uso\nCOSTO\n—\nFRECUENCIA\nMensual\nRENUEVA\n9 días\nADMINFLOW\nPULSO QA\nCorreo transaccional\n1\nServicio de correos\nServicio de email\nSin uso\nCOSTO\nUS$ 9\nFRECUENCIA\nMensual\nRENUEVA\nvencido\nRemember\nHerramienta / software\n2\nHerramienta de IA\nProveedor IA\nEn uso\nCOSTO\nUS$ 20\nFRECUENCIA\nMensual\nRENUEVA\n9 días\nRemember\nADMINFLOW\nCanva Pro\nCanva\nEn uso\nCOSTO\n$ 13k\nFRECUENCIA\nMensual\nRENUEVA\n16 días\nAgenda digital YOYI’R",
+      "screen_calendario": "CALENDARIO FINANCIERO\n◉ ECOSISTEMA\nCalendario y alertas\n\nVencimientos, renovaciones, cobros esperados, campañas y lanzamientos en un solo lugar.\n\nEvento\n‹\nOctubre 2026\n›\nHoy\nCampaña publicitaria\nLanzamiento\nActualización de app\nPago / factura\nOtro\nLUN\nMAR\nMIÉ\nJUE\nVIE\nSÁB\nDOM\n28\nVence: Publicidad en redes #18\n29\n30\n1\nVence: Suscripción de software #35\n2\nLanzamiento de producto · DEMO\n3\nRevisar campaña de anuncios · DEMO\n4\nRenovación de hosting · DEMO\n5\nActualizar aplicación · DEMO\n6\nEnviar facturación · DEMO\n7\nReunión de planificación · DEMO\n8\nAuditoría de ventas · DEMO\n9\nPublicación de contenido · DEMO\n10\nRenovación: Hostinger Premium\nRenovación: Servicio de correos\nLanzamiento de producto · DEMO\n11\nRevisar campaña de anuncios · DEMO\n12\nRenovación de hosting · DEMO\n13\nActualizar aplicación · DEMO\n14\nEnviar facturación · DEMO\n15\nReunión de planificación · DEMO\n16\nAuditoría de ventas · DEMO\n17\nRenovación: Dominio del ecosistema\nRenovación: Base de datos\nPublicación de contenido · DEMO\n18\nLanzamiento de producto · DEMO\n19\nVence: Hosting mensual #1\nVence: Hosting mensual #9\nVence: Hosting mensual #17\n+4\n20\nRenovación de hosting · DEMO\n21\nRenueva: Lucía Fernández · Remember\nActualizar aplicación · DEMO\n22\nEnviar facturación · DEMO\n23\nRenueva: Sofía Martínez · Remember\nReunión de planificación · DEMO\n24\nRenovación: Herramienta de IA\nRenovación: Repositorio de código\nAuditoría de ventas · DEMO\n25\nPublicación de contenido · DEMO\n26\nLanzamiento de producto · DEMO\n27\nRenueva: Valentina Gómez · Remember\nRevisar campaña de anuncios · DEMO\n28\nRenovación de hosting · DEMO\n29\nActualizar aplicación · DEMO\n30\nEnviar facturación · DEMO\n31\nRenovación: Canva Pro\nReunión de planificación · DEMO\n1\n2\nRenueva: Emma Johnson · Remember\n3\n4\nRenueva: Alejandro Ruiz · Remember\n5\n6\n7\n8\nRenueva: Gabriel López · Remember\nAlertas\n29\nPago vencido: Publicidad en redes #18\nVenció el 28/09/2026 · $ 40.900,00\nPago vencido: Suscripción de software #35\nVenció el 01/10/2026 · $ 36.100,00\nRenovación vencida: Hostinger Premium\nEra el 10/10/2026\nRenovación próxima: Dominio del ecosistema\n17/10/2026 (en 2 días) · $ 19.999,00\nRenovación vencida: Servicio de correos\nEra el 10/10/2026\nRenovación próxima: Base de datos\n17/10/2026 (en 2 días) · US$ 15,00\nSuscripción con pago fallido\nValentina Gómez · Remember\nSuscripción con pago fallido\nGabriel López · Remember\nIntegración con errores: Pagos externos (DEMO)\nError simulado: evento sin referencia de pago\nVence pronto: Hosting mensual #1\n19/10/2026 (en 4 días) · US$ 15,00\nVence pronto: Hosting mensual #9\n19/10/2026 (en 4 días) · $ 40.900,00\nVence pronto: Hosting mensual #17\n19/10/2026 (en 4 días) · $ 36.100,00\nVence pronto: Hosting mensual #25\n19/10/2026 (en 4 días) · US$ 55,00\nVence pronto: Hosting mensual #33\n19/10/2026 (en 4 días) · $ 26.500,00\nVence pronto: Hosting mensual #41\n19/10/2026 (en 4 días) · $ 21.700,00\nAumentó de precio: Hostinger Premium\n$ 20.499,18 → $ 24.999,00 (+22%)\nAumentó de precio: Dominio del ecosistema\n$ 16.399,18 → $ 19.999,00 (+22%)\nRenovación próxima: Herramienta de IA\n24/10/2026 (en 9 días) · US$ 20,00\nAumentó de precio: Herramienta de IA\nUS$ 16,40 → US$ 20,00 (+22%)\nAumentó de precio: Canva Pro\n$ 10.659,18 → $ 12.999,00 (+22%)\nAumentó de precio: Servicio de correos\nUS$ 7,38 → US$ 9,00 (+22%)\nServicio sin uso que sigue costando: Servicio de correos\nEvaluá cancelarlo.\nAumentó de precio: Base de datos\nUS$ 12,30 → US$ 15,00 (+22%)\nRenovación próxima: Repositorio de código\n24/10/2026 (en 9 días)\nAumentó de precio: Almacenamiento y respaldos\n$ 4.919,18 → $ 5.999,00 (+22%)\nCuesta más de lo que genera: Conciliador ARCA\nÚltimos 30 días: ingresos $ 37.998,10 vs. costos $ 55.399,88\nCuesta más de lo que genera: Romance Reader Kit\nÚltimos 30 días: ingresos $ 14.415,57 vs. costos $ 22.565,80\n1 posible(s) duplicado(s) para revisar\nImportaciones que coinciden con registros existentes.\nCuesta más de lo que genera: Panel de inventario B2B\nÚltimos 30 días: ingresos $ 0,00 vs. costos $ 26.500,00\nPróximos 30 días\n15/10\nReunión de planificación · DEMO Actualización de app\n16/10\nAuditoría de ventas · DEMO Otro\n17/10\nRenovación: Dominio del ecosistema Pago / factura\n$ 19.999,00\n17/10\nRenovación: Base de datos Pago / factura\nUS$ 15,00\n17/10\nPublicación de contenido · DEMO Lanzamiento\n18/10\nLanzamiento de producto · DEMO Campaña publicitaria\n19/10\nVence: Hosting mensual #1 Pago / factura\nUS$ 15,00\n19/10\nVence: Hosting mensual #9 Pago / factura\n$ 40.900,00\n19/10\nVence: Hosting mensual #17 Pago / factura\n$ 36.100,00\n19/10\nVence: Hosting mensual #25 Pago / factura\nUS$ 55,00\n19/10\nVence: Hosting mensual #33 Pago / factura\n$ 26.500,00\n19/10\nVence: Hosting mensual #41 Pago / factura\n$ 21.700,00\n19/10\nRevisar campaña de anuncios · DEMO Pago / factura\n20/10\nRenovación de hosting · DEMO Actualización de app\n21/10\nRenueva: Lucía Fernández · Remember Actualización de app\n21/10\nActualizar aplicación · DEMO Otro\n22/10\nEnviar facturación · DEMO Lanzamiento\n23/10\nRenueva: Sofía Martínez · Remember Actualización de app\n23/10\nReunión de planificación · DEMO Campaña publicitaria\n24/10\nRenovación: Herramienta de IA Pago / factura\nUS$ 20,00\n24/10\nRenovación: Repositorio de código Pago / factura\n24/10\nAuditoría de ventas · DEMO Pago / factura\n25/10\nPublicación de contenido · DEMO Actualización de app\n26/10\nLanzamiento de producto · DEMO Otro\n27/10\nRenueva: Valentina Gómez · Remember Actualización de app\n27/10\nRevisar campaña de anuncios · DEMO Lanzamiento\n28/10\nRenovación de hosting · DEMO Campaña publicitaria\n29/10\nActualizar aplicación · DEMO Pago / factura\n30/10\nEnviar facturación · DEMO Actualización de app\n31/10\nRenovación: Canva Pro Pago / factura\n$ 12.999,00\n31/10\nReunión de planificación · DEMO Otro\n02/11\nRenueva: Emma Johnson · Remember Actualización de app\n04/11\nRenueva: Alejandro Ruiz · Remember Actualización de app\n08/11\nRenueva: Gabriel López · Remember Actualización de app\n14/11\nRenueva: Olivia Brown · Remember Actualización de app",
+      "screen_clientes": "CLIENTES Y USUARIOS\n◉ ECOSISTEMA\nClientes\n\nQuién compra qué en todo el ecosistema. Los datos de contacto se muestran enmascarados en la lista y completos solo en la ficha.\n\nCliente\nTodos\nNuevos del período\nRecurrentes\nCon suscripción\nCon reembolsos\n24 cliente(s)\nCLIENTE\tEMAIL\tPAÍS\tMARCAS\tCOMPRAS\tTOTAL (ARS)\tSUSCRIPCIONES\tÚLTIMA COMPRA\nOlivia Brown\tcl•••@ejemplo.test\tChile\t\t4\t$ 117.270,53\t1 activa(s)\t24/09/2026\nRenata García\tcl•••@ejemplo.test\tEstados Unidos\t\t3\t$ 88.989,70\t—\t27/09/2026\nAna Méndez\tcl•••@ejemplo.test\tItalia\t\t3\t$ 78.079,28\t—\t18/09/2026\nDiego Castillo\tcl•••@ejemplo.test\tColombia\t\t3\t$ 69.999,35\t—\t06/10/2026\nLiam Wilson INTEGRACIÓN\tcl•••@ejemplo.test\tUruguay\t\t3\t$ 69.194,34\t—\t09/10/2026\nAlejandro Ruiz IMPORTADO\tcl•••@ejemplo.test\tItalia\t\t4\t$ 67.152,31\t1 activa(s)\t12/10/2026\nMia Robinson INTEGRACIÓN\tcl•••@ejemplo.test\tArgentina\t\t3\t$ 65.721,91\t—\t21/09/2026\nGabriel López\tcl•••@ejemplo.test\tMéxico\t\t3\t$ 59.265,18\t—\t08/10/2026\nNoah Smith IMPORTADO\tcl•••@ejemplo.test\tArgentina\t\t2\t$ 57.061,35\t—\t05/10/2026\nIsabella Costa IMPORTADO\tcl•••@ejemplo.test\tEstados Unidos\t\t2\t$ 55.513,63\t—\t17/09/2026\nDaniel Silva INTEGRACIÓN\tcl•••@ejemplo.test\tColombia\t\t3\t$ 55.260,81\t—\t12/09/2026\nLucas Herrera IMPORTADO\tcl•••@ejemplo.test\tEspaña\t\t3\t$ 49.559,77\t—\t14/10/2026\nMateo Díaz INTEGRACIÓN\tcl•••@ejemplo.test\tEspaña\t\t3\t$ 49.303,85\t—\t30/09/2026\nEmma Johnson\tcl•••@ejemplo.test\tUruguay\t\t3\t$ 48.780,88\t1 activa(s)\t30/09/2026\nElena Vargas IMPORTADO\tcl•••@ejemplo.test\tUruguay\t\t3\t$ 45.273,71\t—\t15/09/2026\nSofía Martínez IMPORTADO\tcl•••@ejemplo.test\tMéxico\t\t3\t$ 43.970,67\t1 activa(s)\t05/10/2026\nValentina Gómez\tcl•••@ejemplo.test\tEspaña\t\t2\t$ 42.457,52\t—\t20/09/2026\nCamila Pérez IMPORTADO\tcl•••@ejemplo.test\tChile\t\t3\t$ 42.281,88\t—\t03/10/2026\nTomás Vidal INTEGRACIÓN\tcl•••@ejemplo.test\tItalia\t\t2\t$ 38.652,64\t—\t02/10/2026\nLucía Fernández\tcl•••@ejemplo.test\tArgentina\t\t3\t$ 38.198,57\t1 activa(s)\t06/10/2026\nMartina Rossi IMPORTADO\tcl•••@ejemplo.test\tColombia\t\t2\t$ 32.722,79\t—\t26/09/2026\nPaula Ortega INTEGRACIÓN\tcl•••@ejemplo.test\tMéxico\t\t2\t$ 31.248,92\t—\t14/09/2026\nSara Núñez INTEGRACIÓN\tcl•••@ejemplo.test\tChile\t\t2\t$ 30.134,85\t—\t23/09/2026\nMarcos Torres INTEGRACIÓN\tcl•••@ejemplo.test\tEstados Unidos\t\t2\t$ 27.148,25\t—\t11/10/2026",
+      "screen_integraciones": "INTEGRACIONES\n◉ ECOSISTEMA\nIntegraciones\n\nEmpezá manual, importá archivos y conectá tus apps de a poco. Cada fuente indica su última sincronización, errores y posibles duplicados.\n\nEventos JSON\nImportar CSV\nFuentes de datos\nRevisión de duplicados (1)\nEspecificación para apps\nTienda del ecosistema (DEMO)\nTienda principal · Archivo CSV / Excel\nActiva\nÚLTIMA SINC.\n15/10\nIMPORTADOS\n48\nPENDIENTES\n0\nFuente ficticia · sin conexión real\nEtsy (DEMO)\nMarketplace · Archivo CSV / Excel\nActiva\nÚLTIMA SINC.\n15/10\nIMPORTADOS\n17\nPENDIENTES\n1\nImportaciones simuladas\nApple Books (DEMO)\nMarketplace · Carga manual\nPausada\nÚLTIMA SINC.\n01/10\nIMPORTADOS\n8\nPENDIENTES\n0\nConexión simulada\nPagos externos (DEMO)\nProcesador de pagos · Eventos JSON\nCon errores\nÚLTIMA SINC.\n13/10\nIMPORTADOS\n5\nPENDIENTES\n0\nError simulado: evento sin referencia de pago\nApp: Remember\nError intencional para probar el panel\nNueva fuente de datos\nCÓMO SE EVITA CONTAR DOS VECES\n\n1) Si un registro trae el mismo ID externo que uno existente, se omite. 2) Si coincide fecha, importe, moneda y producto/concepto con otro registro de otra fuente, va a “Revisión de duplicados” en vez de importarse. 3) Los gastos compartidos se registran una vez y se reparten. 4) Los paquetes suman solo como paquete.",
+      "screen_reportes": "REPORTES\n◉ ECOSISTEMA\nReportes\n\nTablas filtradas por la lente y el período elegido. La exportación respeta los mismos filtros.\n\nCSV\nExcel\nVentas (detalle)\nVentas por marca\nVentas por producto y versión\nVentas por canal\nVentas por país\nRentabilidad por aplicación\nSuscripciones\nEventos de suscripción\nGastos (detalle)\nAsignación de gastos por app\nInfraestructura\nMovimientos de tesorería\nResultado mensual (12 meses)\nTipos de cambio\nHistorial de operaciones\n\nLas ventas anuladas aparecen con neto en ARS = 0. Sin tipo de cambio, el convertido queda en 0.\n\nFECHA\tTIPO\tMARCA\tPRODUCTO / CONCEPTO\tAPP\tCANAL\tPAÍS\tCLIENTE\tMONEDA\tBRUTO\tDESCUENTO\tREEMBOLSO\tNETO\tCOMISIÓN\tIMP./RET.\tLIQUIDADO\tTC\tNETO ARS\tCOBRO\tENTREGA\tCUPÓN\tESTADO\tORIGEN\tFUENTE\tID EXTERNO\n02/10/2026\tVenta única\tEbooks para la vida\tLove Without Losing You · PDF · Español · v1.0\t\tEtsy\tItalia\tTomás Vidal\tUSD\t12,99\t0,00\t0,00\t12,99\t0,78\t0,00\t12,21\t1.436,0000\t$ 18.653,64\tCobrado\tEntregado\t\tvalida\tintegracion\tDataset DEMO\tDEMO-ORD-1041\n03/10/2026\tVenta única\tYOYI'R\tAgenda interactiva YOYI’R · PDF interactivo · Español · v1.0\tAgenda digital YOYI’R\tAplicaciones web independientes\tChile\tCamila Pérez\tARS\t15.999,00\t0,00\t0,00\t15.999,00\t959,94\t0,00\t15.039,06\t1,0000\t$ 15.999,00\tCobrado\tEntregado\t\tvalida\timportado\tDataset DEMO\tDEMO-ORD-1004\n05/10/2026\tVenta única\tEbooks para la vida\tRomance Reader Kit · HTML interactivo · Español · v1.0\tRomance Reader Kit\tSitio web propio\tArgentina\tNoah Smith\tUSD\t9,99\t0,00\t0,00\t9,99\t0,60\t0,00\t9,39\t1.443,0000\t$ 14.415,57\tCobrado\tEntregado\t\tvalida\timportado\tDataset DEMO\tDEMO-ORD-1040\n05/10/2026\tCobro de suscripción\tEstrategIA\tRemember · Remember Plus\tRemember\tAplicaciones web independientes\tMéxico\tSofía Martínez\tUSD\t8,99\t0,00\t0,00\t8,99\t0,30\t0,00\t8,69\t1.443,0000\t$ 12.972,57\tCobrado\tNo aplica\t\tvalida\tmanual\t\t\n06/10/2026\tVenta única\tEbooks para la vida\tCómo estudio esto · PDF · Español · v1.0\t\tApple Books\tColombia\tDiego Castillo\tUSD\t7,99\t0,00\t0,00\t7,99\t0,48\t0,00\t7,51\t1.443,0000\t$ 11.529,57\tCobrado\tEntregado\t\tvalida\tmanual\tDataset DEMO\tDEMO-ORD-1003\n06/10/2026\tCobro de suscripción\tEstrategIA\tRemember · Remember Personal\tRemember\tAplicaciones web independientes\tArgentina\tLucía Fernández\tUSD\t4,99\t0,00\t0,00\t4,99\t0,30\t0,00\t4,69\t1.443,0000\t$ 7.200,57\tCobrado\tNo aplica\t\tvalida\tmanual\t\t\n08/10/2026\tIngreso externo\tYOYI'R\tPack organización digital · ZIP · Español · v1.0\t\tAplicaciones web independientes\tMéxico\tGabriel López\tARS\t24.999,00\t0,00\t0,00\t24.999,00\t1.499,94\t0,00\t23.499,06\t1,0000\t$ 24.999,00\tCobrado\tEntregado\t\tvalida\tmanual\tDataset DEMO\tDEMO-ORD-1039\n09/10/2026\tVenta única\tEbooks para la vida\tTu dinero, sin enredos · EPUB · Español · v1.0\tFinanzas inteligentes\tAmazon\tUruguay\tLiam Wilson\tUSD\t8,99\t0,00\t0,00\t8,99\t0,54\t0,00\t8,45\t1.443,0000\t$ 12.972,57\tCobrado\tEntregado\t\tvalida\tintegracion\tDataset DEMO\tDEMO-ORD-1002\n11/10/2026\tVenta única\tEstrategIA\tPULSO QA · Tester · HTML interactivo · Español · v1.0\tPULSO QA\tApple Books\tEstados Unidos\tMarcos Torres\tARS\t14.999,00\t0,00\t2.249,85\t12.749,15\t899,94\t0,00\t11.849,21\t1,0000\t$ 12.749,15\tCobrado\tEntregado\t\tvalida\tintegracion\tDataset DEMO\tDEMO-ORD-1038\n12/10/2026\tVenta única\tEbooks para la vida\tLove Without Losing You · PDF · Español · v1.0\t\tEtsy\tItalia\tAlejandro Ruiz\tUSD\t12,99\t0,00\t0,00\t12,99\t0,78\t0,00\t12,21\t1.443,0000\t$ 18.744,57\tCobrado\tEntregado\t\tvalida\timportado\tDataset DEMO\tDEMO-ORD-1001\n14/10/2026\tVenta única\tEstrategIA\tConciliador ARCA · HTML interactivo · Español · v1.0\tConciliador ARCA\tAmazon\tEspaña\tLucas Herrera\tARS\t19.999,00\t0,00\t0,00\t19.999,00\t1.199,94\t0,00\t18.799,06\t1,0000\t$ 19.999,00\tCobrado\tEntregado\t\tvalida\timportado\tDataset DEMO\tDEMO-ORD-1037\n15/10/2026\tIngreso externo\tEbooks para la vida\tRomance Reader Kit · HTML interactivo · Español · v1.0\tRomance Reader Kit\tSitio web propio\tArgentina\tLucía Fernández\tUSD\t19,98\t1,00\t1,50\t17,48\t0,60\t0,00\t16,88\t1.450,0000\t$ 0,00\tA cobrar\tIncidencia\tDEMO10\tanulada\tmanual\tDataset DEMO\tDEMO-ORD-1000\nTotal\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t$ 170.235,21\t\t\t\t\t\t\t\n\n12 fila(s).",
+      "screen_ajustes": "AJUSTES\n◉ ECOSISTEMA\nAjustes\n\nTodo lo del negocio se edita acá. Nada viene inventado.\n\nNegocio\nNombre\nPropietario\nSitio principal\nFormato de números\n1.234,56\n1,234.56\nMoneda de referencia\nARS\nUSD\nNo se puede cambiar: hay tipos de cambio cargados contra ella.\nGuardar\nMarcas\n\nColor principal (gráficos e identificadores), oscuro (lente) y secundario.\n\nMonedas\n\nMonedas en que vendés o pagás.\n\nARS · $\nUSD · US$\n×\nCanales de venta\n\nLa comisión % es una sugerencia que se precarga en cada venta (editable).\n\nCategorías de productos\n\nPor marca.\n\nEstrategIA\nMicroaplicaciones HTML\n×\nHerramientas para empresas\n×\nConciliación y facturación\n×\nAnálisis de Excel y CSV\n×\nFinanzas, ventas e inventario\n×\nHerramientas para freelancers\n×\nProductividad\n×\nAutomatización\n×\nYOYI'R\nAgendas digitales\n×\nPlanificadores\n×\nPDF interactivos\n×\nRecursos para tablet\n×\nOrganización personal\n×\nPlanificadores financieros\n×\nEstudio, hábitos y bienestar\n×\nPaquetes digitales\n×\nEbooks para la vida\nVida y bienestar\n×\nAprender y dominar\n×\nDinero inteligente\n×\nTrabajo y carrera\n×\nCreatividad y pasiones\n×\nFormatos e idiomas\nFormatos\nPDF\n×\nPDF interactivo\n×\nEPUB\n×\nHTML interactivo\n×\nZIP\n×\nApp web\n×\nMicroapp HTML descargable\n×\nIdiomas\nEspañol\n×\nInglés\n×\nPortugués\n×\nCategorías de gastos\n\nGrupos y subcategorías.\n\nInfraestructura tecnológica\nHosting\n×\nServidores\n×\nDominios\n×\nBases de datos\n×\nAlmacenamiento\n×\nCopias de seguridad\n×\nCertificados / servicios técnicos\n×\nCorreo transaccional\n×\nServicios externos y APIs\n×\nDesarrollo y producción\nHerramientas de programación\n×\nHerramientas de IA\n×\nSoftware de diseño\n×\nServicios de edición\n×\nRecursos gráficos\n×\nHerramientas de pruebas\n×\nServicios técnicos externos\n×\nComercialización\nPublicidad Google Ads\n×\nPublicidad Meta\n×\nPublicidad otras plataformas\n×\nComisiones de marketplaces\n×\nComisiones de pasarelas de pago\n×\nPromociones y campañas\n×\nAdquisición de clientes\n×\nAdministración\nServicios contables\n×\nImpuestos\n×\nComisiones bancarias\n×\nOtros gastos administrativos\n×\nMedios de pago y cuentas\n\nMedios con que pagás gastos; cuentas donde entra y sale el dinero.\n\nMedios de pago\nTransferencia\n×\nTarjeta de crédito\n×\nMercado Pago\n×\nPayPal\n×\nEfectivo\n×\nCuentas\nBanco empresa · ARS\nARS\n$ 1.063.231,62\nMercado Pago · ARS\nARS\n$ 305.438,01\nCuenta internacional · USD\nUSD\nUS$ 257,27\nARS\nUSD\nAlertas y valor hora\n\nUmbrales de las alertas automáticas.\n\nAvisar vencimientos con (días)\nApp sin ventas tras (días)\nCaída de canal mayor a (%)\nValor de tu hora (opcional)\nARS\nUSD\nPara estimar el costo del tiempo de mantenimiento.\nGuardar\nSeguridad y ambiente\n\nEl PIN bloquea el panel en este navegador. El ambiente de pruebas usa datos totalmente separados.\n\nDefinir PIN\nAmbiente de pruebas\nAhora: producción\nRespaldo de datos\n\nDatos guardados en este navegador · producción. Descargá respaldos seguido.\n\nDescargar .json\nRestaurar\nBorrar todo\n\n69 ventas · 45 gastos · 13 suscripciones · 8 apps · ~0,12 MB",
+      "tab_ventas_ventas": "PRODUCTOS Y VENTAS\n◉ ECOSISTEMA\nProductos y ventas\n\nCatálogo con versiones, formatos e idiomas; cada venta conserva su canal, moneda, comisiones y entrega.\n\nProducto\nRegistrar venta\nVentas\nCatálogo\nCanales y países\nTodos los canales\nSitio web propio\nEtsy\nAmazon\nApple Books\nAplicaciones web independientes\nTodos los tipos\nVenta única\nCobro de suscripción\nIngreso externo\nCobro: todos\nA cobrar\nCobrado\nEntrega: todas\nNo aplica\nEntregado\nEntrega pendiente\nIncidencia\n11 ventas\n$ 170.235,21 netos\nFECHA\tCONCEPTO\tMARCA\tCANAL\tPAÍS\tNETO ORIGINAL\tARS\tCOBRO\tENTREGA\t\n15/10/2026\tRomance Reader Kit · HTML interactivo · Español · v1.0 reemb.\nLucía Fernández · cupón DEMO10\n\t\nEbooks para la vida\tSitio web propio\tArgentina\tUS$ 17,48\t$ 25.346,00\t\nA cobrar\t\nIncidencia\t\n14/10/2026\tConciliador ARCA · HTML interactivo · Español · v1.0\nLucas Herrera\n\t\nEstrategIA\tAmazon\tEspaña\t$ 19.999,00\t$ 19.999,00\t\nCobrado\t\nEntregado\tIMPORTADO\n12/10/2026\tLove Without Losing You · PDF · Español · v1.0\nAlejandro Ruiz\n\t\nEbooks para la vida\tEtsy\tItalia\tUS$ 12,99\t$ 18.744,57\t\nCobrado\t\nEntregado\tIMPORTADO\n11/10/2026\tPULSO QA · Tester · HTML interactivo · Español · v1.0 reemb.\nMarcos Torres\n\t\nEstrategIA\tApple Books\tEstados Unidos\t$ 12.749,15\t$ 12.749,15\t\nCobrado\t\nEntregado\tINTEGRACIÓN\n09/10/2026\tTu dinero, sin enredos · EPUB · Español · v1.0\nLiam Wilson\n\t\nEbooks para la vida\tAmazon\tUruguay\tUS$ 8,99\t$ 12.972,57\t\nCobrado\t\nEntregado\tINTEGRACIÓN\n08/10/2026\tPack organización digital · ZIP · Español · v1.0\nGabriel López\n\t\nYOYI'R\tAplicaciones web independientes\tMéxico\t$ 24.999,00\t$ 24.999,00\t\nCobrado\t\nEntregado\t\n06/10/2026\tCómo estudio esto · PDF · Español · v1.0\nDiego Castillo\n\t\nEbooks para la vida\tApple Books\tColombia\tUS$ 7,99\t$ 11.529,57\t\nCobrado\t\nEntregado\t\n06/10/2026\tRemember · Remember Personal recurrente\nLucía Fernández\n\t\nEstrategIA\tAplicaciones web independientes\tArgentina\tUS$ 4,99\t$ 7.200,57\t\nCobrado\t\t\n05/10/2026\tRomance Reader Kit · HTML interactivo · Español · v1.0\nNoah Smith\n\t\nEbooks para la vida\tSitio web propio\tArgentina\tUS$ 9,99\t$ 14.415,57\t\nCobrado\t\nEntregado\tIMPORTADO\n05/10/2026\tRemember · Remember Plus recurrente\nSofía Martínez\n\t\nEstrategIA\tAplicaciones web independientes\tMéxico\tUS$ 8,99\t$ 12.972,57\t\nCobrado\t\t\n03/10/2026\tAgenda interactiva YOYI’R · PDF interactivo · Español · v1.0\nCamila Pérez\n\t\nYOYI'R\tAplicaciones web independientes\tChile\t$ 15.999,00\t$ 15.999,00\t\nCobrado\t\nEntregado\tIMPORTADO\n02/10/2026\tLove Without Losing You · PDF · Español · v1.0\nTomás Vidal\n\t\nEbooks para la vida\tEtsy\tItalia\tUS$ 12,99\t$ 18.653,64\t\nCobrado\t\nEntregado\tINTEGRACIÓN",
+      "tab_ventas_catalogo": "PRODUCTOS Y VENTAS\n◉ ECOSISTEMA\nProductos y ventas\n\nCatálogo con versiones, formatos e idiomas; cada venta conserva su canal, moneda, comisiones y entrega.\n\nProducto\nRegistrar venta\nVentas\nCatálogo\nCanales y países\nTodos los estados\nBorrador\nPublicado\nRequiere actualización\nPausado\nRetirado\nEbooks para la vida\n4 producto(s)\nRomance Reader Kit\nVida y bienestar\nPublicado\nHTML INTERACTIVO · ESPAÑOL\nHTML INTERACTIVO · INGLÉS\nVENTAS\n6\nINGRESOS\n$ 85k\nVERSIONES\n2\nLove Without Losing You\nVida y bienestar\nPublicado\nPDF · ESPAÑOL\nPDF · INGLÉS\nVENTAS\n6\nINGRESOS\n$ 109k\nVERSIONES\n2\nTu dinero, sin enredos\nDinero inteligente\nRequiere actualización\nEPUB · ESPAÑOL\nEPUB · INGLÉS\nVENTAS\n6\nINGRESOS\n$ 75k\nVERSIONES\n2\n⟳ Revisar ejemplos del capítulo 4\nCómo estudio esto\nAprender y dominar\nPublicado\nPDF · ESPAÑOL\nPDF · INGLÉS\nVENTAS\n7\nINGRESOS\n$ 89k\nVERSIONES\n2\nYOYI'R\n3 producto(s)\nAgenda interactiva YOYI’R\nAgendas digitales\nPublicado\nPDF INTERACTIVO · ESPAÑOL\nPDF INTERACTIVO · INGLÉS\nVENTAS\n6\nINGRESOS\n$ 110k\nVERSIONES\n2\nHoy, solo lo posible\nOrganización personal\nPublicado\nHTML INTERACTIVO · ESPAÑOL\nHTML INTERACTIVO · INGLÉS\nVENTAS\n6\nINGRESOS\n$ 90k\nVERSIONES\n2\nPack organización digital\nPaquetes digitales · Paquete\nPublicado\nZIP · ESPAÑOL\nZIP · INGLÉS\nVENTAS\n6\nINGRESOS\n$ 169k\nVERSIONES\n2\nEstrategIA\n3 producto(s)\nADMINFLOW · Gestión\nHerramientas para empresas\nPublicado\nMICROAPP HTML DESCARGABLE · ESPAÑOL\nMICROAPP HTML DESCARGABLE · INGLÉS\nVENTAS\n6\nINGRESOS\n$ 292k\nVERSIONES\n2\nConciliador ARCA\nConciliación y facturación\nBorrador\nHTML INTERACTIVO · ESPAÑOL\nHTML INTERACTIVO · INGLÉS\nVENTAS\n6\nINGRESOS\n$ 135k\nVERSIONES\n2\nPULSO QA · Tester\nMicroaplicaciones HTML\nPublicado\nHTML INTERACTIVO · ESPAÑOL\nHTML INTERACTIVO · INGLÉS\nVENTAS\n6\nINGRESOS\n$ 101k\nVERSIONES\n2",
+      "tab_ventas_canales": "PRODUCTOS Y VENTAS\n◉ ECOSISTEMA\nProductos y ventas\n\nCatálogo con versiones, formatos e idiomas; cada venta conserva su canal, moneda, comisiones y entrega.\n\nProducto\nRegistrar venta\nVentas\nCatálogo\nCanales y países\nComparación de canales\ni\nCANAL\tVENTAS\tBRUTAS\tNETAS\tCOMISIONES\t% COMIS.\tNETO LIQUIDADO\nAplicaciones web independientes\t4\t$ 61.171,14\t$ 61.171,14\t$ 3.325,68\t5,4%\t$ 57.845,46\nEtsy\t2\t$ 37.398,21\t$ 37.398,21\t$ 2.245,62\t6%\t$ 35.152,59\nAmazon\t2\t$ 32.971,57\t$ 32.971,57\t$ 1.979,16\t6%\t$ 30.992,41\nApple Books\t2\t$ 26.528,57\t$ 24.278,72\t$ 1.592,58\t6,6%\t$ 22.686,14\nSitio web propio\t1\t$ 14.415,57\t$ 14.415,57\t$ 865,80\t6%\t$ 13.549,77\nVentas por país\nMéxico\n$ 38k\nItalia\n$ 37k\nArgentina\n$ 22k\nEspaña\n$ 20k\nChile\n$ 16k\nUruguay\n$ 13k\nEstados Unidos\n$ 13k\nColombia\n$ 12k",
+      "tab_gastos_gastos": "GASTOS Y PROVEEDORES\n◉ ECOSISTEMA\nGastos\n\nInfraestructura, desarrollo, comercialización y administración. Un gasto compartido se registra una vez y se reparte entre apps o marcas sin duplicarse.\n\nProveedor\nRegistrar gasto\nGastos\nA pagar\nProveedores\nTodos los estados\nPendiente\nPagado\nVencido\nTodas las categorías\nInfraestructura tecnológica\nDesarrollo y producción\nComercialización\nAdministración\nTodas las apps\nRemember · EstrategIA\nADMINFLOW · EstrategIA\nConciliador ARCA · EstrategIA\nPULSO QA · EstrategIA\nRomance Reader Kit · Ebooks para la vida\nAgenda digital YOYI’R · YOYI'R\nFinanzas inteligentes · Ebooks para la vida\nPanel de inventario B2B · EstrategIA\nOperativo e inversión\nSolo operativos\nSolo inversión\nGASTOS OPERATIVOS DEL PERÍODO\n$ 82.000,00\n6 registros\nINVERSIÓN DEL PERÍODO\n$ 101.115,00\nno resta al resultado operativo\nPor categoría\nRecursos gráficos\n$ 36k\nOtros gastos administrativos\n$ 27k\nPublicidad otras plataformas\n$ 12k\nHerramientas de IA\n$ 7.300\nFECHA\tCONCEPTO\tCATEGORÍA\tASIGNACIÓN\tVENCE\tIMPORTE\tARS\tESTADO\n15/10/2026\tHosting mensual #1 inversión Mensual\nHostinger\n\tHosting\tEstrategIA 50%Ebooks para la vida 50%\t19/10/2026\tUS$ 15,00\t$ 21.750,00\t\nPendiente\n15/10/2026\tAsesoría profesional #24\nCanva\n\tOtros gastos administrativos\tPanel de inventario B2B\t12/10/2026\t$ 26.500,00\t$ 26.500,00\t\nPagado ESTIMADO\n10/10/2026\tPublicidad en redes #2\nProveedor IA\n\tHerramientas de IA\tADMINFLOW\t14/10/2026\t$ 7.300,00\t$ 7.300,00\t\nPagado IMPORTADO\n10/10/2026\tHosting mensual #25 inversión Mensual\nServicio de email\n\tCertificados / servicios técnicos\tRemember\t19/10/2026\tUS$ 55,00\t$ 79.365,00\t\nPendiente\n05/10/2026\tSuscripción de software #3\nCanva\n\tPublicidad otras plataformas\tConciliador ARCA\t13/10/2026\t$ 12.100,00\t$ 12.100,00\t\nPagado ESTIMADO\n05/10/2026\tPublicidad en redes #26\nPublicidad digital\n\tRecursos gráficos\tADMINFLOW\t10/10/2026\t$ 36.100,00\t$ 36.100,00\t\nPagado IMPORTADO",
+      "tab_gastos_venc": "GASTOS Y PROVEEDORES\n◉ ECOSISTEMA\nGastos\n\nInfraestructura, desarrollo, comercialización y administración. Un gasto compartido se registra una vez y se reparte entre apps o marcas sin duplicarse.\n\nProveedor\nRegistrar gasto\nGastos\nA pagar\nProveedores\n$ 202.200,00 pendiente\nUS$ 70,00 pendiente\n2 vencidos\nFECHA\tCONCEPTO\tCATEGORÍA\tASIGNACIÓN\tVENCE\tIMPORTE\tARS\tESTADO\n22/07/2026\tPublicidad en redes #18\nServicio de email\n\tServicios de edición\tADMINFLOW\t28/09/2026\t$ 40.900,00\t$ 40.900,00\t\nVencido ESTIMADO\n21/08/2026\tSuscripción de software #35\nEstudio contable\n\tAdquisición de clientes\tConciliador ARCA\t01/10/2026\t$ 36.100,00\t$ 36.100,00\t\nVencido IMPORTADO\n15/10/2026\tHosting mensual #1 inversión Mensual\nHostinger\n\tHosting\tEstrategIA 50%Ebooks para la vida 50%\t19/10/2026\tUS$ 15,00\t$ 21.750,00\t\nPendiente\n05/09/2026\tHosting mensual #9\nProveedor IA\n\tServicios externos y APIs\tRemember\t19/10/2026\t$ 40.900,00\t$ 40.900,00\t\nPendiente ESTIMADO\n27/07/2026\tHosting mensual #17\nCanva\n\tCorreo transaccional\tRemember\t19/10/2026\t$ 36.100,00\t$ 36.100,00\t\nPendiente IMPORTADO\n10/10/2026\tHosting mensual #25 inversión Mensual\nServicio de email\n\tCertificados / servicios técnicos\tRemember\t19/10/2026\tUS$ 55,00\t$ 79.365,00\t\nPendiente\n31/08/2026\tHosting mensual #33\nPublicidad digital\n\tCopias de seguridad\tRemember\t19/10/2026\t$ 26.500,00\t$ 26.500,00\t\nPendiente ESTIMADO\n22/07/2026\tHosting mensual #41\nProcesador de pagos\n\tAlmacenamiento\tRemember\t19/10/2026\t$ 21.700,00\t$ 21.700,00\t\nPendiente IMPORTADO",
+      "tab_gastos_prov": "GASTOS Y PROVEEDORES\n◉ ECOSISTEMA\nGastos\n\nInfraestructura, desarrollo, comercialización y administración. Un gasto compartido se registra una vez y se reparte entre apps o marcas sin duplicarse.\n\nProveedor\nRegistrar gasto\nGastos\nA pagar\nProveedores\nPROVEEDOR\tTIPO\tCONTACTO\tGASTOS 12 MESES\tRECURSOS\t\nHostinger\nhttps://ejemplo.test/proveedor-0\n\tHosting\tcontacto0@ejemplo.test\t$ 198.240,00\tHostinger Premium Dominio del ecosistema Base de datos Repositorio de código Almacenamiento y respaldos\tEditar\nProveedor IA\nhttps://ejemplo.test/proveedor-1\n\tInteligencia artificial\tcontacto1@ejemplo.test\t$ 184.600,00\tHerramienta de IA\tEditar\nCanva\nhttps://ejemplo.test/proveedor-2\n\tDiseño\tcontacto2@ejemplo.test\t$ 146.835,00\tCanva Pro\tEditar\nServicio de email\nhttps://ejemplo.test/proveedor-3\n\tComunicación\tcontacto3@ejemplo.test\t$ 178.265,00\tServicio de correos\tEditar\nPublicidad digital\nhttps://ejemplo.test/proveedor-4\n\tMarketing\tcontacto4@ejemplo.test\t$ 176.030,00\t—\tEditar\nProcesador de pagos\nhttps://ejemplo.test/proveedor-5\n\tPagos\tcontacto5@ejemplo.test\t$ 177.225,00\t—\tEditar\nEstudio contable\nhttps://ejemplo.test/proveedor-6\n\tAdministración\tcontacto6@ejemplo.test\t$ 134.625,00\t—\tEditar",
+      "tab_fin_resultado": "FINANZAS\n◉ ECOSISTEMA\nFinanzas\n\nVentas, cobros, transferencias y retiros separados para no contar dos veces el mismo dinero. Cada importe conserva su moneda original.\n\nTipo de cambio\nMovimiento\nResultado\nCuentas y movimientos\nMonedas y tipos de cambio\nEstado de resultados consolidado\nARS · 01/10/2026–15/10/2026\nVentas brutas\n$ 172.485,06\n− Descuentos y cupones\n$ 0,00\n− Reembolsos\n−$ 2.249,85\n= Ingresos netos\n$ 170.235,21\n− Comisiones de plataformas\n−$ 10.008,84\n− Impuestos y retenciones\n$ 0,00\n− Gastos operativos\n−$ 82.000,00\n= Resultado del negocio\n$ 78.226,37\nAparte: inversión $ 101.115,00 · retiros personales y transferencias no afectan el resultado.\nCobrado vs. a cobrar\nCOBRADO EN EL PERÍODO\n$ 160.226,37\nNETO LIQUIDADO DEL PERÍODO\n$ 160.226,37\nSALDO PENDIENTE DE COBRO (TODAS LAS FECHAS)\nUSD\nUS$ 28,17\nARS\n$ 27.258,12\nPOR MONEDA ORIGINAL (PERÍODO)\nMONEDA\tINGRESOS NETOS\tGASTOS\nUSD\tUS$ 66,93\tUS$ 70,00\nARS\t$ 73.746,15\t$ 82.000,00",
+      "tab_fin_cuentas": "FINANZAS\n◉ ECOSISTEMA\nFinanzas\n\nVentas, cobros, transferencias y retiros separados para no contar dos veces el mismo dinero. Cada importe conserva su moneda original.\n\nTipo de cambio\nMovimiento\nResultado\nCuentas y movimientos\nMonedas y tipos de cambio\nBANCO EMPRESA · ARS\n$ 1.063.231,62\nARS · saldo según movimientos registrados\nMERCADO PAGO · ARS\n$ 305.438,01\nARS · saldo según movimientos registrados\nCUENTA INTERNACIONAL · USD\nUS$ 257,27\nUSD · saldo según movimientos registrados\nFECHA\tTIPO\tDETALLE\tDESDE\tHACIA\tIMPORTE\t\n15/10/2026\tPago de gasto\tAsesoría profesional #24\tBanco empresa · ARS\t—\t$ 26.500,00\t\n14/10/2026\tCobro de venta\tConciliador ARCA · HTML interactivo · Español · v1.0\t—\tBanco empresa · ARS\t$ 18.799,06\t\n12/10/2026\tCobro de venta\tLove Without Losing You · PDF · Español · v1.0\t—\tCuenta internacional · USD\tUS$ 12,21\t\n11/10/2026\tCobro de venta\tPULSO QA · Tester · HTML interactivo · Español · v1.0\t—\tMercado Pago · ARS\t$ 11.849,21\t\n11/10/2026\tRetiro personal\tRetiro ficticio\tBanco empresa · ARS\t—\t$ 38.000,00\t\n\n10/10/2026\tPago de gasto\tPublicidad en redes #2\tBanco empresa · ARS\t—\t$ 7.300,00\t\n09/10/2026\tCobro de venta\tTu dinero, sin enredos · EPUB · Español · v1.0\t—\tCuenta internacional · USD\tUS$ 8,45\t\n08/10/2026\tCobro de venta\tPack organización digital · ZIP · Español · v1.0\t—\tBanco empresa · ARS\t$ 23.499,06\t\n06/10/2026\tCobro de venta\tCómo estudio esto · PDF · Español · v1.0\t—\tCuenta internacional · USD\tUS$ 7,51\t\n06/10/2026\tCobro de venta\tRemember · Remember Personal\t—\tCuenta internacional · USD\tUS$ 4,69\t\n05/10/2026\tCobro de venta\tRomance Reader Kit · HTML interactivo · Español · v1.0\t—\tCuenta internacional · USD\tUS$ 9,39\t\n05/10/2026\tCobro de venta\tRemember · Remember Plus\t—\tCuenta internacional · USD\tUS$ 8,69\t\n05/10/2026\tPago de gasto\tSuscripción de software #3\tBanco empresa · ARS\t—\t$ 12.100,00\t\n05/10/2026\tPago de gasto\tPublicidad en redes #26\tBanco empresa · ARS\t—\t$ 36.100,00\t\n03/10/2026\tCobro de venta\tAgenda interactiva YOYI’R · PDF interactivo · Español · v1.0\t—\tMercado Pago · ARS\t$ 15.039,06\t\n02/10/2026\tCobro de venta\tLove Without Losing You · PDF · Español · v1.0\t—\tCuenta internacional · USD\tUS$ 12,21\t",
+      "tab_fin_monedas": "FINANZAS\n◉ ECOSISTEMA\nFinanzas\n\nVentas, cobros, transferencias y retiros separados para no contar dos veces el mismo dinero. Cada importe conserva su moneda original.\n\nTipo de cambio\nMovimiento\nResultado\nCuentas y movimientos\nMonedas y tipos de cambio\n\nMoneda de referencia: ARS. Cada importe se convierte con el tipo de cambio más reciente con fecha igual o anterior a su operación. Si no hay ninguno, el importe queda fuera del consolidado y se avisa.\n\n1 USD =\n1.450,0000 ARS\n15/10/2026 · Cotización DEMO\nFECHA\tMONEDA\t1 UNIDAD =\tFUENTE\t\n15/10/2026\tUSD\t1.450,0000 ARS\tCotización DEMO\t\n\n03/10/2026\tUSD\t1.443,0000 ARS\tCotización DEMO\t\n\n21/09/2026\tUSD\t1.436,0000 ARS\tCotización DEMO\t\n\n09/09/2026\tUSD\t1.429,0000 ARS\tCotización DEMO\t\n\n28/08/2026\tUSD\t1.422,0000 ARS\tCotización DEMO\t\n\n16/08/2026\tUSD\t1.415,0000 ARS\tCotización DEMO\t\n\n04/08/2026\tUSD\t1.408,0000 ARS\tCotización DEMO\t\n\n23/07/2026\tUSD\t1.401,0000 ARS\tCotización DEMO\t\n\n11/07/2026\tUSD\t1.394,0000 ARS\tCotización DEMO\t\n\n29/06/2026\tUSD\t1.387,0000 ARS\tCotización DEMO\t\n\n17/06/2026\tUSD\t1.380,0000 ARS\tCotización DEMO\t\n\n05/06/2026\tUSD\t1.373,0000 ARS\tCotización DEMO\t\n\n24/05/2026\tUSD\t1.366,0000 ARS\tCotización DEMO\t\n\n12/05/2026\tUSD\t1.359,0000 ARS\tCotización DEMO\t",
+      "tab_subs_lista": "SUSCRIPCIONES\n◉ ECOSISTEMA\nSuscripciones\n\nPlanes, renovaciones, cancelaciones e ingreso recurrente. Los indicadores se calculan solo cuando hay datos confiables.\n\nRegistrar cobro\nNueva suscripción\nMRR\ni\n$ 47.777,50\nARR $ 573.330,00\nACTIVAS · PAGAN\ni\n5\n2 en prueba · 2 pago fallido\nCHURN DEL PERÍODO\ni\n18,2%\n2 cancelaciones · 11 al inicio · 18,2%/mes\nARPU\ni\n$ 9.555,50\npor suscriptor / mes\nLTV ESTIMADO\ni\n$ 52.555,25\nESTIMADO\nCAC\ni\nDatos insuficientes\n$ 0,00 comercialización · 0 clientes nuevos\nPRUEBA → PAGO\ni\nDatos insuficientes\n0 pruebas iniciadas · 0 convertidas\nRENOVACIONES\n3 / 2 fallidas\n60% de éxito\nEvolución del MRR\nfin de cada mes · 12 meses\n$ 0\n$ 25k\n$ 50k\n$ 75k\n$ 100k\nnov\nene\nmar\nmay\njul\nsep\noct\nRegistrados · activos · pagan\ni\nRemember\nRegistrados\n110\nActivos\n53\nPagan\n5\nConversión a pago: 4,5%\nSuscripciones\nEventos\nTodas las apps\nRemember\nTodos los estados\nEn prueba\nActiva\nPago fallido\nPausada\nCancelada\nSUSCRIPTOR\tAPP\tPLAN\tPRECIO\tALTA\tPRÓXIMA RENOVACIÓN\tESTADO\nLucía Fernández\t\nEstrategIA Remember\tRemember Personal\tUS$ 4,99/mes\t06/08/2026\t21/10/2026\t\nActiva\nSofía Martínez\t\nEstrategIA Remember\tRemember Plus\tUS$ 8,99/mes\t10/08/2026\t23/10/2026\t\nActiva\nMarcos Torres\t\nEstrategIA Remember\tRemember anual\tUS$ 49,00/año\t14/08/2026\t25/10/2026\t\nEn prueba\nValentina Gómez\t\nEstrategIA Remember\tRemember Personal\tUS$ 4,99/mes\t18/08/2026\t27/10/2026\t\nPago fallido\nCamila Pérez\t\nEstrategIA Remember\tRemember Plus\tUS$ 8,99/mes\t22/08/2026\t—\t\nCancelada\nDaniel Silva\t\nEstrategIA Remember\tRemember anual\tUS$ 49,00/año\t26/08/2026\t—\t\nPausada\nEmma Johnson\t\nEstrategIA Remember\tRemember Personal\tUS$ 4,99/mes\t30/08/2026\t02/11/2026\t\nActiva\nAlejandro Ruiz\t\nEstrategIA Remember\tRemember Plus\tUS$ 8,99/mes\t03/09/2026\t04/11/2026\t\nActiva\nMia Robinson\t\nEstrategIA Remember\tRemember anual\tUS$ 49,00/año\t07/09/2026\t06/11/2026\t\nEn prueba\nGabriel López\t\nEstrategIA Remember\tRemember Personal\tUS$ 4,99/mes\t11/09/2026\t08/11/2026\t\nPago fallido\nIsabella Costa\t\nEstrategIA Remember\tRemember Plus\tUS$ 8,99/mes\t15/09/2026\t—\t\nCancelada\nMateo Díaz\t\nEstrategIA Remember\tRemember anual\tUS$ 49,00/año\t19/09/2026\t—\t\nPausada\nOlivia Brown\t\nEstrategIA Remember\tRemember Personal\tUS$ 4,99/mes\t23/09/2026\t14/11/2026\t\nActiva",
+      "tab_subs_eventos": "SUSCRIPCIONES\n◉ ECOSISTEMA\nSuscripciones\n\nPlanes, renovaciones, cancelaciones e ingreso recurrente. Los indicadores se calculan solo cuando hay datos confiables.\n\nRegistrar cobro\nNueva suscripción\nMRR\ni\n$ 47.777,50\nARR $ 573.330,00\nACTIVAS · PAGAN\ni\n5\n2 en prueba · 2 pago fallido\nCHURN DEL PERÍODO\ni\n18,2%\n2 cancelaciones · 11 al inicio · 18,2%/mes\nARPU\ni\n$ 9.555,50\npor suscriptor / mes\nLTV ESTIMADO\ni\n$ 52.555,25\nESTIMADO\nCAC\ni\nDatos insuficientes\n$ 0,00 comercialización · 0 clientes nuevos\nPRUEBA → PAGO\ni\nDatos insuficientes\n0 pruebas iniciadas · 0 convertidas\nRENOVACIONES\n3 / 2 fallidas\n60% de éxito\nEvolución del MRR\nfin de cada mes · 12 meses\n$ 0\n$ 25k\n$ 50k\n$ 75k\n$ 100k\nnov\nene\nmar\nmay\njul\nsep\noct\nRegistrados · activos · pagan\ni\nRemember\nRegistrados\n110\nActivos\n53\nPagan\n5\nConversión a pago: 4,5%\nSuscripciones\nEventos\nFECHA\tEVENTO\tSUSCRIPTOR\tAPP · PLAN\tIMPORTE\n13/10/2026\tPago fallido\tValentina Gómez\tRemember · Remember Personal\t\n13/10/2026\tPago fallido\tGabriel López\tRemember · Remember Personal\t\n10/10/2026\tPausa\tDaniel Silva\tRemember · Remember anual\t\n10/10/2026\tPausa\tMateo Díaz\tRemember · Remember anual\t\n07/10/2026\tCancelación\tCamila Pérez\tRemember · Remember Plus\t\n07/10/2026\tCancelación\tIsabella Costa\tRemember · Remember Plus\t\n06/10/2026\tRenovación cobrada\tLucía Fernández\tRemember · Remember Personal\tUS$ 4,99\n06/10/2026\tRenovación cobrada\tEmma Johnson\tRemember · Remember Personal\tUS$ 4,99\n06/10/2026\tRenovación cobrada\tOlivia Brown\tRemember · Remember Personal\tUS$ 4,99",
+      "tab_integ_conexiones": "INTEGRACIONES\n◉ ECOSISTEMA\nIntegraciones\n\nEmpezá manual, importá archivos y conectá tus apps de a poco. Cada fuente indica su última sincronización, errores y posibles duplicados.\n\nEventos JSON\nImportar CSV\nFuentes de datos\nRevisión de duplicados (1)\nEspecificación para apps\nTienda del ecosistema (DEMO)\nTienda principal · Archivo CSV / Excel\nActiva\nÚLTIMA SINC.\n15/10\nIMPORTADOS\n48\nPENDIENTES\n0\nFuente ficticia · sin conexión real\nEtsy (DEMO)\nMarketplace · Archivo CSV / Excel\nActiva\nÚLTIMA SINC.\n15/10\nIMPORTADOS\n17\nPENDIENTES\n1\nImportaciones simuladas\nApple Books (DEMO)\nMarketplace · Carga manual\nPausada\nÚLTIMA SINC.\n01/10\nIMPORTADOS\n8\nPENDIENTES\n0\nConexión simulada\nPagos externos (DEMO)\nProcesador de pagos · Eventos JSON\nCon errores\nÚLTIMA SINC.\n13/10\nIMPORTADOS\n5\nPENDIENTES\n0\nError simulado: evento sin referencia de pago\nApp: Remember\nError intencional para probar el panel\nNueva fuente de datos\nCÓMO SE EVITA CONTAR DOS VECES\n\n1) Si un registro trae el mismo ID externo que uno existente, se omite. 2) Si coincide fecha, importe, moneda y producto/concepto con otro registro de otra fuente, va a “Revisión de duplicados” en vez de importarse. 3) Los gastos compartidos se registran una vez y se reparten. 4) Los paquetes suman solo como paquete.",
+      "tab_integ_review": "INTEGRACIONES\n◉ ECOSISTEMA\nIntegraciones\n\nEmpezá manual, importá archivos y conectá tus apps de a poco. Cada fuente indica su última sincronización, errores y posibles duplicados.\n\nEventos JSON\nImportar CSV\nFuentes de datos\nRevisión de duplicados (1)\nEspecificación para apps\nVenta de Etsy (DEMO)\nPosible duplicado ficticio para revisar\nDescartar\nImportar igual\nNUEVO\nLove Without Losing You\n13/10/2026 · US$ 12,99 · ID —\nEXISTENTE (DATASET DEMO)\nTu dinero, sin enredos · EPUB · Español · v1.0\n09/10/2026 · US$ 8,99 · ID DEMO-ORD-1002",
+      "tab_integ_spec": "INTEGRACIONES\n◉ ECOSISTEMA\nIntegraciones\n\nEmpezá manual, importá archivos y conectá tus apps de a poco. Cada fuente indica su última sincronización, errores y posibles duplicados.\n\nEventos JSON\nImportar CSV\nFuentes de datos\nRevisión de duplicados (1)\nEspecificación para apps\nFormato de eventos para tus apps\nCopiar ejemplo\n\nCada app (Flask, HTML, etc.) puede exportar o enviar sus eventos en este formato. Hoy los pegás en “Eventos JSON”; más adelante el mismo formato sirve para un webhook. Los external_id repetidos se ignoran.\n\n[\n  { \"source\": \"remember\", \"external_id\": \"evt_001\", \"type\": \"subscription_started\",\n    \"app\": \"Remember\", \"plan\": \"Pro mensual\", \"date\": \"2026-10-01\",\n    \"amount\": 4000, \"currency\": \"ARS\", \"commission\": 280,\n    \"customer_email\": \"ana@ejemplo.com\", \"customer_name\": \"Ana\", \"country\": \"Argentina\" },\n  { \"source\": \"remember\", \"external_id\": \"evt_002\", \"type\": \"renewal\",\n    \"app\": \"Remember\", \"date\": \"2026-11-01\", \"amount\": 4000, \"currency\": \"ARS\",\n    \"customer_email\": \"ana@ejemplo.com\" },\n  { \"source\": \"remember\", \"external_id\": \"evt_003\", \"type\": \"users\",\n    \"app\": \"Remember\", \"date\": \"2026-11-01\", \"registered\": 120, \"active\": 45 }\n]\nTIPOS DE EVENTO\nsale — Venta de pago único (amount, currency, product o app)\nsubscription_started — Alta con primer pago (plan obligatorio)\ntrial_started — Inicio de prueba\nrenewal — Renovación cobrada\npayment_failed — Pago fallido\ncancellation — Cancelación\nplan_changed — Cambio de plan (plan)\nusers — Foto de usuarios (registered, active)\n\nCampos comunes: source, external_id, type, app (nombre exacto de la app registrada), date (AAAA-MM-DD), customer_email. Opcionales: commission, tax, country, channel.",
+      "report_ventas": "REPORTES\n◉ ECOSISTEMA\nReportes\n\nTablas filtradas por la lente y el período elegido. La exportación respeta los mismos filtros.\n\nCSV\nExcel\nVentas (detalle)\nVentas por marca\nVentas por producto y versión\nVentas por canal\nVentas por país\nRentabilidad por aplicación\nSuscripciones\nEventos de suscripción\nGastos (detalle)\nAsignación de gastos por app\nInfraestructura\nMovimientos de tesorería\nResultado mensual (12 meses)\nTipos de cambio\nHistorial de operaciones\n\nLas ventas anuladas aparecen con neto en ARS = 0. Sin tipo de cambio, el convertido queda en 0.\n\nFECHA\tTIPO\tMARCA\tPRODUCTO / CONCEPTO\tAPP\tCANAL\tPAÍS\tCLIENTE\tMONEDA\tBRUTO\tDESCUENTO\tREEMBOLSO\tNETO\tCOMISIÓN\tIMP./RET.\tLIQUIDADO\tTC\tNETO ARS\tCOBRO\tENTREGA\tCUPÓN\tESTADO\tORIGEN\tFUENTE\tID EXTERNO\n02/10/2026\tVenta única\tEbooks para la vida\tLove Without Losing You · PDF · Español · v1.0\t\tEtsy\tItalia\tTomás Vidal\tUSD\t12,99\t0,00\t0,00\t12,99\t0,78\t0,00\t12,21\t1.436,0000\t$ 18.653,64\tCobrado\tEntregado\t\tvalida\tintegracion\tDataset DEMO\tDEMO-ORD-1041\n03/10/2026\tVenta única\tYOYI'R\tAgenda interactiva YOYI’R · PDF interactivo · Español · v1.0\tAgenda digital YOYI’R\tAplicaciones web independientes\tChile\tCamila Pérez\tARS\t15.999,00\t0,00\t0,00\t15.999,00\t959,94\t0,00\t15.039,06\t1,0000\t$ 15.999,00\tCobrado\tEntregado\t\tvalida\timportado\tDataset DEMO\tDEMO-ORD-1004\n05/10/2026\tVenta única\tEbooks para la vida\tRomance Reader Kit · HTML interactivo · Español · v1.0\tRomance Reader Kit\tSitio web propio\tArgentina\tNoah Smith\tUSD\t9,99\t0,00\t0,00\t9,99\t0,60\t0,00\t9,39\t1.443,0000\t$ 14.415,57\tCobrado\tEntregado\t\tvalida\timportado\tDataset DEMO\tDEMO-ORD-1040\n05/10/2026\tCobro de suscripción\tEstrategIA\tRemember · Remember Plus\tRemember\tAplicaciones web independientes\tMéxico\tSofía Martínez\tUSD\t8,99\t0,00\t0,00\t8,99\t0,30\t0,00\t8,69\t1.443,0000\t$ 12.972,57\tCobrado\tNo aplica\t\tvalida\tmanual\t\t\n06/10/2026\tVenta única\tEbooks para la vida\tCómo estudio esto · PDF · Español · v1.0\t\tApple Books\tColombia\tDiego Castillo\tUSD\t7,99\t0,00\t0,00\t7,99\t0,48\t0,00\t7,51\t1.443,0000\t$ 11.529,57\tCobrado\tEntregado\t\tvalida\tmanual\tDataset DEMO\tDEMO-ORD-1003\n06/10/2026\tCobro de suscripción\tEstrategIA\tRemember · Remember Personal\tRemember\tAplicaciones web independientes\tArgentina\tLucía Fernández\tUSD\t4,99\t0,00\t0,00\t4,99\t0,30\t0,00\t4,69\t1.443,0000\t$ 7.200,57\tCobrado\tNo aplica\t\tvalida\tmanual\t\t\n08/10/2026\tIngreso externo\tYOYI'R\tPack organización digital · ZIP · Español · v1.0\t\tAplicaciones web independientes\tMéxico\tGabriel López\tARS\t24.999,00\t0,00\t0,00\t24.999,00\t1.499,94\t0,00\t23.499,06\t1,0000\t$ 24.999,00\tCobrado\tEntregado\t\tvalida\tmanual\tDataset DEMO\tDEMO-ORD-1039\n09/10/2026\tVenta única\tEbooks para la vida\tTu dinero, sin enredos · EPUB · Español · v1.0\tFinanzas inteligentes\tAmazon\tUruguay\tLiam Wilson\tUSD\t8,99\t0,00\t0,00\t8,99\t0,54\t0,00\t8,45\t1.443,0000\t$ 12.972,57\tCobrado\tEntregado\t\tvalida\tintegracion\tDataset DEMO\tDEMO-ORD-1002\n11/10/2026\tVenta única\tEstrategIA\tPULSO QA · Tester · HTML interactivo · Español · v1.0\tPULSO QA\tApple Books\tEstados Unidos\tMarcos Torres\tARS\t14.999,00\t0,00\t2.249,85\t12.749,15\t899,94\t0,00\t11.849,21\t1,0000\t$ 12.749,15\tCobrado\tEntregado\t\tvalida\tintegracion\tDataset DEMO\tDEMO-ORD-1038\n12/10/2026\tVenta única\tEbooks para la vida\tLove Without Losing You · PDF · Español · v1.0\t\tEtsy\tItalia\tAlejandro Ruiz\tUSD\t12,99\t0,00\t0,00\t12,99\t0,78\t0,00\t12,21\t1.443,0000\t$ 18.744,57\tCobrado\tEntregado\t\tvalida\timportado\tDataset DEMO\tDEMO-ORD-1001\n14/10/2026\tVenta única\tEstrategIA\tConciliador ARCA · HTML interactivo · Español · v1.0\tConciliador ARCA\tAmazon\tEspaña\tLucas Herrera\tARS\t19.999,00\t0,00\t0,00\t19.999,00\t1.199,94\t0,00\t18.799,06\t1,0000\t$ 19.999,00\tCobrado\tEntregado\t\tvalida\timportado\tDataset DEMO\tDEMO-ORD-1037\n15/10/2026\tIngreso externo\tEbooks para la vida\tRomance Reader Kit · HTML interactivo · Español · v1.0\tRomance Reader Kit\tSitio web propio\tArgentina\tLucía Fernández\tUSD\t19,98\t1,00\t1,50\t17,48\t0,60\t0,00\t16,88\t1.450,0000\t$ 0,00\tA cobrar\tIncidencia\tDEMO10\tanulada\tmanual\tDataset DEMO\tDEMO-ORD-1000\nTotal\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t$ 170.235,21\t\t\t\t\t\t\t\n\n12 fila(s).",
+      "report_marca": "REPORTES\n◉ ECOSISTEMA\nReportes\n\nTablas filtradas por la lente y el período elegido. La exportación respeta los mismos filtros.\n\nCSV\nExcel\nVentas (detalle)\nVentas por marca\nVentas por producto y versión\nVentas por canal\nVentas por país\nRentabilidad por aplicación\nSuscripciones\nEventos de suscripción\nGastos (detalle)\nAsignación de gastos por app\nInfraestructura\nMovimientos de tesorería\nResultado mensual (12 meses)\nTipos de cambio\nHistorial de operaciones\nMARCA\tVENTAS\tUNIDADES\tBRUTAS ARS\tNETAS ARS\tCOMISIONES\tIMP./RET.\tLIQUIDADO\nEbooks para la vida\t5\t5\t$ 76.315,92\t$ 76.315,92\t$ 4.583,28\t$ 0,00\t$ 71.732,64\nEstrategIA\t4\t4\t$ 55.171,14\t$ 52.921,29\t$ 2.965,68\t$ 0,00\t$ 49.955,61\nYOYI'R\t2\t2\t$ 40.998,00\t$ 40.998,00\t$ 2.459,88\t$ 0,00\t$ 38.538,12\nTotal\t11\t11\t$ 172.485,06\t$ 170.235,21\t$ 10.008,84\t$ 0,00\t$ 160.226,37\n\n3 fila(s).",
+      "report_producto": "REPORTES\n◉ ECOSISTEMA\nReportes\n\nTablas filtradas por la lente y el período elegido. La exportación respeta los mismos filtros.\n\nCSV\nExcel\nVentas (detalle)\nVentas por marca\nVentas por producto y versión\nVentas por canal\nVentas por país\nRentabilidad por aplicación\nSuscripciones\nEventos de suscripción\nGastos (detalle)\nAsignación de gastos por app\nInfraestructura\nMovimientos de tesorería\nResultado mensual (12 meses)\nTipos de cambio\nHistorial de operaciones\nPRODUCTO · VERSIÓN\tVENTAS\tUNIDADES\tBRUTAS ARS\tNETAS ARS\tCOMISIONES\tIMP./RET.\tLIQUIDADO\nLove Without Losing You · PDF · Español · v1.0\t2\t2\t$ 37.398,21\t$ 37.398,21\t$ 2.245,62\t$ 0,00\t$ 35.152,59\nPack organización digital · ZIP · Español · v1.0\t1\t1\t$ 24.999,00\t$ 24.999,00\t$ 1.499,94\t$ 0,00\t$ 23.499,06\nSin producto (apps / externos)\t2\t2\t$ 20.173,14\t$ 20.173,14\t$ 865,80\t$ 0,00\t$ 19.307,34\nConciliador ARCA · HTML interactivo · Español · v1.0\t1\t1\t$ 19.999,00\t$ 19.999,00\t$ 1.199,94\t$ 0,00\t$ 18.799,06\nAgenda interactiva YOYI’R · PDF interactivo · Español · v1.0\t1\t1\t$ 15.999,00\t$ 15.999,00\t$ 959,94\t$ 0,00\t$ 15.039,06\nRomance Reader Kit · HTML interactivo · Español · v1.0\t1\t1\t$ 14.415,57\t$ 14.415,57\t$ 865,80\t$ 0,00\t$ 13.549,77\nTu dinero, sin enredos · EPUB · Español · v1.0\t1\t1\t$ 12.972,57\t$ 12.972,57\t$ 779,22\t$ 0,00\t$ 12.193,35\nPULSO QA · Tester · HTML interactivo · Español · v1.0\t1\t1\t$ 14.999,00\t$ 12.749,15\t$ 899,94\t$ 0,00\t$ 11.849,21\nCómo estudio esto · PDF · Español · v1.0\t1\t1\t$ 11.529,57\t$ 11.529,57\t$ 692,64\t$ 0,00\t$ 10.836,93\nTotal\t11\t11\t$ 172.485,06\t$ 170.235,21\t$ 10.008,84\t$ 0,00\t$ 160.226,37\n\n9 fila(s).",
+      "report_canal": "REPORTES\n◉ ECOSISTEMA\nReportes\n\nTablas filtradas por la lente y el período elegido. La exportación respeta los mismos filtros.\n\nCSV\nExcel\nVentas (detalle)\nVentas por marca\nVentas por producto y versión\nVentas por canal\nVentas por país\nRentabilidad por aplicación\nSuscripciones\nEventos de suscripción\nGastos (detalle)\nAsignación de gastos por app\nInfraestructura\nMovimientos de tesorería\nResultado mensual (12 meses)\nTipos de cambio\nHistorial de operaciones\nCANAL\tVENTAS\tUNIDADES\tBRUTAS ARS\tNETAS ARS\tCOMISIONES\tIMP./RET.\tLIQUIDADO\nAplicaciones web independientes\t4\t4\t$ 61.171,14\t$ 61.171,14\t$ 3.325,68\t$ 0,00\t$ 57.845,46\nEtsy\t2\t2\t$ 37.398,21\t$ 37.398,21\t$ 2.245,62\t$ 0,00\t$ 35.152,59\nAmazon\t2\t2\t$ 32.971,57\t$ 32.971,57\t$ 1.979,16\t$ 0,00\t$ 30.992,41\nApple Books\t2\t2\t$ 26.528,57\t$ 24.278,72\t$ 1.592,58\t$ 0,00\t$ 22.686,14\nSitio web propio\t1\t1\t$ 14.415,57\t$ 14.415,57\t$ 865,80\t$ 0,00\t$ 13.549,77\nTotal\t11\t11\t$ 172.485,06\t$ 170.235,21\t$ 10.008,84\t$ 0,00\t$ 160.226,37\n\n5 fila(s).",
+      "report_pais": "REPORTES\n◉ ECOSISTEMA\nReportes\n\nTablas filtradas por la lente y el período elegido. La exportación respeta los mismos filtros.\n\nCSV\nExcel\nVentas (detalle)\nVentas por marca\nVentas por producto y versión\nVentas por canal\nVentas por país\nRentabilidad por aplicación\nSuscripciones\nEventos de suscripción\nGastos (detalle)\nAsignación de gastos por app\nInfraestructura\nMovimientos de tesorería\nResultado mensual (12 meses)\nTipos de cambio\nHistorial de operaciones\nPAÍS\tVENTAS\tUNIDADES\tBRUTAS ARS\tNETAS ARS\tCOMISIONES\tIMP./RET.\tLIQUIDADO\nMéxico\t2\t2\t$ 37.971,57\t$ 37.971,57\t$ 1.932,84\t$ 0,00\t$ 36.038,73\nItalia\t2\t2\t$ 37.398,21\t$ 37.398,21\t$ 2.245,62\t$ 0,00\t$ 35.152,59\nArgentina\t2\t2\t$ 21.616,14\t$ 21.616,14\t$ 1.298,70\t$ 0,00\t$ 20.317,44\nEspaña\t1\t1\t$ 19.999,00\t$ 19.999,00\t$ 1.199,94\t$ 0,00\t$ 18.799,06\nChile\t1\t1\t$ 15.999,00\t$ 15.999,00\t$ 959,94\t$ 0,00\t$ 15.039,06\nUruguay\t1\t1\t$ 12.972,57\t$ 12.972,57\t$ 779,22\t$ 0,00\t$ 12.193,35\nEstados Unidos\t1\t1\t$ 14.999,00\t$ 12.749,15\t$ 899,94\t$ 0,00\t$ 11.849,21\nColombia\t1\t1\t$ 11.529,57\t$ 11.529,57\t$ 692,64\t$ 0,00\t$ 10.836,93\nTotal\t11\t11\t$ 172.485,06\t$ 170.235,21\t$ 10.008,84\t$ 0,00\t$ 160.226,37\n\n8 fila(s).",
+      "report_rentabilidad": "REPORTES\n◉ ECOSISTEMA\nReportes\n\nTablas filtradas por la lente y el período elegido. La exportación respeta los mismos filtros.\n\nCSV\nExcel\nVentas (detalle)\nVentas por marca\nVentas por producto y versión\nVentas por canal\nVentas por país\nRentabilidad por aplicación\nSuscripciones\nEventos de suscripción\nGastos (detalle)\nAsignación de gastos por app\nInfraestructura\nMovimientos de tesorería\nResultado mensual (12 meses)\nTipos de cambio\nHistorial de operaciones\n\nPeríodo para ingresos y costos; acumulados históricos para inversión y recuperación.\n\nAPP\tMARCA\tTIPO\tESTADO\tINGRESOS NETOS\tCOMISIONES\tIMP./RET.\tCOSTOS ASIGNADOS\tRESULTADO OPERATIVO\tINVERSIÓN ACUMULADA\tRESULTADO ACUMULADO\tRECUPERACIÓN %\tHORAS\nRemember\tEstrategIA\tApp por suscripción\tPublicada\t$ 20.173,14\t$ 865,80\t$ 0,00\t$ 0,00\t$ 19.307,34\t$ 199.365,00\t−$ 79.944,14\t40,10\t10\nADMINFLOW\tEstrategIA\tApp web de pago único\tPublicada\t$ 0,00\t$ 0,00\t$ 0,00\t$ 43.400,00\t−$ 43.400,00\t$ 137.000,00\t$ 132.084,23\t96,41\t14\nConciliador ARCA\tEstrategIA\tProducto descargable\tPruebas\t$ 19.999,00\t$ 1.199,94\t$ 0,00\t$ 12.100,00\t$ 6.699,06\t$ 216.730,00\t$ 31.393,61\t14,49\t9\nPULSO QA\tEstrategIA\tHerramienta interna\tPublicada\t$ 12.749,15\t$ 899,94\t$ 0,00\t$ 0,00\t$ 11.849,21\t$ 171.000,00\t$ 20.943,61\t12,25\t12\nRomance Reader Kit\tEbooks para la vida\tProducto descargable\tPublicada\t$ 14.415,57\t$ 865,80\t$ 0,00\t$ 0,00\t$ 13.549,77\t$ 272.725,00\t$ 5.218,29\t1,91\t9\nAgenda digital YOYI’R\tYOYI'R\tProducto descargable\tPublicada\t$ 15.999,00\t$ 959,94\t$ 0,00\t$ 0,00\t$ 15.039,06\t$ 205.000,00\t$ 37.033,46\t18,07\t12\nFinanzas inteligentes\tEbooks para la vida\tProducto descargable\tDesarrollo\t$ 12.972,57\t$ 779,22\t$ 0,00\t$ 0,00\t$ 12.193,35\t$ 279.160,00\t$ 37.003,00\t13,26\t9\nPanel de inventario B2B\tEstrategIA\tEn desarrollo (aún sin ingresos)\tIdea\t$ 0,00\t$ 0,00\t$ 0,00\t$ 26.500,00\t−$ 26.500,00\t$ 239.000,00\t−$ 96.400,00\t40,33\t12\nTotal\t\t\t\t$ 96.308,43\t$ 5.570,64\t$ 0,00\t$ 82.000,00\t$ 8.737,79\t$ 1.719.980,00\t$ 87.332,06\t\t87\n\n8 fila(s).",
+      "report_suscripciones": "REPORTES\n◉ ECOSISTEMA\nReportes\n\nTablas filtradas por la lente y el estado actual. La exportación respeta los mismos filtros.\n\nCSV\nExcel\nVentas (detalle)\nVentas por marca\nVentas por producto y versión\nVentas por canal\nVentas por país\nRentabilidad por aplicación\nSuscripciones\nEventos de suscripción\nGastos (detalle)\nAsignación de gastos por app\nInfraestructura\nMovimientos de tesorería\nResultado mensual (12 meses)\nTipos de cambio\nHistorial de operaciones\n\nContiene datos personales.\n\nAPP\tPLAN\tCLIENTE\tEMAIL\tESTADO\tALTA\tPRÓXIMA RENOVACIÓN\tPRECIO\tMONEDA\tPERIODICIDAD\tMRR ARS\nRemember\tRemember Personal\tLucía Fernández\tcliente01@ejemplo.test\tActiva\t06/08/2026\t21/10/2026\t4,99\tUSD\tmensual\t$ 7.235,50\nRemember\tRemember Plus\tSofía Martínez\tcliente02@ejemplo.test\tActiva\t10/08/2026\t23/10/2026\t8,99\tUSD\tmensual\t$ 13.035,50\nRemember\tRemember anual\tMarcos Torres\tcliente03@ejemplo.test\tEn prueba\t14/08/2026\t25/10/2026\t49,00\tUSD\tanual\t$ 0,00\nRemember\tRemember Personal\tValentina Gómez\tcliente04@ejemplo.test\tPago fallido\t18/08/2026\t27/10/2026\t4,99\tUSD\tmensual\t$ 0,00\nRemember\tRemember Plus\tCamila Pérez\tcliente05@ejemplo.test\tCancelada\t22/08/2026\t29/10/2026\t8,99\tUSD\tmensual\t$ 0,00\nRemember\tRemember anual\tDaniel Silva\tcliente06@ejemplo.test\tPausada\t26/08/2026\t31/10/2026\t49,00\tUSD\tanual\t$ 0,00\nRemember\tRemember Personal\tEmma Johnson\tcliente07@ejemplo.test\tActiva\t30/08/2026\t02/11/2026\t4,99\tUSD\tmensual\t$ 7.235,50\nRemember\tRemember Plus\tAlejandro Ruiz\tcliente08@ejemplo.test\tActiva\t03/09/2026\t04/11/2026\t8,99\tUSD\tmensual\t$ 13.035,50\nRemember\tRemember anual\tMia Robinson\tcliente09@ejemplo.test\tEn prueba\t07/09/2026\t06/11/2026\t49,00\tUSD\tanual\t$ 0,00\nRemember\tRemember Personal\tGabriel López\tcliente10@ejemplo.test\tPago fallido\t11/09/2026\t08/11/2026\t4,99\tUSD\tmensual\t$ 0,00\nRemember\tRemember Plus\tIsabella Costa\tcliente11@ejemplo.test\tCancelada\t15/09/2026\t10/11/2026\t8,99\tUSD\tmensual\t$ 0,00\nRemember\tRemember anual\tMateo Díaz\tcliente12@ejemplo.test\tPausada\t19/09/2026\t12/11/2026\t49,00\tUSD\tanual\t$ 0,00\nRemember\tRemember Personal\tOlivia Brown\tcliente13@ejemplo.test\tActiva\t23/09/2026\t14/11/2026\t4,99\tUSD\tmensual\t$ 7.235,50\nTotal\t\t\t\t\t\t\t\t\t\t$ 47.777,50\n\n13 fila(s).",
+      "report_eventos": "REPORTES\n◉ ECOSISTEMA\nReportes\n\nTablas filtradas por la lente y el período elegido. La exportación respeta los mismos filtros.\n\nCSV\nExcel\nVentas (detalle)\nVentas por marca\nVentas por producto y versión\nVentas por canal\nVentas por país\nRentabilidad por aplicación\nSuscripciones\nEventos de suscripción\nGastos (detalle)\nAsignación de gastos por app\nInfraestructura\nMovimientos de tesorería\nResultado mensual (12 meses)\nTipos de cambio\nHistorial de operaciones\nFECHA\tEVENTO\tAPP\tPLAN\tCLIENTE\tIMPORTE\tMONEDA\n06/10/2026\tRenovación cobrada\tRemember\tRemember Personal\tLucía Fernández\t4,99\tUSD\n06/10/2026\tRenovación cobrada\tRemember\tRemember Personal\tEmma Johnson\t4,99\tUSD\n06/10/2026\tRenovación cobrada\tRemember\tRemember Personal\tOlivia Brown\t4,99\tUSD\n07/10/2026\tCancelación\tRemember\tRemember Plus\tCamila Pérez\t\t\n07/10/2026\tCancelación\tRemember\tRemember Plus\tIsabella Costa\t\t\n10/10/2026\tPausa\tRemember\tRemember anual\tDaniel Silva\t\t\n10/10/2026\tPausa\tRemember\tRemember anual\tMateo Díaz\t\t\n13/10/2026\tPago fallido\tRemember\tRemember Personal\tValentina Gómez\t\t\n13/10/2026\tPago fallido\tRemember\tRemember Personal\tGabriel López\t\t\n\n9 fila(s).",
+      "report_gastos": "REPORTES\n◉ ECOSISTEMA\nReportes\n\nTablas filtradas por la lente y el período elegido. La exportación respeta los mismos filtros.\n\nCSV\nExcel\nVentas (detalle)\nVentas por marca\nVentas por producto y versión\nVentas por canal\nVentas por país\nRentabilidad por aplicación\nSuscripciones\nEventos de suscripción\nGastos (detalle)\nAsignación de gastos por app\nInfraestructura\nMovimientos de tesorería\nResultado mensual (12 meses)\nTipos de cambio\nHistorial de operaciones\nFECHA\tCONCEPTO\tPROVEEDOR\tCATEGORÍA\tNATURALEZA\tIMPORTE\tMONEDA\tPARTE (LENTE)\tIMPORTE ARS\tESTADO\tVENCIMIENTO\tFRECUENCIA\tASIGNACIÓN\tCOMPROBANTE\tORIGEN\n05/10/2026\tSuscripción de software #3\tCanva\tPublicidad otras plataformas\toperativo\t12.100,00\tARS\t100,00\t$ 12.100,00\tPagado\t13/10/2026\tÚnico\tConciliador ARCA 100%\tDEMO-FACT-102\testimado\n05/10/2026\tPublicidad en redes #26\tPublicidad digital\tRecursos gráficos\toperativo\t36.100,00\tARS\t100,00\t$ 36.100,00\tPagado\t10/10/2026\tÚnico\tADMINFLOW 100%\tDEMO-FACT-125\timportado\n10/10/2026\tPublicidad en redes #2\tProveedor IA\tHerramientas de IA\toperativo\t7.300,00\tARS\t100,00\t$ 7.300,00\tPagado\t14/10/2026\tÚnico\tADMINFLOW 100%\tDEMO-FACT-101\timportado\n10/10/2026\tHosting mensual #25\tServicio de email\tCertificados / servicios técnicos\tinversion\t55,00\tUSD\t100,00\t$ 79.365,00\tPendiente\t19/10/2026\tMensual\tRemember 100%\tDEMO-FACT-124\tmanual\n15/10/2026\tHosting mensual #1\tHostinger\tHosting\tinversion\t15,00\tUSD\t100,00\t$ 21.750,00\tPendiente\t19/10/2026\tMensual\tEstrategIA 50%; Ebooks para la vida 50%\tDEMO-FACT-100\tmanual\n15/10/2026\tAsesoría profesional #24\tCanva\tOtros gastos administrativos\toperativo\t26.500,00\tARS\t100,00\t$ 26.500,00\tPagado\t12/10/2026\tÚnico\tPanel de inventario B2B 100%\tDEMO-FACT-123\testimado\nTotal\t\t\t\t\t\t\t\t$ 183.115,00\t\t\t\t\t\t\n\n6 fila(s).",
+      "report_asignacion": "REPORTES\n◉ ECOSISTEMA\nReportes\n\nTablas filtradas por la lente y el período elegido. La exportación respeta los mismos filtros.\n\nCSV\nExcel\nVentas (detalle)\nVentas por marca\nVentas por producto y versión\nVentas por canal\nVentas por país\nRentabilidad por aplicación\nSuscripciones\nEventos de suscripción\nGastos (detalle)\nAsignación de gastos por app\nInfraestructura\nMovimientos de tesorería\nResultado mensual (12 meses)\nTipos de cambio\nHistorial de operaciones\nAPP\tGASTO\tFECHA\tPARTE %\tASIGNADO ARS\nADMINFLOW\tPublicidad en redes #2\t10/10/2026\t100,00\t$ 7.300,00\nADMINFLOW\tPublicidad en redes #26\t05/10/2026\t100,00\t$ 36.100,00\nConciliador ARCA\tSuscripción de software #3\t05/10/2026\t100,00\t$ 12.100,00\nPanel de inventario B2B\tAsesoría profesional #24\t15/10/2026\t100,00\t$ 26.500,00\nRemember\tHosting mensual #25\t10/10/2026\t100,00\t$ 79.365,00\nTotal\t\t\t\t$ 161.365,00\n\n5 fila(s).",
+      "report_infra": "REPORTES\n◉ ECOSISTEMA\nReportes\n\nTablas filtradas por la lente y el estado actual. La exportación respeta los mismos filtros.\n\nCSV\nExcel\nVentas (detalle)\nVentas por marca\nVentas por producto y versión\nVentas por canal\nVentas por país\nRentabilidad por aplicación\nSuscripciones\nEventos de suscripción\nGastos (detalle)\nAsignación de gastos por app\nInfraestructura\nMovimientos de tesorería\nResultado mensual (12 meses)\nTipos de cambio\nHistorial de operaciones\nTIPO\tNOMBRE\tPROVEEDOR\tCOSTO\tMONEDA\tFRECUENCIA\tMENSUAL EQ. ARS\tRENOVACIÓN\tESTADO\tAPPS\nHosting / servidor\tHostinger Premium\tHostinger\t24.999,00\tARS\tMensual\t$ 24.999,00\t10/10/2026\tEn uso\tRemember; ADMINFLOW; Romance Reader Kit\nDominio\tDominio del ecosistema\tHostinger\t19.999,00\tARS\tAnual\t$ 1.666,58\t17/10/2026\tEn uso\tRemember; Romance Reader Kit\nHerramienta / software\tHerramienta de IA\tProveedor IA\t20,00\tUSD\tMensual\t$ 29.000,00\t24/10/2026\tEn uso\tRemember; ADMINFLOW\nHerramienta / software\tCanva Pro\tCanva\t12.999,00\tARS\tMensual\t$ 12.999,00\t31/10/2026\tEn uso\tAgenda digital YOYI’R\nCorreo transaccional\tServicio de correos\tServicio de email\t9,00\tUSD\tMensual\t$ 13.050,00\t10/10/2026\tSin uso\tRemember\nBase de datos\tBase de datos\tHostinger\t15,00\tUSD\tMensual\t$ 21.750,00\t17/10/2026\tEn uso\tRemember\nRepositorio\tRepositorio de código\tHostinger\t0,00\tUSD\tMensual\t$ 0,00\t24/10/2026\tEn uso\tADMINFLOW; PULSO QA\nAlmacenamiento\tAlmacenamiento y respaldos\tHostinger\t5.999,00\tARS\tMensual\t$ 0,00\t31/10/2026\tCancelado\tAgenda digital YOYI’R\nTotal\t\t\t\t\t\t$ 103.464,58\t\t\t\n\n8 fila(s).",
+      "report_tesoreria": "REPORTES\n◉ ECOSISTEMA\nReportes\n\nTablas filtradas por la lente y el período elegido. La exportación respeta los mismos filtros.\n\nCSV\nExcel\nVentas (detalle)\nVentas por marca\nVentas por producto y versión\nVentas por canal\nVentas por país\nRentabilidad por aplicación\nSuscripciones\nEventos de suscripción\nGastos (detalle)\nAsignación de gastos por app\nInfraestructura\nMovimientos de tesorería\nResultado mensual (12 meses)\nTipos de cambio\nHistorial de operaciones\nFECHA\tTIPO\tDESDE\tHACIA\tIMPORTE\tMONEDA\tDETALLE\n02/10/2026\tCobro de venta\t\tCuenta internacional · USD\t12,21\tUSD\tCobro DEMO\n03/10/2026\tCobro de venta\t\tMercado Pago · ARS\t15.039,06\tARS\tCobro DEMO\n05/10/2026\tCobro de venta\t\tCuenta internacional · USD\t9,39\tUSD\tCobro DEMO\n05/10/2026\tCobro de venta\t\tCuenta internacional · USD\t8,69\tUSD\tRemember · Remember Plus\n05/10/2026\tPago de gasto\tBanco empresa · ARS\t\t12.100,00\tARS\tSuscripción de software #3\n05/10/2026\tPago de gasto\tBanco empresa · ARS\t\t36.100,00\tARS\tPublicidad en redes #26\n06/10/2026\tCobro de venta\t\tCuenta internacional · USD\t7,51\tUSD\tCobro DEMO\n06/10/2026\tCobro de venta\t\tCuenta internacional · USD\t4,69\tUSD\tRemember · Remember Personal\n08/10/2026\tCobro de venta\t\tBanco empresa · ARS\t23.499,06\tARS\tCobro DEMO\n09/10/2026\tCobro de venta\t\tCuenta internacional · USD\t8,45\tUSD\tCobro DEMO\n10/10/2026\tPago de gasto\tBanco empresa · ARS\t\t7.300,00\tARS\tPublicidad en redes #2\n11/10/2026\tCobro de venta\t\tMercado Pago · ARS\t11.849,21\tARS\tCobro DEMO\n11/10/2026\tRetiro personal\tBanco empresa · ARS\t\t38.000,00\tARS\tRetiro ficticio\n12/10/2026\tCobro de venta\t\tCuenta internacional · USD\t12,21\tUSD\tCobro DEMO\n14/10/2026\tCobro de venta\t\tBanco empresa · ARS\t18.799,06\tARS\tCobro DEMO\n15/10/2026\tPago de gasto\tBanco empresa · ARS\t\t26.500,00\tARS\tAsesoría profesional #24\n\n16 fila(s).",
+      "report_mensual": "REPORTES\n◉ ECOSISTEMA\nReportes\n\nTablas filtradas por la lente y el estado actual. La exportación respeta los mismos filtros.\n\nCSV\nExcel\nVentas (detalle)\nVentas por marca\nVentas por producto y versión\nVentas por canal\nVentas por país\nRentabilidad por aplicación\nSuscripciones\nEventos de suscripción\nGastos (detalle)\nAsignación de gastos por app\nInfraestructura\nMovimientos de tesorería\nResultado mensual (12 meses)\nTipos de cambio\nHistorial de operaciones\nMES\tBRUTAS\tNETAS\tCOMISIONES\tIMP./RET.\tGASTOS\tRESULTADO\tCOBRADO\tINVERSIÓN\nnoviembre 2025\t$ 0,00\t$ 0,00\t$ 0,00\t$ 0,00\t$ 0,00\t$ 0,00\t$ 0,00\t$ 0,00\ndiciembre 2025\t$ 0,00\t$ 0,00\t$ 0,00\t$ 0,00\t$ 0,00\t$ 0,00\t$ 0,00\t$ 0,00\nenero 2026\t$ 0,00\t$ 0,00\t$ 0,00\t$ 0,00\t$ 0,00\t$ 0,00\t$ 0,00\t$ 0,00\nfebrero 2026\t$ 0,00\t$ 0,00\t$ 0,00\t$ 0,00\t$ 0,00\t$ 0,00\t$ 0,00\t$ 0,00\nmarzo 2026\t$ 0,00\t$ 0,00\t$ 0,00\t$ 0,00\t$ 0,00\t$ 0,00\t$ 0,00\t$ 0,00\nabril 2026\t$ 0,00\t$ 0,00\t$ 0,00\t$ 0,00\t$ 0,00\t$ 0,00\t$ 0,00\t$ 0,00\nmayo 2026\t$ 0,00\t$ 0,00\t$ 0,00\t$ 0,00\t$ 0,00\t$ 0,00\t$ 0,00\t$ 0,00\njunio 2026\t$ 83.192,26\t$ 83.192,26\t$ 2.496,60\t$ 0,00\t$ 21.700,00\t$ 58.995,66\t$ 80.695,66\t$ 0,00\njulio 2026\t$ 210.938,22\t$ 207.017,62\t$ 10.788,90\t$ 0,00\t$ 255.400,00\t−$ 59.171,28\t$ 185.812,35\t$ 111.520,00\nagosto 2026\t$ 419.756,78\t$ 406.931,68\t$ 23.334,00\t$ 0,00\t$ 255.600,00\t$ 127.997,68\t$ 359.481,02\t$ 84.725,00\nseptiembre 2026\t$ 443.258,02\t$ 435.865,92\t$ 23.982,12\t$ 0,00\t$ 226.600,00\t$ 185.283,80\t$ 379.396,65\t$ 57.160,00\noctubre 2026\t$ 172.485,06\t$ 170.235,21\t$ 10.008,84\t$ 0,00\t$ 82.000,00\t$ 78.226,37\t$ 160.226,37\t$ 101.115,00\nTotal\t$ 1.329.630,34\t$ 1.303.242,69\t$ 70.610,46\t$ 0,00\t$ 841.300,00\t$ 391.332,23\t$ 1.165.612,05\t$ 354.520,00\n\n12 fila(s).",
+      "report_tc": "REPORTES\n◉ ECOSISTEMA\nReportes\n\nTablas filtradas por la lente y el estado actual. La exportación respeta los mismos filtros.\n\nCSV\nExcel\nVentas (detalle)\nVentas por marca\nVentas por producto y versión\nVentas por canal\nVentas por país\nRentabilidad por aplicación\nSuscripciones\nEventos de suscripción\nGastos (detalle)\nAsignación de gastos por app\nInfraestructura\nMovimientos de tesorería\nResultado mensual (12 meses)\nTipos de cambio\nHistorial de operaciones\nFECHA\tMONEDA\t1 UNIDAD EN ARS\tFUENTE\n12/05/2026\tUSD\t1.359,0000\tCotización DEMO\n24/05/2026\tUSD\t1.366,0000\tCotización DEMO\n05/06/2026\tUSD\t1.373,0000\tCotización DEMO\n17/06/2026\tUSD\t1.380,0000\tCotización DEMO\n29/06/2026\tUSD\t1.387,0000\tCotización DEMO\n11/07/2026\tUSD\t1.394,0000\tCotización DEMO\n23/07/2026\tUSD\t1.401,0000\tCotización DEMO\n04/08/2026\tUSD\t1.408,0000\tCotización DEMO\n16/08/2026\tUSD\t1.415,0000\tCotización DEMO\n28/08/2026\tUSD\t1.422,0000\tCotización DEMO\n09/09/2026\tUSD\t1.429,0000\tCotización DEMO\n21/09/2026\tUSD\t1.436,0000\tCotización DEMO\n03/10/2026\tUSD\t1.443,0000\tCotización DEMO\n15/10/2026\tUSD\t1.450,0000\tCotización DEMO\n\n14 fila(s).",
+      "report_historial": "REPORTES\n◉ ECOSISTEMA\nReportes\n\nTablas filtradas por la lente y el período elegido. La exportación respeta los mismos filtros.\n\nCSV\nExcel\nVentas (detalle)\nVentas por marca\nVentas por producto y versión\nVentas por canal\nVentas por país\nRentabilidad por aplicación\nSuscripciones\nEventos de suscripción\nGastos (detalle)\nAsignación de gastos por app\nInfraestructura\nMovimientos de tesorería\nResultado mensual (12 meses)\nTipos de cambio\nHistorial de operaciones\nFECHA Y HORA\tACCIÓN\tDETALLE\n15/10/2026, 12:00:00\tDatos de demostración\tDataset ficticio precargado, aislado de producción\n\n1 fila(s).",
+      "lens": "br_estrategia",
+      "period": {
+        "from": "2026-09-01",
+        "to": "2026-10-15"
+      },
+      "theme": "dark",
+      "command_newSale": [
+        "Registrar venta o ingreso"
+      ],
+      "command_newExpense": [
+        "Registrar gasto"
+      ],
+      "command_newSub": [
+        "Nueva suscripción"
+      ],
+      "command_subPayment": [
+        "Registrar cobro de suscripción"
+      ],
+      "command_newProject": [
+        "Nueva aplicación o proyecto"
+      ],
+      "command_newProduct": [
+        "Nuevo producto digital"
+      ],
+      "command_newResource": [
+        "Nuevo recurso de infraestructura"
+      ],
+      "command_newEvent": [
+        "Nuevo evento"
+      ],
+      "command_newCustomer": [
+        "Nuevo cliente"
+      ],
+      "command_newSupplier": [
+        "Nuevo proveedor"
+      ],
+      "command_newRate": [
+        "Tipo de cambio"
+      ],
+      "command_newTreasury": [
+        "Movimiento de tesorería"
+      ],
+      "command_newTime": [
+        "Registrar horas"
+      ],
+      "command_importCSV": [
+        "Importar CSV"
+      ],
+      "command_importJSON": [
+        "Importar eventos JSON"
+      ],
+      "sales_search": "PRODUCTOS Y VENTAS\n◉ ECOSISTEMA\nProductos y ventas\n\nCatálogo con versiones, formatos e idiomas; cada venta conserva su canal, moneda, comisiones y entrega.\n\nProducto\nRegistrar venta\nVentas\nCatálogo\nCanales y países\nTodos los canales\nSitio web propio\nEtsy\nAmazon\nApple Books\nAplicaciones web independientes\nTodos los tipos\nVenta única\nCobro de suscripción\nIngreso externo\nCobro: todos\nA cobrar\nCobrado\nEntrega: todas\nNo aplica\nEntregado\nEntrega pendiente\nIncidencia\n0 ventas\n$ 0,00 netos\n\nSin ventas con estos filtros en el período.",
+      "catalog_search": "PRODUCTOS Y VENTAS\n◉ ECOSISTEMA\nProductos y ventas\n\nCatálogo con versiones, formatos e idiomas; cada venta conserva su canal, moneda, comisiones y entrega.\n\nProducto\nRegistrar venta\nVentas\nCatálogo\nCanales y países\nTodos los estados\nBorrador\nPublicado\nRequiere actualización\nPausado\nRetirado\n\nSin productos con estos filtros.",
+      "customer_search": "CLIENTES Y USUARIOS\n◉ ECOSISTEMA\nClientes\n\nQuién compra qué en todo el ecosistema. Los datos de contacto se muestran enmascarados en la lista y completos solo en la ficha.\n\nCliente\nTodos\nNuevos del período\nRecurrentes\nCon suscripción\nCon reembolsos\n0 cliente(s)\n\nSin clientes con estos filtros.",
+      "customer_persisted": [
+        {
+          "name": "Prueba Fase 2",
+          "email": "fase2@ejemplo.test"
+        }
+      ],
+      "sale": {
+        "calc": {
+          "gross": 200,
+          "discount": 20,
+          "refunded": 30,
+          "net": 150,
+          "commission": 10,
+          "tax": 5,
+          "liquid": 135
+        },
+        "receipts": [
+          135
+        ]
+      },
+      "csv_preview": "Importar CSV\nQué importás *\nVentas / ingresos\nGastos\nFuente *\nArchivo CSV *\nDesde Excel: Guardar como → CSV.\nCOLUMNAS (1 FILAS DETECTADAS)\nFecha *\n— no importar —\nfecha\nproducto\nimporte\nmoneda\nid\nImporte / precio *\n— no importar —\nfecha\nproducto\nimporte\nmoneda\nid\nCantidad\n— no importar —\nfecha\nproducto\nimporte\nmoneda\nid\nMoneda\n— no importar —\nfecha\nproducto\nimporte\nmoneda\nid\nProducto (nombre)\n— no importar —\nfecha\nproducto\nimporte\nmoneda\nid\nID externo\n— no importar —\nfecha\nproducto\nimporte\nmoneda\nid\nCanal\n— no importar —\nfecha\nproducto\nimporte\nmoneda\nid\nPaís\n— no importar —\nfecha\nproducto\nimporte\nmoneda\nid\nCliente (nombre)\n— no importar —\nfecha\nproducto\nimporte\nmoneda\nid\nCliente (email)\n— no importar —\nfecha\nproducto\nimporte\nmoneda\nid\nDescuento\n— no importar —\nfecha\nproducto\nimporte\nmoneda\nid\nCupón\n— no importar —\nfecha\nproducto\nimporte\nmoneda\nid\nComisión\n— no importar —\nfecha\nproducto\nimporte\nmoneda\nid\nImpuestos / retenciones\n— no importar —\nfecha\nproducto\nimporte\nmoneda\nid\nReembolso\n— no importar —\nfecha\nproducto\nimporte\nmoneda\nid\nVALORES FIJOS (SI EL ARCHIVO NO LOS TRAE)\nMoneda por defecto *\nARS\nUSD\nFormato de fecha\nAutomático\ndd/mm/aaaa\nmm/dd/aaaa\nCanal por defecto\nSin canal\nSitio web propio\nEtsy\nAmazon\nApple Books\nAplicaciones web independientes\nMarca por defecto\nElegí una marca…\nEstrategIA\nYOYI'R\nEbooks para la vida\nSi el producto no se reconoce.\nApp vinculada\nNinguna\nRemember · EstrategIA\nADMINFLOW · EstrategIA\nConciliador ARCA · EstrategIA\nPULSO QA · EstrategIA\nRomance Reader Kit · Ebooks para la vida\nAgenda digital YOYI’R · YOYI'R\nFinanzas inteligentes · Ebooks para la vida\nPanel de inventario B2B · EstrategIA\n¿Ya cobradas?\nA cobrar\nCobrado\n1 listas para importar\n0 a revisión (posible duplicado)\n0 omitidas\n0 con errores\nFILA\tFECHA\tPRODUCTO / CONCEPTO\tIMPORTE\tCANAL\n2\t15/10/2026\tRomance Reader Kit\t$ 321,00\t—\nCancelar\nImportar",
+      "csv_imported": 1,
+      "json_event": {
+        "feedback": "0 procesados\n1 ya existían\n0 con error",
+        "sales": 1
+      },
+      "export_csv": {
+        "extension": ".csv",
+        "sha256": "159c2d2d197ce8a351e8ff4d060786314ccdc83dbfbb2cfbe67814ba27ba0d72",
+        "bytes": 9918
+      },
+      "export_xls": {
+        "extension": ".xls",
+        "sha256": "d5d906f80765dfe6a9490bc60c73de5aeba732855e86d0bd56cd6dce60c8b4d8",
+        "bytes": 51647
+      },
+      "backup_counts": {
+        "rates": 14,
+        "projects": 8,
+        "plans": 3,
+        "products": 10,
+        "customers": 25,
+        "sales": 72,
+        "subs": 13,
+        "expenses": 45,
+        "resources": 8,
+        "suppliers": 7,
+        "events": 30,
+        "treasury": 104,
+        "integrations": 6,
+        "review": 1,
+        "timeLogs": 26,
+        "log": 8
+      },
+      "restore_counts": {
+        "rates": 14,
+        "projects": 8,
+        "plans": 3,
+        "products": 10,
+        "customers": 25,
+        "sales": 72,
+        "subs": 13,
+        "expenses": 45,
+        "resources": 8,
+        "suppliers": 7,
+        "events": 30,
+        "treasury": 104,
+        "integrations": 6,
+        "review": 1,
+        "timeLogs": 26,
+        "log": 9
+      },
+      "wrong_pin": "PIN incorrecto",
+      "unlocked": true
+    }
+  }
+}

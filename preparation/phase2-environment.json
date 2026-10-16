@@ -1,0 +1,169 @@
+{
+  "checks": [
+    {
+      "check": "Portable PHP >= 8.3",
+      "passed": true,
+      "version": "8.4.26"
+    },
+    {
+      "check": "PHP entry syntax",
+      "passed": true,
+      "result": "No syntax errors detected in C:\\Users\\Dio\\Desktop\\dashboard\\centro-operaciones-php\\public\\index.php"
+    },
+    {
+      "check": "Official PHP package SHA256",
+      "passed": true,
+      "sha256": "da68394f9193b7f6b89d0c76861a4034ae10efee7fd55a7255d8118c2acf70d7"
+    },
+    {
+      "check": "HTTP exact content: /index.php",
+      "passed": true,
+      "status": 200,
+      "mime": "text/html; charset=UTF-8"
+    },
+    {
+      "check": "HTTP exact content: /assets/css/app.css",
+      "passed": true,
+      "status": 200,
+      "mime": "text/css; charset=UTF-8"
+    },
+    {
+      "check": "HTTP exact content: /assets/js/00-utilities.js",
+      "passed": true,
+      "status": 200,
+      "mime": "application/javascript"
+    },
+    {
+      "check": "HTTP exact content: /assets/js/01-storage-domain.js",
+      "passed": true,
+      "status": 200,
+      "mime": "application/javascript"
+    },
+    {
+      "check": "HTTP exact content: /assets/js/02-interface.js",
+      "passed": true,
+      "status": 200,
+      "mime": "application/javascript"
+    },
+    {
+      "check": "HTTP exact content: /assets/js/03-overview-projects.js",
+      "passed": true,
+      "status": 200,
+      "mime": "application/javascript"
+    },
+    {
+      "check": "HTTP exact content: /assets/js/04-sales.js",
+      "passed": true,
+      "status": 200,
+      "mime": "application/javascript"
+    },
+    {
+      "check": "HTTP exact content: /assets/js/05-subscriptions.js",
+      "passed": true,
+      "status": 200,
+      "mime": "application/javascript"
+    },
+    {
+      "check": "HTTP exact content: /assets/js/06-expenses-finances.js",
+      "passed": true,
+      "status": 200,
+      "mime": "application/javascript"
+    },
+    {
+      "check": "HTTP exact content: /assets/js/07-resources-calendar-customers.js",
+      "passed": true,
+      "status": 200,
+      "mime": "application/javascript"
+    },
+    {
+      "check": "HTTP exact content: /assets/js/08-integrations.js",
+      "passed": true,
+      "status": 200,
+      "mime": "application/javascript"
+    },
+    {
+      "check": "HTTP exact content: /assets/js/09-reports-settings.js",
+      "passed": true,
+      "status": 200,
+      "mime": "application/javascript"
+    },
+    {
+      "check": "HTTP exact content: /assets/js/10-boot.js",
+      "passed": true,
+      "status": 200,
+      "mime": "application/javascript"
+    },
+    {
+      "check": "Private path does not expose files: /reference/centro-operaciones.html",
+      "passed": true,
+      "status": 200,
+      "note": "PHP built-in server may return the public index as fallback; it must never return private contents."
+    },
+    {
+      "check": "Private path does not expose files: /preparation/baseline.json",
+      "passed": true,
+      "status": 200,
+      "note": "PHP built-in server may return the public index as fallback; it must never return private contents."
+    },
+    {
+      "check": "Private path does not expose files: /storage/private/test.json",
+      "passed": true,
+      "status": 200,
+      "note": "PHP built-in server may return the public index as fallback; it must never return private contents."
+    },
+    {
+      "check": "Private path does not expose files: /tools/serve.ps1",
+      "passed": true,
+      "status": 200,
+      "note": "PHP built-in server may return the public index as fallback; it must never return private contents."
+    },
+    {
+      "check": "Private path does not expose files: /.runtime/php/php.exe",
+      "passed": true,
+      "status": 200,
+      "note": "PHP built-in server may return the public index as fallback; it must never return private contents."
+    },
+    {
+      "check": "No Markdown added in project",
+      "passed": true
+    }
+  ],
+  "php_modules": [
+    "[PHP Modules]",
+    "bcmath",
+    "calendar",
+    "Core",
+    "ctype",
+    "date",
+    "dom",
+    "filter",
+    "hash",
+    "iconv",
+    "json",
+    "libxml",
+    "mysqlnd",
+    "pcre",
+    "PDO",
+    "Phar",
+    "random",
+    "readline",
+    "Reflection",
+    "session",
+    "SimpleXML",
+    "SPL",
+    "standard",
+    "tokenizer",
+    "xml",
+    "xmlreader",
+    "xmlwriter",
+    "zlib",
+    "",
+    "[Zend Modules]",
+    ""
+  ],
+  "php_ini": "-n: no system php.ini loaded or changed",
+  "source": "https://www.php.net/downloads.php?os=windows&version=8.4",
+  "package_url": "https://downloads.php.net/~windows/releases/archives/php-8.4.26-nts-Win32-vs17-x64.zip",
+  "scope": "Loopback-only PHP development server; no API, authentication, MySQL, Hostinger or deployment",
+  "limitations": "Local runtime validation only, not Hostinger production configuration; pdo_mysql is not enabled in this phase"
+}

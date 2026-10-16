@@ -1,0 +1,54 @@
+<?php
+declare(strict_types=1);
+
+function respond(int $status, array $body): never
+{
+    http_response_code($status);
+    header('Content-Type: application/json; charset=utf-8');
+    header('Cache-Control: no-store');
+    echo json_encode($body, JSON_UNESCAPED_UNICODE | JSON_THROW_ON_ERROR);
+    exit;
+}
+
+try {
+    require dirname(__DIR__) . '/app/bootstrap.php';
+    $action = $_GET['action'] ?? '';
+    if (!is_string($action)) respond(400, ['ok' => false, 'code' => 'invalid_request']);
+    $method = $_SERVER['REQUEST_METHOD'];
+    if ($action === 'session' && $method === 'GET') {
+        $user = $auth->current();
+        respond(200, ['ok' => true, 'authenticated' => $user !== null, 'csrf' => Centro\Security::csrf(), 'user' => $user,
+            'setup_required' => !$auth->configured(), 'business_storage' => 'local', 'mysql_sync' => false]);
+    }
+    if (!in_array($action, ['login', 'logout', 'touch'], true)) {
+        if (!$auth->current()) respond(401, ['ok' => false, 'code' => 'session_expired']);
+        respond(404, ['ok' => false, 'code' => 'not_found']);
+    }
+    if ($method !== 'POST') { header('Allow: POST'); respond(405, ['ok' => false, 'code' => 'method_not_allowed']); }
+    if ($action !== 'login' && !$auth->current()) respond(401, ['ok' => false, 'code' => 'session_expired']);
+    if (!Centro\Security::validCsrf($_SERVER['HTTP_X_CSRF_TOKEN'] ?? null)) respond(403, ['ok' => false, 'code' => 'csrf_invalid']);
+    if ($action === 'logout') {
+        Centro\Security::destroy();
+        respond(200, ['ok' => true, 'next' => 'login.php']);
+    }
+    if ($action === 'touch') { $auth->current(true); respond(200, ['ok' => true]); }
+    if (!$auth->configured()) respond(503, ['ok' => false, 'code' => 'setup_required']);
+    if ((int)($_SERVER['CONTENT_LENGTH'] ?? 0) > 4096) respond(413, ['ok' => false, 'code' => 'request_too_large']);
+    if (!str_starts_with(strtolower($_SERVER['CONTENT_TYPE'] ?? ''), 'application/json')) respond(415, ['ok' => false, 'code' => 'json_required']);
+    $raw = file_get_contents('php://input', false, null, 0, 4097);
+    if ($raw === false || strlen($raw) > 4096) respond(413, ['ok' => false, 'code' => 'request_too_large']);
+    try { $input = json_decode($raw, true, 8, JSON_THROW_ON_ERROR); }
+    catch (JsonException $error) { respond(400, ['ok' => false, 'code' => 'invalid_request']); }
+    if (!is_array($input) || !is_string($input['email'] ?? null) || !is_string($input['password'] ?? null) || strlen($input['email']) > 254 || strlen($input['password']) > 72) {
+        respond(400, ['ok' => false, 'code' => 'invalid_request']);
+    }
+    $result = $auth->login($input['email'], $input['password'], $_SERVER['REMOTE_ADDR'] ?? '');
+    if (!$result['ok']) {
+        if (isset($result['retry'])) header('Retry-After: ' . $result['retry']);
+        respond($result['status'], ['ok' => false, 'code' => $result['code']]);
+    }
+    respond(200, ['ok' => true, 'next' => 'index.php']);
+} catch (Throwable $error) {
+    error_log('Centro authentication request failed [' . get_class($error) . ']');
+    respond(503, ['ok' => false, 'code' => 'service_unavailable']);
+}

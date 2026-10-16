@@ -1,0 +1,133 @@
+{
+  "checks": [
+    {
+      "check": "Immutable centro-operaciones.html",
+      "passed": true
+    },
+    {
+      "check": "Immutable centro-operaciones-php\\reference\\centro-operaciones.html",
+      "passed": true
+    },
+    {
+      "check": "Immutable centro-operaciones-DEMO.html",
+      "passed": true
+    },
+    {
+      "check": "Immutable centro-operaciones-php\\reference\\centro-operaciones-DEMO.html",
+      "passed": true
+    },
+    {
+      "check": "Immutable README.md",
+      "passed": true
+    },
+    {
+      "check": "Only approved guard changes business JavaScript",
+      "passed": true
+    },
+    {
+      "check": "Original CSS unchanged",
+      "passed": true
+    },
+    {
+      "check": "All original bindings, templates and listeners preserved",
+      "passed": true
+    },
+    {
+      "check": "Dashboard markup identical plus separate server session bridge",
+      "passed": true
+    },
+    {
+      "check": "No new Markdown",
+      "passed": true
+    },
+    {
+      "check": "Database connections disabled by default",
+      "passed": true
+    },
+    {
+      "check": "PHP lint app\\Auth.php",
+      "passed": true,
+      "result": "No syntax errors detected in C:\\Users\\Dio\\Desktop\\dashboard\\centro-operaciones-php\\app\\Auth.php"
+    },
+    {
+      "check": "PHP lint app\\AuthStore.php",
+      "passed": true,
+      "result": "No syntax errors detected in C:\\Users\\Dio\\Desktop\\dashboard\\centro-operaciones-php\\app\\AuthStore.php"
+    },
+    {
+      "check": "PHP lint app\\bootstrap.php",
+      "passed": true,
+      "result": "No syntax errors detected in C:\\Users\\Dio\\Desktop\\dashboard\\centro-operaciones-php\\app\\bootstrap.php"
+    },
+    {
+      "check": "PHP lint app\\Database.php",
+      "passed": true,
+      "result": "No syntax errors detected in C:\\Users\\Dio\\Desktop\\dashboard\\centro-operaciones-php\\app\\Database.php"
+    },
+    {
+      "check": "PHP lint app\\Security.php",
+      "passed": true,
+      "result": "No syntax errors detected in C:\\Users\\Dio\\Desktop\\dashboard\\centro-operaciones-php\\app\\Security.php"
+    },
+    {
+      "check": "PHP lint app\\views\\dashboard.php",
+      "passed": true,
+      "result": "No syntax errors detected in C:\\Users\\Dio\\Desktop\\dashboard\\centro-operaciones-php\\app\\views\\dashboard.php"
+    },
+    {
+      "check": "PHP lint config\\settings.php",
+      "passed": true,
+      "result": "No syntax errors detected in C:\\Users\\Dio\\Desktop\\dashboard\\centro-operaciones-php\\config\\settings.php"
+    },
+    {
+      "check": "PHP lint public\\api.php",
+      "passed": true,
+      "result": "No syntax errors detected in C:\\Users\\Dio\\Desktop\\dashboard\\centro-operaciones-php\\public\\api.php"
+    },
+    {
+      "check": "PHP lint public\\index.php",
+      "passed": true,
+      "result": "No syntax errors detected in C:\\Users\\Dio\\Desktop\\dashboard\\centro-operaciones-php\\public\\index.php"
+    },
+    {
+      "check": "PHP lint public\\login.php",
+      "passed": true,
+      "result": "No syntax errors detected in C:\\Users\\Dio\\Desktop\\dashboard\\centro-operaciones-php\\public\\login.php"
+    },
+    {
+      "check": "PHP lint public\\logout.php",
+      "passed": true,
+      "result": "No syntax errors detected in C:\\Users\\Dio\\Desktop\\dashboard\\centro-operaciones-php\\public\\logout.php"
+    },
+    {
+      "check": "PHP lint tools\\check_environment.php",
+      "passed": true,
+      "result": "No syntax errors detected in C:\\Users\\Dio\\Desktop\\dashboard\\centro-operaciones-php\\tools\\check_environment.php"
+    },
+    {
+      "check": "PHP lint tools\\create_admin.php",
+      "passed": true,
+      "result": "No syntax errors detected in C:\\Users\\Dio\\Desktop\\dashboard\\centro-operaciones-php\\tools\\create_admin.php"
+    }
+  ],
+  "inventory_counts": {
+    "screens": 13,
+    "named_functions": 124,
+    "actions": 57,
+    "change_handlers": 6,
+    "input_handlers": 3,
+    "constants": 108,
+    "forms": 26,
+    "identifiers": 127,
+    "data_attributes": 521,
+    "event_listeners": 52,
+    "reports": 15
+  },
+  "pdo_drivers_loadable": [
+    "mysql"
+  ],
+  "mysql_validation": "Driver load only; NO connection, NO migrations, NO database query executed",
+  "approved_change": "One early guard in updateShell: onboarding/lock do not render shell nodes",
+  "credentials": "No administrator initialized in default private storage; credentials created only by private CLI",
+  "auth_storage": "Temporary private file, real PHP sessions; prepared PDO implementation not claimed as tested"
+}

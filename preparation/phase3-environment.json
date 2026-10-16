@@ -1,0 +1,20 @@
+{
+    "php_version": "8.4.26",
+    "php_compatible": true,
+    "extensions": {
+        "PDO": true,
+        "pdo_mysql": true,
+        "session": true,
+        "json": true
+    },
+    "database_connection_enabled": false,
+    "database_connected": false,
+    "auth_driver": "file",
+    "sessions": "PHP files outside public directory",
+    "business_storage": "IndexedDB, not synchronized",
+    "migration_executed": false,
+    "database_pending": [
+        "Actual Hostinger server version, InnoDB, sql_mode, migration DDL and permissions unverified",
+        "No local MySQL server found; no remote connection or SQL execution authorized"
+    ]
+}

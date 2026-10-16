@@ -1,0 +1,110 @@
+{
+  "phase": 3,
+  "status": "Private PHP authentication and minimal resize fix implemented; business data still local; MySQL not connected",
+  "created_php": [
+    "app/Auth.php",
+    "app/AuthStore.php",
+    "app/bootstrap.php",
+    "app/Database.php",
+    "app/Security.php",
+    "app/views/dashboard.php",
+    "config/settings.php",
+    "public/api.php",
+    "public/login.php",
+    "public/logout.php",
+    "tools/create_admin.php",
+    "tools/check_environment.php"
+  ],
+  "modified_php": [
+    "public/index.php"
+  ],
+  "created_frontend": [
+    "public/assets/js/auth-login.js",
+    "public/assets/js/server-session.js",
+    "public/assets/css/auth.css"
+  ],
+  "modified_business_frontend": {
+    "public/assets/js/02-interface.js": "One guard in updateShell; all other original business JS and CSS unchanged"
+  },
+  "other_files": [
+    "public/.htaccess",
+    "database/migrations/001_auth.sql",
+    "tools/create-admin.ps1",
+    "tests/phase3_static.py",
+    "tests/phase3_security.py",
+    "tests/frontend_equivalence.py",
+    "tools/extract_frontend.py"
+  ],
+  "preserved": {
+    "screens": 13,
+    "named_functions": 124,
+    "actions": 57,
+    "form_templates": 26,
+    "reports": 15,
+    "originals_and_demo": "SHA256 unchanged"
+  },
+  "auth": {
+    "active_driver": "Temporary private file auth; NOT a MySQL simulation",
+    "administrator": "Unique, private CLI creation only; no default credentials",
+    "default_administrator_created": false,
+    "sessions": "Real PHP file sessions outside public, strict mode, HttpOnly, SameSite Strict, Secure on HTTPS",
+    "expiry": "Configurable idle 1800s and absolute 28800s by default",
+    "csrf": "Required for login/logout/touch, rotates on authentication",
+    "throttling": "Shared private IP/account/global buckets, survives changing browser sessions",
+    "logout": "logout.php confirmation or Alt+Shift+Q, API POST also supported",
+    "business_storage": "IndexedDB/localStorage unchanged, no MySQL synchronization or remote business writes"
+  },
+  "tests": {
+    "static_checks_passed": 24,
+    "security_checks_passed": 55,
+    "functional_checks_passed": 78,
+    "resize_regressions_passed": 2,
+    "normal_animation_checks_passed": 4,
+    "visual_pairs_passed": 31,
+    "visual_pairs_pixel_identical": 30,
+    "visual_nonexact": [
+      {
+        "name": "mobile-dark-pulso",
+        "pixels": 6,
+        "max_rgb_delta": 1
+      }
+    ],
+    "new_version_js_errors": 0,
+    "baseline_errors_retained": true,
+    "tls_cookie_policy": "Verified in isolated PHP HTTPS-flag test, not a live TLS deployment"
+  },
+  "database": {
+    "configured_name": "[private configuration omitted]",
+    "configured_user": "[private configuration omitted]",
+    "host_and_password": "Not configured",
+    "enabled": false,
+    "connected": false,
+    "migrations_executed": false,
+    "prepared_tables": [
+      "schema_migrations",
+      "auth_users",
+      "auth_login_limits"
+    ],
+    "sessions_table": "Not needed for chosen PHP native session files",
+    "pdo_auth_queries": "Prepared statements and transactions implemented but NOT verified against an actual MySQL/MariaDB server",
+    "compatibility": "PDO MySQL extension load verified; no local server found; Hostinger version, schema constraints, permissions and TLS remain unverified"
+  },
+  "limitations": [
+    "Business data remains in the browser and is not encrypted by server login",
+    "No synchronization between devices; no migration of sales, expenses or subscriptions",
+    "No live MySQL/MariaDB tests; no connection or publication on Hostinger",
+    "Desktop and mobile viewport Chromium only, not physical devices/all browsers",
+    "Windows denied the optional router file; implementation no longer depends on it. Public index rejects unknown fallback paths; HTTP private-file probes passed"
+  ],
+  "next_phase": "With authorization: provide a local MySQL/MariaDB test instance, validate migration 001 and PDO auth/limiter transactions, then separately authorize remote setup. Do not migrate business collections yet.",
+  "evidence": [
+    "phase3-static.json",
+    "phase3-security.json",
+    "phase3-environment.json",
+    "phase3-tls-policy.json",
+    "phase3-browser/controls-results.json",
+    "phase3-browser/resize-results.json",
+    "phase3-browser/visual-results.json",
+    "phase3-browser/motion-results.json"
+  ]
+}

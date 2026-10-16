@@ -1,0 +1,123 @@
+{
+  "suite": "resize",
+  "checks": [
+    {
+      "check": "Inherited onboarding resize error reproduced in both versions",
+      "passed": true
+    }
+  ],
+  "errors": [
+    {
+      "page": "original",
+      "message": "Cannot set properties of null (setting 'textContent')",
+      "stack": "TypeError: Cannot set properties of null (setting 'textContent')\n    at updateShell (http://127.0.0.1:57931/baseline.html:1148:29)\n    at http://127.0.0.1:57931/baseline.html:1189:125\n    at http://127.0.0.1:57931/baseline.html:411:102"
+    },
+    {
+      "page": "modular",
+      "message": "Cannot set properties of null (setting 'textContent')",
+      "stack": "TypeError: Cannot set properties of null (setting 'textContent')\n    at updateShell (http://127.0.0.1:8080/assets/js/02-interface.js:366:29)\n    at http://127.0.0.1:8080/assets/js/02-interface.js:407:125\n    at http://127.0.0.1:8080/assets/js/00-utilities.js:32:102"
+    }
+  ],
+  "console_errors": [],
+  "failed_requests": [],
+  "contexts": "Fresh in-memory Playwright contexts, no personal browser profile",
+  "normalization": "Fixed Date only (real timers and requestAnimationFrame), identical synthetic fixture, prefers-reduced-motion for deterministic comparisons, await fonts and two frames; SMIL paused at zero; no application code changes",
+  "chromium": "153.0.8010.12",
+  "fonts_source": "Original Google Fonts CSS and binaries cached privately, requests fulfilled identically for both pages; app links unchanged",
+  "reference_transport": "Original immutable HTML fulfilled verbatim by Playwright at a separate loopback origin; modular version served by actual PHP",
+  "fonts": [
+    [
+      {
+        "family": "Inter",
+        "status": "loaded"
+      },
+      {
+        "family": "Inter",
+        "status": "unloaded"
+      },
+      {
+        "family": "Inter",
+        "status": "loaded"
+      },
+      {
+        "family": "Inter",
+        "status": "unloaded"
+      },
+      {
+        "family": "JetBrains Mono",
+        "status": "loaded"
+      },
+      {
+        "family": "JetBrains Mono",
+        "status": "unloaded"
+      },
+      {
+        "family": "JetBrains Mono",
+        "status": "unloaded"
+      },
+      {
+        "family": "Space Grotesk",
+        "status": "unloaded"
+      },
+      {
+        "family": "Space Grotesk",
+        "status": "unloaded"
+      },
+      {
+        "family": "Space Grotesk",
+        "status": "loaded"
+      },
+      {
+        "family": "Space Grotesk",
+        "status": "unloaded"
+      }
+    ],
+    [
+      {
+        "family": "Inter",
+        "status": "loaded"
+      },
+      {
+        "family": "Inter",
+        "status": "unloaded"
+      },
+      {
+        "family": "Inter",
+        "status": "loaded"
+      },
+      {
+        "family": "Inter",
+        "status": "unloaded"
+      },
+      {
+        "family": "JetBrains Mono",
+        "status": "loaded"
+      },
+      {
+        "family": "JetBrains Mono",
+        "status": "unloaded"
+      },
+      {
+        "family": "JetBrains Mono",
+        "status": "unloaded"
+      },
+      {
+        "family": "Space Grotesk",
+        "status": "unloaded"
+      },
+      {
+        "family": "Space Grotesk",
+        "status": "unloaded"
+      },
+      {
+        "family": "Space Grotesk",
+        "status": "loaded"
+      },
+      {
+        "family": "Space Grotesk",
+        "status": "unloaded"
+      }
+    ]
+  ],
+  "status": "KNOWN ORIGINAL DEFECT REPRODUCED, NOT FIXED: resize calls updateShell while onboarding has no shell elements"
+}

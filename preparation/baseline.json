@@ -1,0 +1,26 @@
+{
+    "created_utc":  "2026-10-16T00:36:04.5697033Z",
+    "files":  [
+                  {
+                      "file":  "centro-operaciones.html",
+                      "bytes":  373998,
+                      "lines":  2542,
+                      "sha256":  "5f556fdd3480608bb482be2bd9e42c63b135a73ae27c000e57c307577fb47d07"
+                  },
+                  {
+                      "file":  "centro-operaciones-DEMO.html",
+                      "bytes":  388133,
+                      "lines":  2624,
+                      "sha256":  "78942e47c709628852145c70113cd8f1a2638301ffd5714cf856ee8acba07122"
+                  },
+                  {
+                      "file":  "README.md",
+                      "bytes":  25366,
+                      "lines":  283,
+                      "sha256":  "dcf37fbc55fb43604c6a1df3bc17987fae4ff1d38cf5d8fff13a0a74a04007dc"
+                  }
+              ],
+    "scope":  "Preparacion exclusivamente; sin backend ni conexion remota",
+    "git":  "No es un repositorio Git",
+    "README_warning":  "Conservado sin modificar: contiene propuesta anterior Fly.io; reemplazada por instrucciones PHP/Hostinger del usuario."
+}

@@ -1,0 +1,52 @@
+CIERRE DE FASES 1, 2 Y 3
+
+Windows, PHP 8.3 o posterior. PHP portable no forma parte del repositorio.
+Obtener PHP unicamente de https://windows.php.net/download/ y comprobar
+su SHA256 contra el publicado por el distribuidor antes de descomprimir.
+El entorno utilizado fue PHP 8.4.26 NTS x64, archivo oficial
+php-8.4.26-nts-Win32-vs17-x64.zip, SHA256:
+da68394f9193b7f6b89d0c76861a4034ae10efee7fd55a7255d8118c2acf70d7
+Para reproducir las pruebas existentes, descomprimir en .runtime/php/.
+Para ejecutar solamente la app puede usarse PHP instalado o -PhpPath.
+
+Desde la raiz del proyecto, PowerShell:
+  powershell -File tools/serve.ps1
+  powershell -File tools/create-admin.ps1 -Email TU_CORREO
+Abrir http://127.0.0.1:8080/. La herramienta solicita correo y una
+contrasena privada; no existen credenciales predeterminadas.
+Si PHP esta en otro lugar, serve.ps1 acepta -PhpPath. create-admin.ps1
+requiere .runtime/php/php.exe; alternativamente usar tools/create_admin.php
+con --email=TU_CORREO --password-stdin y entrada estandar privada.
+El servidor integrado es exclusivamente para desarrollo local.
+
+Configuracion opcional: copiar config/private.example.php a
+config/private.php (excluido de Git). No habilitar MySQL en este cierre.
+La autenticacion usa archivos privados y sesiones PHP. Los datos de
+negocio permanecen en IndexedDB/localStorage del navegador. Un clon
+no incluye cuentas, sesiones ni datos del navegador o respaldos privados.
+
+Pruebas: Python 3.13 y dependencias de requirements-test.txt:
+  py -3 -m pip install -r requirements-test.txt
+  py -3 -m playwright install chromium
+  py -3 tools/cache_test_fonts.py
+  py -3 tests/phase3_security.py --suite security
+  py -3 tests/phase3_security.py --suite regression
+Si el lanzador py no detecta Python, usar python.exe por su ruta completa.
+Las pruebas generan administradores temporales privados y utilizan datos
+sinteticos de la demo. Los resultados quedan en preparation/.
+Las fuentes tipograficas se descargan para las pruebas, no se versionan.
+La version Chromium utilizada originalmente fue 153.0.8010.12;
+otras versiones o plataformas pueden cambiar el rasterizado.
+
+Los scripts phase1/phase2 y phase3_static.py conservan su alcance historico:
+algunas comprobaciones requieren los HTML y README.md de la carpeta padre
+original, que no forman parte de la aplicacion. Las copias HTML inmutables
+estan en reference/. No ejecutar prepare.ps1 ni extract_frontend.py para
+arrancar esta version: son herramientas historicas de preparacion.
+Los resultados historicos registran el entorno de cada fase; no representan
+una conexion MySQL, despliegue productivo ni pruebas nuevas del respaldo.
+
+No se incluyen .runtime/, storage/, caches, sesiones, logs ni secretos.
+Se eliminaron los valores predeterminados del usuario/nombre de base real
+del codigo y se anonimizaron en el resumen publicable de la fase 3.
+No se modificaron los HTML originales ni las copias de referencia/demo.
