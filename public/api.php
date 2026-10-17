@@ -16,6 +16,15 @@ try {
     if (!is_string($action)) respond(400, ['ok' => false, 'code' => 'invalid_request']);
     $method = $_SERVER['REQUEST_METHOD'];
     if (in_array($action, ['business_list','business_command'], true)) require dirname(__DIR__).'/app/business_api.php';
+    if ($action === 'financial_command') {
+        if ($method !== 'POST' || !$config['financial_api_enabled'] || $config['environment'] !== 'local' || $config['db']['host'] !== '127.0.0.1' || $config['auth_driver'] !== 'mysql') respond(404,['ok'=>false,'code'=>'not_found']);
+        if (!$auth->current()) respond(401,['ok'=>false,'code'=>'session_expired']);
+        if (!Centro\Security::validCsrf($_SERVER['HTTP_X_CSRF_TOKEN'] ?? null)) respond(403,['ok'=>false,'code'=>'csrf_invalid']);
+        $raw=file_get_contents('php://input',false,null,0,65537); try{$body=json_decode((string)$raw,true,32,JSON_THROW_ON_ERROR);}catch(Throwable){respond(400,['ok'=>false,'code'=>'invalid_json']);}
+        if (!is_array($body)||!is_string($body['environment']??null)||!is_string($body['operation_id']??null)||!is_array($body['command']??null)) respond(400,['ok'=>false,'code'=>'invalid_request']);
+        require_once dirname(__DIR__).'/app/FinancialService.php';
+        try{$u=$auth->current();$s=new Centro\FinancialService(Centro\Database::connection($config['db']));respond(200,['ok'=>true,...$s->execute($body['environment'],$body['operation_id'],(int)$u['id'],$body['command'])]);}catch(Centro\BusinessError $e){respond($e->status,['ok'=>false,'code'=>$e->reason]);}
+    }
     if ($action === 'session' && $method === 'GET') {
         $user = $auth->current();
         respond(200, ['ok' => true, 'authenticated' => $user !== null, 'csrf' => Centro\Security::csrf(), 'user' => $user,
