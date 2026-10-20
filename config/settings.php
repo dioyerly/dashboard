@@ -15,6 +15,7 @@ $settings = [
     'private_dir' => $env('CENTRO_PRIVATE_DIR', $root . '/storage/private/auth'),
     'auth_driver' => $env('CENTRO_AUTH_DRIVER', 'file'),
     'business_api_enabled' => $env('CENTRO_BUSINESS_API_ENABLED', '0') === '1',
+    'business_storage' => $env('CENTRO_BUSINESS_STORAGE', 'local'),
     'financial_api_enabled' => $env('CENTRO_FINANCIAL_API_ENABLED', '0') === '1',
     'idle_seconds' => $int('CENTRO_IDLE_SECONDS', 1800),
     'absolute_seconds' => $int('CENTRO_ABSOLUTE_SECONDS', 28800),

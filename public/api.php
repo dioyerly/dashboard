@@ -16,6 +16,7 @@ try {
     if (!is_string($action)) respond(400, ['ok' => false, 'code' => 'invalid_request']);
     $method = $_SERVER['REQUEST_METHOD'];
     if (in_array($action, ['business_list','business_command'], true)) require dirname(__DIR__).'/app/business_api.php';
+    if ($action === 'business_state') require dirname(__DIR__).'/app/business_state_api.php';
     if ($action === 'financial_command') {
         if ($method !== 'POST' || !$config['financial_api_enabled'] || $config['environment'] !== 'local' || $config['db']['host'] !== '127.0.0.1' || $config['auth_driver'] !== 'mysql') respond(404,['ok'=>false,'code'=>'not_found']);
         if (!$auth->current()) respond(401,['ok'=>false,'code'=>'session_expired']);
@@ -28,7 +29,7 @@ try {
     if ($action === 'session' && $method === 'GET') {
         $user = $auth->current();
         respond(200, ['ok' => true, 'authenticated' => $user !== null, 'csrf' => Centro\Security::csrf(), 'user' => $user,
-            'setup_required' => !$auth->configured(), 'business_storage' => 'local', 'mysql_sync' => false]);
+            'setup_required' => !$auth->configured(), 'business_storage' => ($config['business_api_enabled'] && $config['business_storage']==='sql' ? 'sql' : 'local'), 'mysql_sync' => ($config['business_api_enabled'] && $config['business_storage']==='sql')]);
     }
     if (!in_array($action, ['login', 'logout', 'touch'], true)) {
         if (!$auth->current()) respond(401, ['ok' => false, 'code' => 'session_expired']);

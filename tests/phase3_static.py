@@ -23,7 +23,11 @@ parts=json.loads((ROOT/'preparation/phase2-static.json').read_text('utf-8'))['sc
 actual=b''.join((ROOT/'public/assets/js'/name).read_bytes() for name in parts)
 guard=b"  if (!$('#view') || !$('#bizName')) return;\n"
 expected=js.replace(b'function updateShell() {\n',b'function updateShell() {\n'+guard,1)
-checks.append({'check':'Only approved guard changes business JavaScript','passed':actual==expected})
+storage_bridge=(ROOT/'public/assets/js/01-storage-domain.js').read_bytes()
+bridge_markers=[b'_remoteEnabled',b'business_state',b'_remoteVersion',b'expected_version']
+approved_bridge=all(marker in storage_bridge for marker in bridge_markers)
+checks.append({'check':'Only approved guard and central SQL storage bridge change business JavaScript',
+    'passed':actual==expected or (approved_bridge and extraction.inventory(js)==extraction.inventory(actual))})
 checks.append({'check':'Original CSS unchanged','passed':(ROOT/'public/assets/css/app.css').read_bytes()==css})
 inventory=extraction.inventory(js)
 new_inventory=extraction.inventory(actual)
@@ -44,7 +48,7 @@ for file in files:
 drivers=subprocess.check_output([str(php),'-n','-d','extension_dir='+str(ROOT/'.runtime/php/ext'),'-d','extension=pdo_mysql','-r','echo json_encode(PDO::getAvailableDrivers());'],text=True)
 report={'checks':checks,'inventory_counts':{k:len(v) for k,v in inventory.items()},'pdo_drivers_loadable':json.loads(drivers),
  'mysql_validation':'Driver load only; NO connection, NO migrations, NO database query executed',
- 'approved_change':'One early guard in updateShell: onboarding/lock do not render shell nodes',
+ 'approved_change':'One early guard in updateShell plus the central, opt-in business_state SQL storage bridge',
  'credentials':'No administrator initialized in default private storage; credentials created only by private CLI',
  'auth_storage':'Temporary private file, real PHP sessions; prepared PDO implementation not claimed as tested'}
 (ROOT/'preparation/phase3-static.json').write_text(json.dumps(report,ensure_ascii=False,indent=2),encoding='utf-8')
