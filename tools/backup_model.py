@@ -19,6 +19,7 @@ TABLES = ['currencies','brands','channels','projects','customers','accounts','bu
           'plans','plan_prices','products','product_versions','product_links','bundle_items',
           'product_channels','product_version_channels','project_user_stats','product_version_history']
 ACTIVITY_TABLES = ['subscriptions','subscription_events','time_logs','integrations','suppliers']
+SNAPSHOT_TABLES = ['original_financial_snapshots']
 REFS = {
  'projects': {'brand_id':'brands','investment_currency':'currencies'},
  'accounts': {'currency_id':'currencies'}, 'business_settings':{'base_currency':'currencies'},
@@ -64,7 +65,7 @@ class Model:
         self.raw_hash = hashlib.sha256(raw).hexdigest()
         self.environment = environment
         self.activity = activity
-        self.tables = TABLES + (ACTIVITY_TABLES if activity else [])
+        self.tables = TABLES + (ACTIVITY_TABLES if activity else []) + (SNAPSHOT_TABLES if activity else [])
         self.rows = {t:[] for t in self.tables}
         self.mapping = []
         self.issues = []
@@ -394,6 +395,15 @@ class Model:
                 for k in ('kind','url','contact','tax_id','notes'):
                     if rs.get(k) is None:
                         rs[k]=''; self.normalizations.append({'path':['suppliers',i,k],'rule':'sql_not_null_empty_string'})
+        for collection in ('sales','expenses','treasury'):
+            for i,o in enumerate(source.get(collection,[])):
+                if not isinstance(o,dict) or not isinstance(o.get('id'),str):
+                    self.issue('error',[collection,i],'invalid_or_missing_id'); continue
+                ident=collection+'_'+o['id']
+                payload=json.dumps(o,ensure_ascii=False,separators=(',',':'))
+                self.rows['original_financial_snapshots'].append({'id':ident,'collection':collection,'ordinal':str(i),
+                    'source_path':collection+'/'+str(i),'payload':payload,'content_hash':hashlib.sha256(payload.encode()).hexdigest(),
+                    'import_status':'historical','normalized_json':None})
 
     def validate_rows(self):
         by={t:{r['id']:r for r in rs} for t,rs in self.rows.items()}

@@ -10,7 +10,7 @@ final class BackupImport
         'product_categories','formats','languages','payment_methods','expense_groups','expense_categories',
         'plans','plan_prices','products','product_versions','product_links','bundle_items','product_channels',
         'product_version_channels','project_user_stats','product_version_history'];
-    public const ACTIVITY_TABLES=['subscriptions','subscription_events','time_logs','integrations','suppliers'];
+    public const ACTIVITY_TABLES=['subscriptions','subscription_events','time_logs','integrations','suppliers','original_financial_snapshots'];
     private Business $business;
     private array $tables;
     public function __construct(private \PDO $pdo,private array $config,private array $marker)
@@ -31,6 +31,9 @@ final class BackupImport
         if($activity){
             $path=dirname(__DIR__).'/database/migrations/012_administrative_activity.sql';
             $q=$pdo->prepare('SELECT checksum FROM schema_migrations WHERE version=?');$q->execute(['012_administrative_activity']);
+            if(!hash_equals(hash_file('sha256',$path),(string)$q->fetchColumn()))throw new BusinessError('migration_checksum_mismatch');
+            $path=dirname(__DIR__).'/database/migrations/014_original_financial_snapshots.sql';
+            $q=$pdo->prepare('SELECT checksum FROM schema_migrations WHERE version=?');$q->execute(['014_original_financial_snapshots']);
             if(!hash_equals(hash_file('sha256',$path),(string)$q->fetchColumn()))throw new BusinessError('migration_checksum_mismatch');
             $path=dirname(__DIR__).'/database/migrations/013_activity_source_metadata.sql';
             $q=$pdo->prepare('SELECT checksum FROM schema_migrations WHERE version=?');$q->execute(['013_activity_source_metadata']);

@@ -94,6 +94,8 @@ def prepare(profile='block3',demo_costs=False):
         if p.returncode:raise ValueError('activity_migration_failed')
         p=subprocess.run(db.PHP_ARGS+[str(ROOT/'tools/migrate_activity_source_metadata_local.php'),'--backup='+str(dump(cfg))],env=rootenv,cwd=ROOT,capture_output=True,creationflags=db.FLAGS)
         if p.returncode:raise ValueError('activity_metadata_migration_failed')
+        p=subprocess.run(db.PHP_ARGS+[str(ROOT/'tools/migrate_original_snapshots_local.php'),'--backup='+str(dump(cfg))],env=rootenv,cwd=ROOT,capture_output=True,creationflags=db.FLAGS)
+        if p.returncode:raise ValueError('snapshot_migration_failed')
     # A distinct temporary administrator, never copied from file auth/review or the backup.
     password=secrets.token_urlsafe(32)
     p=subprocess.run(db.PHP_ARGS+[str(ROOT/'tools/create_admin.php'),'--email=backup-import@ejemplo.test','--password-stdin'],
@@ -115,7 +117,8 @@ def model_for(raw,environment_name,target=None,profile='block3',demo_costs=False
         model=ConfigurationModel(raw,environment_name,demo_costs,activity=profile=='block7')
         if profile=='block7':
             from configuration_model import EXTRA_TABLES
-            ordered=TABLES+EXTRA_TABLES+__import__('backup_model').ACTIVITY_TABLES
+            bm=__import__('backup_model')
+            ordered=TABLES+EXTRA_TABLES+bm.ACTIVITY_TABLES+bm.SNAPSHOT_TABLES
             model.rows={k:model.rows[k] for k in ordered}
         return model
     return Model(raw,environment_name,activity=profile=='block7')

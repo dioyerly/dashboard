@@ -25,6 +25,7 @@ final class Business
         'time_logs'=>['project_id','logged_on','hours','kind','note'],
         'integrations'=>['name','kind','method','status','project_id','last_sync','errors_json','notes','source_stats','source_stats_present'],
         'suppliers'=>['name','kind','url','contact','tax_id','notes'],
+        'original_financial_snapshots'=>['collection','ordinal','source_path','payload','content_hash','import_status','normalized_json'],
     ];
     private const REFS = [
         'projects'=>['brand_id'=>'brands','investment_currency'=>'currencies'],
@@ -186,7 +187,7 @@ final class Business
         if(isset(Catalogs::TYPES[$resource]))return Catalogs::validate($resource,$data,$old,$this->configuration);
         $fields=$this->fields()[$resource];
         if (array_diff(array_keys($data),$fields)) throw new BusinessError('unknown_field');
-        $nullable=['commission_pct','initial_investment','investment_currency','email','launch_date','business_date','source_created_at','source_updated_at','source_origin','source_stats','next_renewal','cancel_date','external_id','plan_id','customer_id','event_date','amount','currency_id','sale_id','project_id','last_sync'];
+        $nullable=['commission_pct','initial_investment','investment_currency','email','launch_date','business_date','source_created_at','source_updated_at','source_origin','source_stats','next_renewal','cancel_date','external_id','plan_id','customer_id','event_date','amount','currency_id','sale_id','project_id','last_sync','normalized_json'];
         if($this->configuration && $resource==='customers')$nullable=[...$nullable,'consent','origin'];
         $row=[];
         foreach ($fields as $field) {
