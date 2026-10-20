@@ -1,0 +1,23 @@
+{
+  "scope": "Official distributions previously verified locally; pinned SHA-256 values preserve reproducibility without executables or secrets.",
+  "packages": [
+    {
+      "name": "PHP 8.4.26 NTS VS17 x64",
+      "destination": "php",
+      "filename": "php-8.4.26-nts-Win32-vs17-x64.zip",
+      "url": "https://downloads.php.net/~windows/releases/archives/php-8.4.26-nts-Win32-vs17-x64.zip",
+      "sha256": "da68394f9193b7f6b89d0c76861a4034ae10efee7fd55a7255d8118c2acf70d7",
+      "official_hash_source": "https://www.php.net/downloads.php?os=windows&version=8.4",
+      "archive_root": null
+    },
+    {
+      "name": "MariaDB 11.4.13 Windows x64",
+      "destination": "mariadb",
+      "filename": "mariadb-11.4.13-winx64.zip",
+      "url": "https://archive.mariadb.org/mariadb-11.4.13/winx64-packages/mariadb-11.4.13-winx64.zip",
+      "sha256": "d62986d433eeebfde218560b276103831604a61e929e87f1a17f5aebd80257e2",
+      "official_hash_source": "https://archive.mariadb.org/mariadb-11.4.13/winx64-packages/sha256sums.txt",
+      "archive_root": "mariadb-11.4.13-winx64"
+    }
+  ]
+}

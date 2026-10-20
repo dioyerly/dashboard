@@ -1,0 +1,307 @@
+ESTADO ACTUAL: FASE 4B, BLOQUE 4 CERRADO
+Las secciones por fase conservan instrucciones historicas.
+La revision actual usa MariaDB solo para autenticacion. El negocio sigue
+en IndexedDB y SQL del negocio permanece desactivado por defecto.
+Los contratos financieros no son un ejecutor financiero implementado.
+
+RECONSTRUIR UN CLON NUEVO SIN SECRETOS NI EJECUTABLES
+Windows x64, Python y PowerShell disponibles. Desde la raiz:
+  powershell -File tools/restore_portable_runtime.ps1
+Descarga distribuciones oficiales y verifica los SHA-256 fijados en
+preparation/runtime-distributions.json antes de extraer. Rechaza reemplazar
+runtimes existentes. No instala servicios ni cambia PATH. Si el distribuidor
+retira el archivo, detenerse; no sustituir versiones ni hashes sin verificar.
+Los hashes y fuentes oficiales proceden de la verificacion local previa.
+No se ejecuta este restaurador durante el cierre sobre el entorno existente.
+Los ZIP y desempaquetados temporales permanecen ignorados en .runtime/.
+Luego inicializar UNA SOLA VEZ y arrancar MariaDB:
+  python tools/local_mariadb.py initialize
+  python tools/local_mariadb.py start
+
+La configuracion privada review.json no se publica. Para recrearla y crear
+un administrador nuevo en un clon NUEVO, ejecutar este bloque PowerShell:
+@'
+import getpass,json,os,pathlib,subprocess,sys
+sys.path.insert(0, 'tools')
+import local_mariadb as db
+root=pathlib.Path.cwd()
+review=root/'.runtime/mariadb/review.json'
+if review.exists(): raise SystemExit('Existing review configuration preserved')
+env=db.environment(db.database())
+env['CENTRO_PRIVATE_DIR']=str(root/'storage/private/review-mysql')
+env['CENTRO_BUSINESS_API_ENABLED']='0'
+email=input('Administrator email: ').strip()
+password=getpass.getpass('New private password (12-72 UTF-8 bytes): ')
+child=os.environ.copy();child.update(env)
+result=subprocess.run(db.PHP_ARGS+['tools/create_admin.php','--email='+email,'--password-stdin'],input=password+'\n',text=True,env=child,cwd=root)
+password=None
+if result.returncode: raise SystemExit('Administrator initialization failed; review was not written')
+review.write_text(json.dumps({'environment':env},indent=2),encoding='utf-8')
+print('Private local review initialized; no credentials printed')
+'@ | Set-Content -LiteralPath .runtime/setup_review.py -Encoding UTF8
+  python .runtime/setup_review.py
+  powershell -File tools/serve-mysql.ps1
+Abrir http://127.0.0.1:8080/login.php. Este procedimiento aplica solo
+001_auth.sql. Las migraciones 002-006 se prueban en destinos sinteticos
+separados con las herramientas y suites documentadas mas abajo.
+No versionar review.json, local.json, client.ini ni storage/private/.
+El create-admin.ps1 historico usa el driver file; para MySQL usar el bloque
+anterior, con PDO y entorno explicitos. No se copian cuentas ni hashes.
+Las fuentes de tests se reconstruyen con tools/cache_test_fonts.py.
+Instalar dependencias de tests en un entorno virtual local, por ejemplo
+.runtime/test-venv; no es necesario instalarlas globalmente.
+
+CIERRE DE FASES 1, 2 Y 3
+
+Windows, PHP 8.3 o posterior. PHP portable no forma parte del repositorio.
+Obtener PHP unicamente de https://windows.php.net/download/ y comprobar
+su SHA256 contra el publicado por el distribuidor antes de descomprimir.
+El entorno utilizado fue PHP 8.4.26 NTS x64, archivo oficial
+php-8.4.26-nts-Win32-vs17-x64.zip, SHA256:
+da68394f9193b7f6b89d0c76861a4034ae10efee7fd55a7255d8118c2acf70d7
+Para reproducir las pruebas existentes, descomprimir en .runtime/php/.
+Para ejecutar solamente la app puede usarse PHP instalado o -PhpPath.
+
+Desde la raiz del proyecto, PowerShell:
+  powershell -File tools/serve.ps1
+  powershell -File tools/create-admin.ps1 -Email TU_CORREO
+Abrir http://127.0.0.1:8080/. La herramienta solicita correo y una
+contrasena privada; no existen credenciales predeterminadas.
+Si PHP esta en otro lugar, serve.ps1 acepta -PhpPath. create-admin.ps1
+requiere .runtime/php/php.exe; alternativamente usar tools/create_admin.php
+con --email=TU_CORREO --password-stdin y entrada estandar privada.
+El servidor integrado es exclusivamente para desarrollo local.
+
+Configuracion opcional: copiar config/private.example.php a
+config/private.php (excluido de Git). No habilitar MySQL en este cierre.
+La autenticacion usa archivos privados y sesiones PHP. Los datos de
+negocio permanecen en IndexedDB/localStorage del navegador. Un clon
+no incluye cuentas, sesiones ni datos del navegador o respaldos privados.
+
+Pruebas: Python 3.13 y dependencias de requirements-test.txt:
+  py -3 -m pip install -r requirements-test.txt
+  py -3 -m playwright install chromium
+  py -3 tools/cache_test_fonts.py
+  py -3 tests/phase3_security.py --suite security
+  py -3 tests/phase3_security.py --suite regression
+Si el lanzador py no detecta Python, usar python.exe por su ruta completa.
+Las pruebas generan administradores temporales privados y utilizan datos
+sinteticos de la demo. Los resultados quedan en preparation/.
+Las fuentes tipograficas se descargan para las pruebas, no se versionan.
+La version Chromium utilizada originalmente fue 153.0.8010.12;
+otras versiones o plataformas pueden cambiar el rasterizado.
+
+Los scripts phase1/phase2 y phase3_static.py conservan su alcance historico:
+algunas comprobaciones requieren los HTML y README.md de la carpeta padre
+original, que no forman parte de la aplicacion. Las copias HTML inmutables
+estan en reference/. No ejecutar prepare.ps1 ni extract_frontend.py para
+arrancar esta version: son herramientas historicas de preparacion.
+Los resultados historicos registran el entorno de cada fase; no representan
+una conexion MySQL, despliegue productivo ni pruebas nuevas del respaldo.
+
+No se incluyen .runtime/, storage/, caches, sesiones, logs ni secretos.
+Se eliminaron los valores predeterminados del usuario/nombre de base real
+del codigo y se anonimizaron en el resumen publicable de la fase 3.
+No se modificaron los HTML originales ni las copias de referencia/demo.
+
+FASE 4A - AUTENTICACION SQL LOCAL (sin Hostinger)
+MariaDB portable oficial en .runtime/mariadb/, sin servicio de Windows.
+Su descarga y SHA256 verificado se registran en download-verification.json
+dentro de ese directorio ignorado. Datos, configuracion, logs y credenciales
+locales tambien permanecen alli o en storage/private/, fuera de Git.
+La inicializacion se hace una sola vez con:
+  python tools/local_mariadb.py initialize
+Con la instancia ya preparada:
+  python tools/local_mariadb.py start
+  powershell -File tools/serve-mysql.ps1
+El segundo comando usa .runtime/mariadb/review.json, privado y local;
+no cambia variables persistentes, no copia usuarios del driver file y no
+acepta un host remoto. Las credenciales temporales de revision estan en
+.runtime/mariadb/review-access.json. No compartir ni versionar esos archivos.
+Para detener MariaDB tras detener PHP:
+  python tools/local_mariadb.py stop
+El cliente CLI local usa --skip-ssl por un error Schannel del entorno;
+esta excepcion se limita a 127.0.0.1 y no define la politica de produccion.
+
+Pruebas SQL reales y de reinicio (crean esquemas locales aislados nuevos):
+  python tests/phase4a_mysql.py
+  $env:CENTRO_TEST_AUTH_DRIVER='mysql'
+  $env:CENTRO_TEST_OUTPUT=Join-Path (Get-Location) 'preparation/phase4a-browser'
+  python tests/phase3_security.py --suite security
+  python tests/phase3_security.py --suite regression
+  python tests/phase4a_outage.py
+No ejecutar outage en paralelo con otras pruebas SQL: reinicia MariaDB.
+La migracion 001 se ejecuta por PDO en cada esquema de pruebas y registra
+su checksum. Los esquemas anteriores se conservan, no se borran al repetir.
+Las sesiones siguen siendo archivos PHP privados; solo administrador y
+limites de acceso usan MariaDB. IndexedDB/localStorage no cambian.
+tools/serve.ps1 conserva el arranque por archivo como alternativa explicita;
+no existe fallback automatico ni escritura simultanea de usuarios.
+No reutilizar los usuarios SQL locales ni sus passwords en Hostinger.
+
+FASE 4B REVISADA - PRIMER BLOQUE AISLADO
+El dashboard sigue usando exclusivamente IndexedDB/localStorage para negocio.
+No habilitar CENTRO_BUSINESS_API_ENABLED en el servidor de revision.
+La API experimental viene deshabilitada; solo los procesos de prueba la
+habilitan, sobre una base sintetica nueva y sin leer datos del navegador.
+  python tests/business_foundation.py
+Este test crea un respaldo SQL privado antes de ejecutar por PDO la nueva
+migracion 002_business_foundation.sql; registra y verifica su checksum.
+No modifica 001_auth.sql ni la base de revision. Conserva bases de prueba.
+Prueba servicios, rollback, idempotencia, concurrencia, HTTP y reinicio SQL.
+No ejecutar en paralelo con otras pruebas SQL porque reinicia MariaDB.
+Resultados: preparation/phase4b-foundation/.
+Contratos, limites y modulos pendientes:
+preparation/phase4b-foundation-contracts.json.
+La migracion DDL no es atomica en MariaDB: un esquema parcial requiere
+recuperacion manual. El runner rechaza su reaplicacion automatica.
+No hay importacion del respaldo JSON, operaciones financieras SQL ni
+restauracion/borrado SQL implementados en este primer bloque.
+
+FASE 4B - BLOQUE 2: CATALOGOS Y PRODUCTOS AISLADOS
+  python tests/catalogs.py
+Ejecuta 001/002 en una base sintetica nueva, respalda antes de 003/004 y
+prueba catalogos, productos/versiones/paquetes, precios historicos,
+paginacion de mas de 500 registros, concurrencia y recuperacion DDL.
+No ejecutar en paralelo con otras pruebas SQL: reinicia MariaDB.
+Los resultados quedan en preparation/phase4b-catalogs/.
+
+Runner nuevo para 003/004: tools/migrate_catalogs_local.php.
+Usar solo con configuracion privada de una base local aislada y --backup
+apuntando al dump previo y a su manifiesto .json de base y SHA256.
+003 es la opcion predeterminada; para 004 pasar:
+  --migration=004_project_stats_optional_origin
+Para reanudar, repetir con EL MISMO respaldo previo. El diario privado
+esta en .runtime/mariadb/migration-journals/. El runner compara las
+definiciones reales contra un esquema local auxiliar antes de continuar.
+No borra ni recrea tablas existentes: adopta pasos iguales ya confirmados
+por MariaDB y rechaza divergencias. Conservar dump, manifiesto y diario.
+Los esquemas auxiliares de verificacion se conservan localmente.
+
+El API sigue deshabilitado por defecto y no es usado por el dashboard.
+003 y 004 deben estar completas para habilitar servicios del bloque 2.
+business_list devuelve records/next_cursor/revision/limit. Los cursores
+son opacos, vencen en 30 minutos y se vinculan a consulta y ambiente.
+Si hay una escritura entre paginas, devuelve pagination_conflict (409):
+reiniciar el recorrido. parent_field/parent_id consultan relaciones
+permitidas; limit debe estar entre 1 y 500.
+restore en un comando reactiva un registro archivado con el MISMO ID;
+no restaura un respaldo completo. Historiales son inmutables.
+Campos, mapeo JSON, condiciones y pendientes:
+preparation/phase4b-catalogs/contracts.json.
+
+FASE 4B - BLOQUE 3: RESPALDOS PARCIALES EN DESTINO SINTETICO
+  python tests/backup_import.py
+Ejecuta diagnostico, importacion PDO atomica, exportacion independiente,
+comparacion de campos/IDs/relaciones, concurrencia y recuperacion. Crea
+bases nuevas; no ejecutar en paralelo con otras suites SQL: reinicia MariaDB.
+Resultados agregados: preparation/phase4b-backups/.
+La demo original se diagnostica sin modificarla: sus importes de recursos
+con precision no representable se informan y bloquean, nunca se redondean.
+
+CLI (todos los archivos de entrada deben estar dentro del proyecto):
+  python tools/backup_local.py diagnose --source .runtime/ejemplo.json --environment pruebas
+El diagnostico no conecta SQL salvo que se indique --target para comprobar
+ademas la colacion y las reglas reales mediante PDO; tampoco escribe filas.
+Informes, origenes preservados completos, dumps, credenciales y exportaciones
+se guardan exclusivamente en .runtime/mariadb/backup-imports/ o import-targets/.
+No compartir esos archivos. Los informes publicables de pruebas solo usan
+datos sinteticos y nunca son una copia de datos personales.
+
+  python tools/backup_local.py prepare
+Crea un destino NUEVO, aplica 001-004 con runners existentes y respaldo
+previo, genera un administrador distinto y devuelve ruta de target privado.
+No acepta preparar una base existente. No hay migracion SQL nueva.
+Usar la ruta devuelta como TARGET y un ID estable import_ seguido por 16-80
+caracteres alfanumericos, guion o guion bajo, conservado en cada reintento:
+  python tools/backup_local.py import --target TARGET --source .runtime/ejemplo.json --environment pruebas --operation import_ID_ESTABLE_DE_16_CARACTERES
+  python tools/backup_local.py verify --target TARGET --source .runtime/ejemplo.json --environment pruebas --operation import_ID_ESTABLE_DE_16_CARACTERES
+  python tools/backup_local.py export --target TARGET --environment pruebas --operation import_ID_ESTABLE_DE_16_CARACTERES
+Los comandos devuelven la ruta del informe privado, nunca las filas ni secretos.
+--output solo acepta una ruta NUEVA dentro de .runtime/. No sobrescribe archivos.
+
+Solo formato original version 1, UTF-8, maximo 32 MiB; ambiente explicito,
+porque el respaldo original no lo incluye. No ejecuta normalizeState ni sus
+defaults sobre el origen. Campos desconocidos en entidades soportadas,
+errores criticos o ausencias historicas no representables bloquean TODO el
+intento. No se eliminan referencias ni se omiten registros para hacerlo pasar.
+Clientes sin origin/consent y planes sin trialDays requieren revision porque
+las columnas actuales NOT NULL no preservan un desconocido. Fechas opcionales
+y origen ausente de userStats se conservan como NULL. IDs existentes intactos;
+IDs tecnicos deterministas para hijos que el origen no identifica.
+Precios actuales de planes: fechas NULL, procedencia unknown; no se inventa
+historia previa. Formatos historicos adicionales no especificados se rechazan
+para revision. El historial de versiones inicia con el snapshot importado.
+
+Destino registrado, privado, local, InnoDB y vacio; no existe opcion de merge,
+sobrescritura o restore/wipe. El recibo y auditoria se confirman en la MISMA
+transaccion que los registros. El mapa del recibo conserva rutas, presencia,
+orden y tipos, no otra copia de valores del negocio. Export lee tablas SQL
+bajo bloqueo del ambiente y reconstruye SOLO la proyeccion soportada.
+NULL/ausencia, decimales, UTC y email normalizado se informan expresamente.
+Colecciones pendientes permanecen en el original privado, nunca en tablas
+financieras ni en un state JSON usado como base de datos.
+No es migracion completa ni habilita SQL para el dashboard. No hay endpoint
+nuevo, acceso remoto, cambio de IndexedDB, generaciones de datasets,
+restauracion integral ni preparacion de Hostinger en este bloque.
+
+FASE 4B - BLOQUE 4: CONFIGURACION, COTIZACIONES Y CONTRATOS
+  python tests/configuration.py
+Usa exclusivamente nuevas bases sinteticas locales. Interrumpe y recupera
+005/006, comprueba restricciones reales, NULL historicos, decimales exactos,
+import/export, concurrencia, recibos y reinicio. No ejecutar junto con otras
+suites SQL porque reinicia MariaDB. Evidencia: preparation/phase4b-configuration/.
+
+El perfil block3 se conserva para repetir baselines sin modificar esquemas
+anteriores. Para el perfil ampliado, crear OTRO destino, nunca la base review:
+  python tools/backup_local.py prepare --profile block4
+La ruta target privada devuelta selecciona automaticamente el perfil al
+importar/verificar/exportar. El diagnostico sin target requiere:
+  python tools/backup_local.py diagnose --profile block4 --source .runtime/ejemplo.json --environment pruebas
+No modifica origenes ni IndexedDB; sigue siendo importacion PARCIAL.
+005 crea dataset_settings y exchange_rates. 006 permite NULL en
+customers.consent/origin y plans.trial_days, sin cambiar valores existentes.
+001-004 siguen inmutables. No se actualiza la base del servidor de revision.
+Ambas migraciones deben estar completas para usar los servicios ampliados.
+El runner existente admite --migration=005_configuration_rates o
+--migration=006_historical_absence, con respaldo privado previo y el mismo
+respaldo/diario al recuperar. El DDL no se revierte como una transaccion.
+
+Cotizaciones, tarifa horaria y umbrales: DECIMAL(38,18), entradas exactas,
+sin float ni redondeo implicito. Monedas, fechas y unicidad moneda/fecha
+verificadas; las cotizaciones conservan la base explicita del respaldo.
+No reinterpretar una cotizacion con otra base/moneda/fecha. Cambiar su valor
+requiere comando versionado y auditado. Una base de negocio con cotizaciones
+no se puede cambiar silenciosamente. Zona horaria ausente queda NULL.
+Origen/consentimiento/trialDays ausentes quedan NULL; false y cero explicitos
+siguen siendo false/cero. El mapa preserva presencia de campos al exportar.
+Fechas de precios desconocidas siguen NULL; etiquetas historicas permanecen
+como snapshots, sin inventar formatos, idiomas, categorias ni historia previa.
+
+Los costos descriptivos pueden tener precision real mayor que centavos.
+No normalizarlos de forma general. Para CORREGIR SOLO los tres artefactos
+conocidos de cost*.82 del JSON DEMO, pedirlo expresamente al crear destino:
+  python tools/backup_local.py prepare --profile block4 --normalize-known-demo-costs
+Exige marcador DEMO y exactamente los tres IDs/valores conocidos. Registra
+path, antes/despues y SHA del origen; la copia privada original no cambia.
+10659.179999999998 -> 10659.18; 12.299999999999999 -> 12.30;
+4919.179999999999 -> 4919.18. No aplica a precios, cotizaciones o caja.
+Infraestructura todavia NO se importa a tablas de negocio: estas correcciones
+son evidencia de normalizacion en el diagnostico/recibo, no pagos ni recursos
+SQL completos. Los importes desconocidos no representables se rechazan.
+Los precios ya mapeados a DECIMAL(20,2) NO se redondean para hacerlos entrar.
+Subtotales y caja futura requieren calculo decimal y limites explicitos;
+el round2 original basado en IEEE-754 no se sustituye globalmente.
+
+app/FinancialContracts.php valida contratos y describe efectos atomicos.
+No ejecuta operaciones financieras ni constituye una API financiera.
+Cambios comerciales no alteran caja confirmada; anulacion exige advertencia
+de regularizacion. Correcciones mediante compensaciones vinculadas; cobros,
+pagos y devoluciones efectivos requieren datos explicitos y confirmacion.
+Cuando se implemente el ejecutor, una operacion confirmada debera generar
+TODOS sus efectos relacionados, recibo y auditoria dentro de UNA transaccion.
+No interpretar esta separacion como prohibicion de automatizar pagos/cobros.
+Los tests financieros validan los contratos; los tests SQL de atomicidad
+ejercitan configuracion/importacion, no flujos financieros aun inexistentes.
+Contratos y limites: preparation/phase4b-configuration/contracts.json.
+Regresion nueva: preparation/phase4b-configuration-browser/.

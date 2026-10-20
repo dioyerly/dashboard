@@ -1,0 +1,33 @@
+{
+  "scope": "Three existing-function characterizations and two in-memory fault models of a proposed naive split; no real SQL migration or browser persistence exercised",
+  "checks": [
+    {
+      "check": "One existing sale command creates customer, sale and linked receipt",
+      "passed": true,
+      "kind": "existing_behavior"
+    },
+    {
+      "check": "Customer email deduplication currently uses only this in-memory state",
+      "passed": true,
+      "kind": "existing_behavior"
+    },
+    {
+      "check": "Existing transact restores memory when the single local save rejects",
+      "passed": true,
+      "kind": "existing_behavior"
+    },
+    {
+      "check": "Modeled SQL-first split leaves committed catalog after local failure despite memory rollback",
+      "passed": true,
+      "kind": "fault_model_only_not_real_sql"
+    },
+    {
+      "check": "Modeled local-first split leaves sale referencing uncommitted customer after SQL rejection",
+      "passed": true,
+      "kind": "fault_model_only_not_real_sql"
+    }
+  ],
+  "business_storage_modified": false,
+  "sql_executed": false,
+  "conclusion": "Existing memory rollback cannot coordinate separate durable stores; a recovery protocol and explicit restore scope are required before activation."
+}

@@ -1,0 +1,227 @@
+{
+  "checks": [
+    {
+      "check": "Anonymous dashboard blocked before HTML is emitted",
+      "passed": true
+    },
+    {
+      "check": "Private API unauthenticated returns 401 JSON",
+      "passed": true
+    },
+    {
+      "check": "Login API enforces POST",
+      "passed": true
+    },
+    {
+      "check": "Login rejects missing CSRF",
+      "passed": true
+    },
+    {
+      "check": "Local storage mode explicitly reported",
+      "passed": true
+    },
+    {
+      "check": "Cookie is HttpOnly and SameSite Strict",
+      "passed": true
+    },
+    {
+      "check": "Wrong password refused generically",
+      "passed": true
+    },
+    {
+      "check": "Unknown email receives same error",
+      "passed": true
+    },
+    {
+      "check": "Correct credentials authenticate with password_verify",
+      "passed": true
+    },
+    {
+      "check": "Session ID regenerates at authentication",
+      "passed": true
+    },
+    {
+      "check": "CSRF token rotates at authentication",
+      "passed": true
+    },
+    {
+      "check": "Old CSRF cannot log out authenticated session",
+      "passed": true
+    },
+    {
+      "check": "Missing CSRF cannot touch session",
+      "passed": true
+    },
+    {
+      "check": "Authenticated dashboard contains original shell entry",
+      "passed": true
+    },
+    {
+      "check": "Business writes are not implemented",
+      "passed": true
+    },
+    {
+      "check": "No registration endpoint",
+      "passed": true
+    },
+    {
+      "check": "HTTP cannot retrieve private path: app/views/dashboard.php",
+      "passed": true
+    },
+    {
+      "check": "HTTP cannot retrieve private path: config/settings.php",
+      "passed": true
+    },
+    {
+      "check": "HTTP cannot retrieve private path: storage/private/auth/auth.json",
+      "passed": true
+    },
+    {
+      "check": "HTTP cannot retrieve private path: storage/private/auth/sessions/test",
+      "passed": true
+    },
+    {
+      "check": "HTTP cannot retrieve private path: database/migrations/001_auth.sql",
+      "passed": true
+    },
+    {
+      "check": "HTTP cannot retrieve private path: tools/create_admin.php",
+      "passed": true
+    },
+    {
+      "check": "HTTP cannot retrieve private path: .runtime/php/php.exe",
+      "passed": true
+    },
+    {
+      "check": "HTTP cannot retrieve private path: reference/centro-operaciones.html",
+      "passed": true
+    },
+    {
+      "check": "HTTP cannot retrieve private path: preparation/phase3-static.json",
+      "passed": true
+    },
+    {
+      "check": "HTTP cannot retrieve private path: ../config/settings.php",
+      "passed": true
+    },
+    {
+      "check": "HTTP cannot retrieve private path: %2e%2e/config/settings.php",
+      "passed": true
+    },
+    {
+      "check": "Only a password hash is persisted",
+      "passed": true
+    },
+    {
+      "check": "Private initialization refuses a second administrator",
+      "passed": true
+    },
+    {
+      "check": "Credentials absent from all public source files",
+      "passed": true
+    },
+    {
+      "check": "Logout destroys server session",
+      "passed": true
+    },
+    {
+      "check": "Destroyed session ID cannot be replayed",
+      "passed": true
+    },
+    {
+      "check": "Fresh login after logout works",
+      "passed": true
+    },
+    {
+      "check": "Failure counted across independent sessions",
+      "passed": true
+    },
+    {
+      "check": "Failure counted across independent sessions",
+      "passed": true
+    },
+    {
+      "check": "Failure counted across independent sessions",
+      "passed": true
+    },
+    {
+      "check": "Failure counted across independent sessions",
+      "passed": true
+    },
+    {
+      "check": "Failure counted across independent sessions",
+      "passed": true
+    },
+    {
+      "check": "Repeated attempts blocked even with correct password",
+      "passed": true
+    },
+    {
+      "check": "Access recovers after configured limit window",
+      "passed": true
+    },
+    {
+      "check": "Login form fits desktop",
+      "passed": true
+    },
+    {
+      "check": "Browser login reaches protected onboarding: desktop",
+      "passed": true
+    },
+    {
+      "check": "Account shortcut and real logout: desktop",
+      "passed": true
+    },
+    {
+      "check": "Login form fits mobile",
+      "passed": true
+    },
+    {
+      "check": "Browser login reaches protected onboarding: mobile",
+      "passed": true
+    },
+    {
+      "check": "Account shortcut and real logout: mobile",
+      "passed": true
+    },
+    {
+      "check": "Login and logout browser flows have no JS errors",
+      "passed": true
+    },
+    {
+      "check": "idle expiry setup authenticated",
+      "passed": true
+    },
+    {
+      "check": "idle expiry returns coherent 401",
+      "passed": true
+    },
+    {
+      "check": "idle expiry blocks dashboard",
+      "passed": true
+    },
+    {
+      "check": "absolute expiry setup authenticated",
+      "passed": true
+    },
+    {
+      "check": "absolute expiry returns coherent 401",
+      "passed": true
+    },
+    {
+      "check": "absolute expiry blocks dashboard",
+      "passed": true
+    },
+    {
+      "check": "HTTPS detection requires server flag, not spoofable forwarded header",
+      "passed": true
+    },
+    {
+      "check": "Production refuses plaintext HTTP",
+      "passed": true
+    }
+  ],
+  "storage": "Real private file auth and PHP sessions, not a MySQL simulation",
+  "mysql": "Not connected",
+  "browser_errors": []
+}

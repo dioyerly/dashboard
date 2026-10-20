@@ -1,0 +1,83 @@
+{
+  "phase": 2,
+  "status": "Frontend separated and served by local PHP; original resize defect preserved and reproduced",
+  "public_files": [
+    "public\\assets\\css\\app.css",
+    "public\\assets\\js\\00-utilities.js",
+    "public\\assets\\js\\01-storage-domain.js",
+    "public\\assets\\js\\02-interface.js",
+    "public\\assets\\js\\03-overview-projects.js",
+    "public\\assets\\js\\04-sales.js",
+    "public\\assets\\js\\05-subscriptions.js",
+    "public\\assets\\js\\06-expenses-finances.js",
+    "public\\assets\\js\\07-resources-calendar-customers.js",
+    "public\\assets\\js\\08-integrations.js",
+    "public\\assets\\js\\09-reports-settings.js",
+    "public\\assets\\js\\10-boot.js",
+    "public\\index.php"
+  ],
+  "existing_files_modified": [],
+  "php": {
+    "version": "8.4.26",
+    "installation": "Project-local portable official ZIP; verified SHA256; no PATH/system configuration changes",
+    "server": "http://127.0.0.1:8080"
+  },
+  "counts": {
+    "screens": 13,
+    "named_functions": 124,
+    "actions": 57,
+    "change_handlers": 6,
+    "input_handlers": 3,
+    "reports": 15
+  },
+  "unique_form_templates": 26,
+  "verification": {
+    "static_checks_passed": 34,
+    "environment_checks_passed": 22,
+    "functional_checks_passed": 78,
+    "normal_motion_checks_passed": 4,
+    "pixel_identical_pairs": 31,
+    "screenshots_in_pairs": 62
+  },
+  "known_defect": {
+    "message": "Cannot set properties of null (setting 'textContent')",
+    "location": "updateShell, original line 1148; resize handler original line 1189",
+    "cause": "Onboarding/lock contain no shell elements; resize still calls updateShell",
+    "observed_visual_suite_errors": [
+      {
+        "page": "original",
+        "message": "Cannot set properties of null (setting 'textContent')"
+      },
+      {
+        "page": "modular",
+        "message": "Cannot set properties of null (setting 'textContent')"
+      },
+      {
+        "page": "original",
+        "message": "Cannot set properties of null (setting 'textContent')"
+      },
+      {
+        "page": "modular",
+        "message": "Cannot set properties of null (setting 'textContent')"
+      }
+    ],
+    "focused_reproduction": "phase2-browser/resize-results.json",
+    "fixed": false,
+    "raw_visual_suite": "31 screenshot comparisons pass; no-uncaught-errors check fails on inherited defect, retained in raw results"
+  },
+  "scope_limits": [
+    "Chromium desktop 1440x900 and mobile viewport 390x844; not a physical phone or all browsers",
+    "Deterministic comparisons use original reduced-motion support and privately cached original Google Fonts; normal motion separately exercised",
+    "All source bindings preserved byte-for-byte; functional checks sample principal flows, not every possible input or all 57 actions",
+    "IndexedDB/localStorage unchanged; prior file-origin data requires JSON backup/restore to the localhost origin",
+    "Existing financial/security issues are unchanged; no API, new authentication, MySQL, Hostinger access, deployment or commits"
+  ],
+  "artifacts": [
+    "phase2-static.json",
+    "phase2-environment.json",
+    "phase2-browser/visual-results.json",
+    "phase2-browser/controls-results.json",
+    "phase2-browser/motion-results.json",
+    "phase2-browser/resize-results.json"
+  ]
+}

@@ -1,0 +1,104 @@
+{
+  "engine": "11.4.13-MariaDB",
+  "suites": [
+    {
+      "file": "preparation/phase4b-configuration/results.json",
+      "checks": 53,
+      "failed": 0
+    },
+    {
+      "file": "preparation/phase4b-configuration/financial-contract-results.json",
+      "checks": 34,
+      "failed": 0
+    },
+    {
+      "file": "preparation/phase4b-configuration-block3-regression/import-results.json",
+      "checks": 55,
+      "failed": 0
+    },
+    {
+      "file": "preparation/phase4b-configuration-catalog-regression/pdo-results.json",
+      "checks": 36,
+      "failed": 0
+    },
+    {
+      "file": "preparation/phase4b-configuration-catalog-regression/integration-results.json",
+      "checks": 21,
+      "failed": 0
+    },
+    {
+      "file": "preparation/phase4b-configuration-catalog-regression/foundation-regression.json",
+      "checks": 31,
+      "failed": 0
+    },
+    {
+      "file": "preparation/phase4b-configuration-browser/security-results.json",
+      "checks": 55,
+      "failed": 0
+    },
+    {
+      "file": "preparation/phase4b-configuration-browser/controls-results.json",
+      "checks": 78,
+      "failed": 0
+    },
+    {
+      "file": "preparation/phase4b-configuration-browser/resize-results.json",
+      "checks": 2,
+      "failed": 0
+    },
+    {
+      "file": "preparation/phase4b-configuration-browser/visual-results.json",
+      "checks": 32,
+      "failed": 2
+    },
+    {
+      "file": "preparation/phase4b-configuration-browser-confirmation/visual-results.json",
+      "checks": 32,
+      "failed": 0
+    },
+    {
+      "file": "preparation/phase4b-configuration-browser-confirmation/motion-results.json",
+      "checks": 4,
+      "failed": 0
+    }
+  ],
+  "new_migrations": [
+    "005_configuration_rates",
+    "006_historical_absence"
+  ],
+  "migration_hashes": {
+    "001_auth.sql": "df3549635b55c589381a73ff13ab334a1ca7edb411c8460e936347f0ffa88c15",
+    "002_business_foundation.sql": "73edd04c142ff5819b6ca9e2ca0acfb69676b3261a8946d03f2a9155f3223f47",
+    "003_catalogs_products.sql": "1753f16927d1e5abdf608620ead7dcdd30c7077f2d53e3fb35e5befaf006bd4c",
+    "004_project_stats_optional_origin.sql": "9c2269743f007721bb88101b0465c2d3e00468c35666a85174d2c432d1fd4697",
+    "005_configuration_rates.sql": "ea6bc2915ede21b6408834be11376df606de4f4c6b3e5ce2c0d8bd07dab0dd2f",
+    "006_historical_absence.sql": "fc1e8f2c90c5a256d4aae91e0de887d90a94c2140de015f423f9568cd035b972"
+  },
+  "new_tables_verified": [
+    "dataset_settings",
+    "exchange_rates"
+  ],
+  "review_tables": [
+    "auth_login_limits",
+    "auth_users",
+    "schema_migrations"
+  ],
+  "login_http": 200,
+  "local_url": "http://127.0.0.1:8080/login.php",
+  "business_storage": "local",
+  "mysql_sync": false,
+  "frontend_reference_git_diff_exit": 0,
+  "visual_confirmation_pairs": 31,
+  "visual_confirmation_identical": 31,
+  "initial_visual_discrepancies_preserved": true,
+  "tolerances_modified": false,
+  "frontend_test_code_modified_in_this_block": false,
+  "financial_sql_executor_implemented": false,
+  "complete_business_import": false,
+  "hostinger_contacted": false,
+  "commit_or_push": false,
+  "restart_decimal_preservation": {
+    "quote_exact_after_restarts": true,
+    "updated_hourly_exact_after_restarts": true
+  }
+}

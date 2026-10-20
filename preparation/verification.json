@@ -1,0 +1,109 @@
+{
+    "checked_utc":  "2026-10-16T00:38:39.4202180Z",
+    "checks":  [
+                   {
+                       "check":  "Original intacto: centro-operaciones.html",
+                       "passed":  true
+                   },
+                   {
+                       "check":  "Copia exacta: centro-operaciones.html",
+                       "passed":  true
+                   },
+                   {
+                       "check":  "Original intacto: centro-operaciones-DEMO.html",
+                       "passed":  true
+                   },
+                   {
+                       "check":  "Copia exacta: centro-operaciones-DEMO.html",
+                       "passed":  true
+                   },
+                   {
+                       "check":  "Original intacto: README.md",
+                       "passed":  true
+                   },
+                   {
+                       "check":  "13 vistas: centro-operaciones.html",
+                       "passed":  true
+                   },
+                   {
+                       "check":  "15 reportes: centro-operaciones.html",
+                       "passed":  true
+                   },
+                   {
+                       "check":  "Referencias literales data-act resueltas: centro-operaciones.html",
+                       "passed":  true,
+                       "unresolved":  [
+
+                                      ],
+                       "limit":  "No incluye acciones construidas dinamicamente ni handlers locales de modales."
+                   },
+                   {
+                       "check":  "13 vistas: centro-operaciones-DEMO.html",
+                       "passed":  true
+                   },
+                   {
+                       "check":  "15 reportes: centro-operaciones-DEMO.html",
+                       "passed":  true
+                   },
+                   {
+                       "check":  "Referencias literales data-act resueltas: centro-operaciones-DEMO.html",
+                       "passed":  true,
+                       "unresolved":  [
+
+                                      ],
+                       "limit":  "No incluye acciones construidas dinamicamente ni handlers locales de modales."
+                   },
+                   {
+                       "check":  "CSS identico entre original y demo",
+                       "passed":  true
+                   },
+                   {
+                       "check":  "Sin Markdown adicional",
+                       "passed":  true
+                   },
+                   {
+                       "check":  "Sin implementacion backend PHP",
+                       "passed":  true
+                   },
+                   {
+                       "check":  "JSON valido: schema-design.json",
+                       "passed":  true
+                   },
+                   {
+                       "check":  "JSON valido: migration-plan.json",
+                       "passed":  true
+                   },
+                   {
+                       "check":  "16 colecciones raiz mapeadas al diseno",
+                       "passed":  true,
+                       "missing":  [
+
+                                   ]
+                   },
+                   {
+                       "check":  "Mapeo apunta a tablas existentes en el diseno",
+                       "passed":  true
+                   },
+                   {
+                       "check":  "Nombres de tablas unicos en el diseno",
+                       "passed":  true
+                   },
+                   {
+                       "check":  "Referencias FK conceptuales resueltas",
+                       "passed":  true,
+                       "missing":  [
+
+                                   ],
+                       "limit":  "No valida DDL ni constraints en motor SQL; esquema aun conceptual."
+                   }
+               ],
+    "not_run":  [
+                    "Pruebas funcionales de navegador y capturas PC/movil",
+                    "Lint PHP: php no disponible en PATH",
+                    "Ejecucion JS: node no disponible en PATH",
+                    "Python: launcher presente pero sin interprete instalado",
+                    "DDL y transacciones SQL: no hay servidor/cliente configurado",
+                    "Compatibilidad efectiva de la cuenta Hostinger, sin acceso ni conexion"
+                ],
+    "external_connections":  "Ninguna conexion a Hostinger ni a bases de datos"
+}

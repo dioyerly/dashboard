@@ -1,0 +1,8 @@
+.auth-page #access-title{font-size:24px;margin:6px 0 18px}
+.auth-page .field{margin-bottom:14px}
+.auth-page .auth-submit{width:100%;margin-top:8px;padding:12px}
+.auth-note{margin-top:20px}
+.auth-page .err-msg{min-height:1.5em}
+.auth-confirm{max-width:560px;width:100%;padding:28px}
+.auth-confirm h1{margin-top:8px;font-size:28px}
+.auth-page button:disabled{opacity:.6;cursor:wait}

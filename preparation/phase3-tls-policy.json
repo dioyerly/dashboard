@@ -1,0 +1,12 @@
+{
+  "method": "Isolated PHP policy test with HTTPS server flag; no claim of live TLS/Hostinger testing",
+  "passed": true,
+  "cookie_parameters": {
+    "lifetime": 0,
+    "path": "/",
+    "domain": "",
+    "secure": true,
+    "httponly": true,
+    "samesite": "Strict"
+  }
+}

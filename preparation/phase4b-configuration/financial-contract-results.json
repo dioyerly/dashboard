@@ -1,0 +1,141 @@
+{
+  "checks": [
+    {
+      "check": "sale_edit never creates or changes cash implicitly",
+      "passed": true
+    },
+    {
+      "check": "sale_refund_commercial never creates or changes cash implicitly",
+      "passed": true
+    },
+    {
+      "check": "sale_void never creates or changes cash implicitly",
+      "passed": true
+    },
+    {
+      "check": "expense_edit never creates or changes cash implicitly",
+      "passed": true
+    },
+    {
+      "check": "subscription_status never creates or changes cash implicitly",
+      "passed": true
+    },
+    {
+      "check": "sale_collect requires atomic linked effects plus receipt/audit",
+      "passed": true
+    },
+    {
+      "check": "expense_pay requires atomic linked effects plus receipt/audit",
+      "passed": true
+    },
+    {
+      "check": "cash_refund requires atomic linked effects plus receipt/audit",
+      "passed": true
+    },
+    {
+      "check": "cash_compensate requires atomic linked effects plus receipt/audit",
+      "passed": true
+    },
+    {
+      "check": "Confirmed new collected sale automatically includes linked cash effect",
+      "passed": true
+    },
+    {
+      "check": "Confirmed paid expense automatically includes linked payment",
+      "passed": true
+    },
+    {
+      "check": "Renewal captures ordered event, sale and immutable price snapshot",
+      "passed": true
+    },
+    {
+      "check": "Cash needs explicit confirmation",
+      "passed": true
+    },
+    {
+      "check": "No invented cash amount",
+      "passed": true
+    },
+    {
+      "check": "No invented cash currency",
+      "passed": true
+    },
+    {
+      "check": "No invented cash date",
+      "passed": true
+    },
+    {
+      "check": "No invented cash account_id",
+      "passed": true
+    },
+    {
+      "check": "Cash overprecision rejected",
+      "passed": true
+    },
+    {
+      "check": "Account currency checked",
+      "passed": true
+    },
+    {
+      "check": "Void sale cannot be silently collected",
+      "passed": true
+    },
+    {
+      "check": "Already collected sale cannot be collected twice under another operation",
+      "passed": true
+    },
+    {
+      "check": "Stale financial contract version rejected",
+      "passed": true
+    },
+    {
+      "check": "String settlement flags cannot accidentally request cash",
+      "passed": true
+    },
+    {
+      "check": "Canceled subscription cannot renew through a status event",
+      "passed": true
+    },
+    {
+      "check": "Canceled subscription can explicitly reactivate without creating cash",
+      "passed": true
+    },
+    {
+      "check": "Payment failure becomes unpaid without erasing cash",
+      "passed": true
+    },
+    {
+      "check": "Compensation requires original movement link",
+      "passed": true
+    },
+    {
+      "check": "Transfer has two atomic linked legs",
+      "passed": true
+    },
+    {
+      "check": "Same-currency transfer must balance exactly",
+      "passed": true
+    },
+    {
+      "check": "Cross-currency transfer requires explicit received amount, not guessed quote",
+      "passed": true
+    },
+    {
+      "check": "Historical plan price evidence required",
+      "passed": true
+    },
+    {
+      "check": "External identity is integration plus event, never global event alone",
+      "passed": true
+    },
+    {
+      "check": "Literal zero external ID is an identity, not missing",
+      "passed": true
+    },
+    {
+      "check": "Contract validator explicitly has no financial executor",
+      "passed": true
+    }
+  ],
+  "scope": "Executable input/effect contracts only; SQL financial executor and tables are intentionally absent"
+}

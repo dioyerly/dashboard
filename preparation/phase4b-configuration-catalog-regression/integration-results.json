@@ -1,0 +1,125 @@
+{
+  "checks": [
+    {
+      "check": "002 baseline applied without modifying migration file",
+      "passed": true
+    },
+    {
+      "check": "Injected interruption leaves two DDL steps committed without ledger entry",
+      "passed": true
+    },
+    {
+      "check": "Recovery adopts matching committed DDL and completes without deleting rows",
+      "passed": true
+    },
+    {
+      "check": "Repeated 003 checks checksum and is safe",
+      "passed": true
+    },
+    {
+      "check": "Services reject incomplete catalog migration set",
+      "passed": true
+    },
+    {
+      "check": "004 preserves optional origin from original project statistics",
+      "passed": true
+    },
+    {
+      "check": "Catalog/product/price/package/pagination real PDO suite",
+      "passed": true
+    },
+    {
+      "check": "Concurrent catalog retries commit once",
+      "passed": true
+    },
+    {
+      "check": "Concurrent product edits yield one version conflict",
+      "passed": true
+    },
+    {
+      "check": "Mid-batch error rolls back first entity",
+      "passed": true
+    },
+    {
+      "check": "Divergent partial DDL refused without deleting data or adding other steps",
+      "passed": true
+    },
+    {
+      "check": "Catalogs/history and completed migration survive restart",
+      "passed": true
+    },
+    {
+      "check": "Pagination requires authentication",
+      "passed": true
+    },
+    {
+      "check": "HTTP pagination reads all 624 rows without duplicates",
+      "passed": true
+    },
+    {
+      "check": "HTTP validates cursor and bounds",
+      "passed": true
+    },
+    {
+      "check": "API queries normalized product-version relation",
+      "passed": true
+    },
+    {
+      "check": "Relation filter injection rejected",
+      "passed": true
+    },
+    {
+      "check": "New catalog writes still require CSRF",
+      "passed": true
+    },
+    {
+      "check": "API prevents history rewrites",
+      "passed": true
+    },
+    {
+      "check": "Dashboard contract remains local",
+      "passed": true
+    },
+    {
+      "check": "Applied migration 001/002 checksums unchanged",
+      "passed": true
+    }
+  ],
+  "tables": [
+    "accounts",
+    "auth_login_limits",
+    "auth_users",
+    "brands",
+    "bundle_items",
+    "business_audit",
+    "business_operations",
+    "business_page_cursors",
+    "business_settings",
+    "channels",
+    "currencies",
+    "customers",
+    "environments",
+    "expense_categories",
+    "expense_groups",
+    "formats",
+    "languages",
+    "payment_methods",
+    "plans",
+    "plan_prices",
+    "products",
+    "product_categories",
+    "product_channels",
+    "product_links",
+    "product_versions",
+    "product_version_channels",
+    "product_version_history",
+    "projects",
+    "project_user_stats",
+    "schema_migrations"
+  ],
+  "engine": "11.4.13-MariaDB",
+  "migration": "003_catalogs_products",
+  "sha256": "1753f16927d1e5abdf608620ead7dcdd30c7077f2d53e3fb35e5befaf006bd4c",
+  "active_dashboard_modified": false,
+  "private_backup_and_recovery_journal": true
+}

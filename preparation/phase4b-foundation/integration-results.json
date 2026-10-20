@@ -1,0 +1,102 @@
+{
+  "checks": [
+    {
+      "check": "Private destination SQL backup created before migration",
+      "passed": true
+    },
+    {
+      "check": "Missing destination backup blocks migration before DDL",
+      "passed": true
+    },
+    {
+      "check": "PDO migration execution",
+      "passed": true
+    },
+    {
+      "check": "Migration retry verifies checksum without reapplying",
+      "passed": true
+    },
+    {
+      "check": "Real service/constraint/rollback suite",
+      "passed": true
+    },
+    {
+      "check": "Eight concurrent retries create exactly one result and seven replays",
+      "passed": true
+    },
+    {
+      "check": "Two simultaneous editors produce one commit and one conflict",
+      "passed": true
+    },
+    {
+      "check": "Committed commands survive MariaDB and PHP process restart",
+      "passed": true
+    },
+    {
+      "check": "Anonymous business API requires authentication",
+      "passed": true
+    },
+    {
+      "check": "Business write rejects missing CSRF",
+      "passed": true
+    },
+    {
+      "check": "Business write enforces POST",
+      "passed": true
+    },
+    {
+      "check": "Business write enforces JSON content type",
+      "passed": true
+    },
+    {
+      "check": "Malformed JSON rejected",
+      "passed": true
+    },
+    {
+      "check": "Oversized JSON rejected",
+      "passed": true
+    },
+    {
+      "check": "Authenticated API commits command",
+      "passed": true
+    },
+    {
+      "check": "Second session reads committed record",
+      "passed": true
+    },
+    {
+      "check": "HTTP retry returns same committed result",
+      "passed": true
+    },
+    {
+      "check": "HTTP token payload conflict returns controlled 409",
+      "passed": true
+    },
+    {
+      "check": "HTTP stale/create conflict is controlled",
+      "passed": true
+    },
+    {
+      "check": "Dashboard still reports exclusively local business storage",
+      "passed": true
+    },
+    {
+      "check": "API errors never include SQL or database credentials",
+      "passed": true
+    },
+    {
+      "check": "Default-off feature gate denies even authenticated requests",
+      "passed": true
+    },
+    {
+      "check": "Actual SQL schema failure returns generic 503 without SQL details",
+      "passed": true
+    }
+  ],
+  "migration": "002_business_foundation",
+  "migration_sha256": "73edd04c142ff5819b6ca9e2ca0acfb69676b3261a8946d03f2a9155f3223f47",
+  "engine": "11.4.13-MariaDB",
+  "backup": "Private SQL dump under .runtime/mariadb (not versioned)",
+  "review_database_modified": false,
+  "dashboard_business_sql_activated": false
+}

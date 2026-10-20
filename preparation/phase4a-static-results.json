@@ -1,0 +1,12 @@
+{
+  "passed": true,
+  "counts": {
+    "views": 13,
+    "actions": 57,
+    "named_functions": 124,
+    "form_templates": 26
+  },
+  "php_lint_files": 15,
+  "javascript_syntax_files": 13,
+  "original_reference_hashes_preserved": true
+}

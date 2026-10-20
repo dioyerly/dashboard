@@ -1,0 +1,138 @@
+{
+  "checks": [
+    {
+      "check": "Administrator initialized through existing private CLI",
+      "passed": true
+    },
+    {
+      "check": "PDO schema, constraints and transaction suite",
+      "passed": true
+    },
+    {
+      "check": "Administrator survives independent PHP processes",
+      "passed": true
+    },
+    {
+      "check": "Concurrent rate limiter admits exactly five of eight attempts",
+      "passed": true
+    },
+    {
+      "check": "Connection outage returns sanitized exception",
+      "passed": true
+    },
+    {
+      "check": "Administrator survives MariaDB restart",
+      "passed": true
+    },
+    {
+      "check": "PDO reconnects after restart",
+      "passed": true
+    }
+  ],
+  "pdo": {
+    "checks": [
+      {
+        "check": "Real MariaDB connection",
+        "passed": true
+      },
+      {
+        "check": "Native prepared statements",
+        "passed": true
+      },
+      {
+        "check": "Exact authentication tables",
+        "passed": true
+      },
+      {
+        "check": "Migration checksum recorded",
+        "passed": true
+      },
+      {
+        "check": "All tables InnoDB",
+        "passed": true
+      },
+      {
+        "check": "Application cannot create tables",
+        "passed": true
+      },
+      {
+        "check": "Application cannot alter migration ledger",
+        "passed": true
+      },
+      {
+        "check": "Email unique index",
+        "passed": true
+      },
+      {
+        "check": "Rate expiry index",
+        "passed": true
+      },
+      {
+        "check": "Single admin CHECK enforced",
+        "passed": true
+      },
+      {
+        "check": "Active boolean CHECK enforced",
+        "passed": true
+      },
+      {
+        "check": "CLI administrator persisted and password verifies",
+        "passed": true
+      },
+      {
+        "check": "Second administrator rejected",
+        "passed": true
+      },
+      {
+        "check": "Prepared input cannot alter SQL",
+        "passed": true
+      },
+      {
+        "check": "Two buckets committed atomically",
+        "passed": true
+      },
+      {
+        "check": "Reached limit blocks",
+        "passed": true
+      },
+      {
+        "check": "Blocked attempt does not partially increment other bucket",
+        "passed": true
+      },
+      {
+        "check": "Expired rate window recovers",
+        "passed": true
+      },
+      {
+        "check": "Clear removes bucket",
+        "passed": true
+      },
+      {
+        "check": "Statement failure propagates",
+        "passed": true
+      },
+      {
+        "check": "Failed transaction rolled back",
+        "passed": true
+      },
+      {
+        "check": "No partial row after rollback",
+        "passed": true
+      },
+      {
+        "check": "Explicit rollback restores administrator",
+        "passed": true
+      }
+    ],
+    "tables": [
+      "auth_login_limits",
+      "auth_users",
+      "schema_migrations"
+    ]
+  },
+  "version": "11.4.13-MariaDB",
+  "bind_address": "127.0.0.1",
+  "port": 62459,
+  "migration": "001_auth.sql",
+  "remote_connections": false
+}

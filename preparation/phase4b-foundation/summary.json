@@ -1,0 +1,163 @@
+{
+  "phase": "4B revised, block 1",
+  "status": "Verified isolated relational foundation; not a complete business migration",
+  "branch": "main",
+  "migration": "002_business_foundation.sql",
+  "sha256": "73edd04c142ff5819b6ca9e2ca0acfb69676b3261a8946d03f2a9155f3223f47",
+  "engine": "11.4.13-MariaDB",
+  "tables": [
+    "environments",
+    "currencies",
+    "brands",
+    "channels",
+    "projects",
+    "customers",
+    "accounts",
+    "business_settings",
+    "business_operations",
+    "business_audit"
+  ],
+  "tests": {
+    "foundation_pdo": {
+      "checks": 31,
+      "passed": 31,
+      "failed": 0
+    },
+    "foundation_integration": {
+      "checks": 23,
+      "passed": 23,
+      "failed": 0
+    },
+    "security": {
+      "checks": 55,
+      "passed": 55,
+      "failed": 0
+    },
+    "controls": {
+      "checks": 78,
+      "passed": 78,
+      "failed": 0
+    },
+    "visual": {
+      "checks": 32,
+      "passed": 32,
+      "failed": 0
+    },
+    "resize": {
+      "checks": 2,
+      "passed": 2,
+      "failed": 0
+    },
+    "motion": {
+      "checks": 4,
+      "passed": 4,
+      "failed": 0
+    }
+  },
+  "visual_pairs": 31,
+  "pixel_identical_pairs": 30,
+  "visual_nonexact": [
+    {
+      "check": "mobile-light-pulso",
+      "different_pixels": 10,
+      "maximum_channel_delta": 2
+    }
+  ],
+  "frontend_assets_changed": false,
+  "originals_modified": false,
+  "migration_001_modified": false,
+  "business_api_default_enabled": false,
+  "business_api_enabled_on_review_server": false,
+  "review_business_tables_added": false,
+  "browser_business_data_imported_or_deleted": false,
+  "active_business_storage": "IndexedDB/localStorage unchanged",
+  "sql_applied_only_to_new_synthetic_schemas": true,
+  "private_destination_sql_backup_before_002": true,
+  "pending": {
+    "existing_full_design": "preparation/schema-design.json remains the conceptual model for all entities; unimplemented tables in that file are proposals, not created tables.",
+    "catalogs_remaining": [
+      "exchange_rates",
+      "product_categories",
+      "formats",
+      "languages",
+      "expense_groups",
+      "expense_categories",
+      "payment_methods",
+      "full business settings/alerts/hourly rate",
+      "project_user_stats"
+    ],
+    "products_remaining": [
+      "products",
+      "product_versions",
+      "product_version_channels",
+      "bundle_items",
+      "product_links"
+    ],
+    "subscriptions_remaining": [
+      "plans",
+      "plan_prices",
+      "subscriptions",
+      "subscription_events"
+    ],
+    "financial_remaining": [
+      "sales",
+      "sale_history",
+      "sale_refunds",
+      "sale_voids",
+      "expenses",
+      "expense_allocations",
+      "treasury_movements"
+    ],
+    "operations_remaining": [
+      "suppliers",
+      "resources",
+      "resource_projects",
+      "resource_price_history",
+      "calendar_events",
+      "time_logs"
+    ],
+    "integration_remaining": [
+      "integrations",
+      "integration_stats",
+      "integration_errors",
+      "integration_events",
+      "external_references",
+      "import_batches",
+      "import_rows",
+      "duplicate_reviews"
+    ],
+    "ordering": "Complete catalog and dataset-scope contracts before dependent financial tables. Then implement coherent command groups with receipts and audit: product+versions+links; sale+customer+receipt; subscription+price snapshot+sale+event+receipt; expense+allocations+payment; transfer+both account amounts; import event+dedup record+all effects.",
+    "invariants": [
+      "A receipt cannot be recreated by restoring a sale",
+      "A retry cannot duplicate any side effect",
+      "Historical subscription prices do not change when current plans change",
+      "Never total unmatched currencies as if converted",
+      "Expense allocation preserves the global total",
+      "Transfers preserve both currencies and explicit amounts",
+      "A failed integration event leaves no customer, sale or subscription partial changes"
+    ],
+    "financial_policy_pending": "Characterize original refund/void/paid-expense behavior before implementing SQL finance; do not silently change historical totals or turn commercial refunds into inferred cash movements."
+  },
+  "future_restore_wipe": {
+    "implemented": false,
+    "activation_gate": "Not available in the SQL API until all business modules, complete JSON validation and end-to-end tests are implemented. Existing browser buttons are unchanged.",
+    "scope": "A future SQL restore/wipe applies to one complete business environment shared by all sessions, never a partial browser-local subset. Authentication, credentials and other environments are excluded.",
+    "backup": "Consistent complete SQL snapshot plus manifest with schema version, environment/dataset revision, counts and checksums; exclude passwords, sessions and local PIN. This is distinct from the private synthetic pre-migration SQL dump used by this block.",
+    "preview": "Validate all collections, types, enum values, IDs, duplicate normalized keys, relationships, money, dates and unsupported fields before writes. Report differences, conflicts, missing exchange rates and historical unknowns; do not invent history or silently discard fields.",
+    "restore": "Require preview bound to backup checksum and expected dataset revision, explicit confirmation and stable operation ID. Save a private destination backup first. Stage a complete replacement dataset, verify counts/amounts/balances/references, then atomically switch the active dataset pointer. Retain the prior dataset read-only for recovery; never replay createSale to reconstruct old receipts.",
+    "wipe": "Require explicit environment confirmation and expected dataset revision, private prior backup and stable operation ID. Atomically switch to a new empty dataset for that environment, retaining the old dataset read-only. Other environments and authentication remain unchanged.",
+    "prerequisite_migration": "Dataset generations and active-dataset pointers, including generation scope in entity FKs and command receipts, must be added and tested before restore/wipe or financial activation. This first-block schema has only environment scope and cannot yet implement these operations safely.",
+    "browser": "No automatic deletion or import. Legacy backups require explicit staged migration; server preview conflicts must be resolved before activation. Existing browser data remains available until a separately reviewed complete cutover."
+  },
+  "risks": [
+    "MariaDB tested; Oracle MySQL/Hostinger not tested",
+    "Nontransactional DDL needs private backup and manual partial-schema recovery",
+    "500-record read ceiling; pagination/export pending",
+    "Environment serialization limits throughput intentionally",
+    "No legacy JSON import, financial services or SQL restore/wipe yet; equivalence not claimed for unimplemented modules"
+  ],
+  "local_url": "http://127.0.0.1:8080/login.php",
+  "hostinger_accessed": false,
+  "committed": false,
+  "pushed": false
+}

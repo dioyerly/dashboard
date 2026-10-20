@@ -1,0 +1,98 @@
+{
+  "phase": "4A",
+  "status": "Local MariaDB authentication validated; no remote connection or business-data migration",
+  "engine": "11.4.13-MariaDB",
+  "sha256": "d62986d433eeebfde218560b276103831604a61e929e87f1a17f5aebd80257e2",
+  "official_sha256_source": "https://archive.mariadb.org/mariadb-11.4.13/winx64-packages/sha256sums.txt",
+  "sha256_verified": true,
+  "bind_address": "127.0.0.1",
+  "port": 62459,
+  "migration": "database/migrations/001_auth.sql",
+  "migration_execution": "Actual PHP PDO against isolated local MariaDB schemas; checksum ledger recorded",
+  "tables": [
+    "auth_login_limits",
+    "auth_users",
+    "schema_migrations"
+  ],
+  "auth_driver": "mysql",
+  "sessions": "Private native PHP file sessions",
+  "file_driver": "Explicit alternative only, separately tested; no automatic fallback",
+  "tests": {
+    "security": {
+      "checks": 55,
+      "passed": 55,
+      "failed": 0
+    },
+    "controls": {
+      "checks": 78,
+      "passed": 78,
+      "failed": 0
+    },
+    "resize": {
+      "checks": 2,
+      "passed": 2,
+      "failed": 0
+    },
+    "visual": {
+      "checks": 32,
+      "passed": 32,
+      "failed": 0
+    },
+    "motion": {
+      "checks": 4,
+      "passed": 4,
+      "failed": 0
+    },
+    "file_security": {
+      "checks": 55,
+      "passed": 55,
+      "failed": 0
+    },
+    "pdo": {
+      "checks": 23,
+      "passed": 23,
+      "failed": 0
+    },
+    "sql_lifecycle": {
+      "checks": 7,
+      "passed": 7,
+      "failed": 0
+    },
+    "http_recovery": {
+      "checks": 9,
+      "passed": 9,
+      "failed": 0
+    }
+  },
+  "visual_pairs": 31,
+  "pixel_identical_pairs": 30,
+  "visual_nonexact": [
+    {
+      "check": "mobile-dark-pulso",
+      "different_pixels": 6,
+      "maximum_channel_delta": 1
+    }
+  ],
+  "business_storage": "IndexedDB/localStorage unchanged",
+  "runtime_files_ignored": true,
+  "unexpected_php_warnings_or_fatals": 0,
+  "new_application_javascript_errors": 0,
+  "review_url": "http://127.0.0.1:8080/login.php",
+  "test_coverage_limit": "All 57 action bindings and 26 form templates preserved statically; existing functional suite exercises principal flows, not every possible combination.",
+  "limitations": [
+    "MariaDB 11.4.13 tested; Oracle MySQL and Hostinger engine not tested",
+    "Local CLI uses --skip-ssl on loopback to avoid Windows Schannel error; no remote TLS policy changed",
+    "Security sessions remain private PHP files, not SQL tables",
+    "Old baseline HTML retains known resize error; immutable references preserved"
+  ],
+  "hostinger_pending": [
+    "Explicit remote authorization",
+    "Verify server engine/version, PHP extensions, InnoDB, CHECK constraints and privileges",
+    "Private config/storage outside public root and HTTPS cookie policy",
+    "Review migration checksum and backup before authorized DDL",
+    "Fresh production administrator via private CLI; never reuse temporary local credentials"
+  ],
+  "committed": false,
+  "pushed": false,
+  "next_phase_started": false
+}
