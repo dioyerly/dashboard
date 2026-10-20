@@ -98,7 +98,8 @@ def start():
 
 def stop():
     value = state()
-    result = subprocess.run([str(RUNTIME/'bin/mariadb-admin.exe'), '--defaults-file='+str(RUNTIME/'client.ini'),
+    client = PREP_CLIENT if PREP_CLIENT.exists() else RUNTIME/'client.ini'
+    result = subprocess.run([str(RUNTIME/'bin/mariadb-admin.exe'), '--defaults-file='+str(client),
         '--protocol=tcp', '--host=127.0.0.1', '--port='+str(value['port']), '--skip-ssl', 'shutdown'], capture_output=True, creationflags=FLAGS)
     if result.returncode: raise RuntimeError('Local MariaDB shutdown failed')
     for _ in range(100):

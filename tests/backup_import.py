@@ -51,21 +51,18 @@ def encoded(value):return json.dumps(value,ensure_ascii=False).encode('utf-8')
 
 
 def original_demo():
-    # Executes only the original data-building functions in a VM, without DOM/storage/network.
-    code=r"""
-const fs=require('node:fs'),vm=require('node:vm');
-const source=fs.readFileSync('public/assets/js/01-storage-domain.js','utf8');
-const demo=fs.readFileSync('reference/centro-operaciones-DEMO.html','utf8');
-function extract(s,n){return s.match(new RegExp('function '+n+'\\([^]*?\\n\\}'))[0];}
-const ctx=vm.createContext({});
-vm.runInContext(`let serial=0; const uid=p=>p+'_'+(++serial), round2=n=>Math.round(n*100)/100;
-const todayStr=()=> '2026-10-16', addDays=(s,n)=>{const d=new Date(s+'T12:00:00Z');d.setUTCDate(d.getUTCDate()+n);return d.toISOString().slice(0,10);};`
- +extract(source,'emptyState')+'\n'+extract(source,'seedFromDescription')+'\n'+extract(demo,'createDemoState'),ctx);
-process.stdout.write(vm.runInContext('JSON.stringify(createDemoState())',ctx));
-"""
-    p=subprocess.run(['node','-e',code],cwd=ROOT,capture_output=True)
-    if p.returncode:raise RuntimeError('Original demo fixture VM failed')
-    return p.stdout
+    # This fixture was generated from createDemoState() in the immutable demo
+    # with the local browser test harness. Production never loads it.
+    demo=ROOT/'reference/centro-operaciones-DEMO.html'
+    expected='78942e47c709628852145c70113cd8f1a2638301ffd5714cf856ee8acba07122'
+    if hashlib.sha256(demo.read_bytes()).hexdigest()!=expected:
+        raise RuntimeError('Original demo source changed; regenerate the reviewed fixture')
+    fixture=ROOT/'tests/fixtures/original-demo-v1.json'
+    raw=fixture.read_bytes()
+    if hashlib.sha256(raw).hexdigest()!='6258f8e1261e57815e32d1400bbb5a51d9a31a2a3b0e24bc11f88d83d4889d54':
+        raise RuntimeError('Original demo fixture hash mismatch')
+    json.loads(raw)
+    return raw
 
 
 def main():

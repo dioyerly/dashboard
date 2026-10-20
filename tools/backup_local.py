@@ -105,8 +105,10 @@ def prepare(profile='block3',demo_costs=False):
         if p.returncode:raise ValueError('snapshot_migration_failed')
     # A distinct temporary administrator, never copied from file auth/review or the backup.
     password=secrets.token_urlsafe(32)
+    admin_private = OUTPUT/'auth-private'/cfg['name']
+    admin_private.mkdir(parents=True, exist_ok=True)
     p=subprocess.run(db.PHP_ARGS+[str(ROOT/'tools/create_admin.php'),'--email=backup-import@ejemplo.test','--password-stdin'],
-                     input=password+'\n',text=True,env={**rootenv,'CENTRO_PRIVATE_DIR':str(OUTPUT/'auth-private')},capture_output=True,creationflags=db.FLAGS)
+                     input=password+'\n',text=True,env={**rootenv,'CENTRO_PRIVATE_DIR':str(admin_private)},capture_output=True,creationflags=db.FLAGS)
     if p.returncode:raise ValueError('synthetic_administrator_failed')
     from configuration_model import EXTRA_TABLES
     from backup_model import ACTIVITY_TABLES, SNAPSHOT_TABLES
