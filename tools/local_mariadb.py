@@ -1,5 +1,6 @@
 """Project-only MariaDB lifecycle. No services, PATH changes or remote connections."""
 import argparse
+import configparser
 import json
 import os
 from pathlib import Path
@@ -11,6 +12,7 @@ import time
 ROOT = Path(__file__).resolve().parents[1]
 RUNTIME = ROOT / '.runtime/mariadb'
 STATE = RUNTIME / 'local.json'
+PREP_CLIENT = Path(os.environ.get('CENTRO_PREP_CLIENT_INI', str(RUNTIME/'prep.ini')))
 PHP = ROOT / '.runtime/php/php.exe'
 PHP_ARGS = [str(PHP), '-n', '-d', 'extension_dir='+str(PHP.parent/'ext'), '-d', 'extension=pdo_mysql']
 FLAGS = subprocess.CREATE_NO_WINDOW if os.name == 'nt' else 0
@@ -22,9 +24,21 @@ def state():
     return value
 
 
+def prep_credentials():
+    """Read the private preparation account without exposing it to application config."""
+    if not PREP_CLIENT.exists():
+        return os.environ.get('CENTRO_PREP_DB_USER', 'root'), os.environ.get('CENTRO_PREP_DB_PASSWORD')
+    parser = configparser.ConfigParser(interpolation=None)
+    parser.read(PREP_CLIENT, encoding='utf-8')
+    section = parser['client']
+    return (os.environ.get('CENTRO_PREP_DB_USER', section.get('user', 'root')),
+            os.environ.get('CENTRO_PREP_DB_PASSWORD', section.get('password', '')))
+
+
 def sql(statement):
     value = state()
-    command = [str(RUNTIME/'bin/mariadb.exe'), '--defaults-file='+str(RUNTIME/'client.ini'),
+    client = PREP_CLIENT if PREP_CLIENT.exists() else RUNTIME/'client.ini'
+    command = [str(RUNTIME/'bin/mariadb.exe'), '--defaults-file='+str(client),
                '--protocol=tcp', '--host=127.0.0.1', '--port='+str(value['port']), '--skip-ssl', '--batch', '--skip-column-names']
     result = subprocess.run(command, input=statement, text=True, capture_output=True, creationflags=FLAGS)
     if result.returncode:
@@ -103,7 +117,9 @@ def database():
         "CREATE USER '"+user+"'@'127.0.0.1' IDENTIFIED BY '"+password+"';")
     # Migration statements are executed through actual PHP PDO, not a CLI substitute.
     env = os.environ.copy()
-    env.update(environment({'name':name,'user':'root','password':state()['root_password']}))
+    prep_user, prep_password = prep_credentials()
+    prep_password = prep_password or state()['root_password']
+    env.update(environment({'name':name,'user':prep_user,'password':prep_password}))
     code = "require 'app/Database.php'; $c=require 'config/settings.php'; $p=Centro\\Database::connection($c['db']); $s=file_get_contents('database/migrations/001_auth.sql'); foreach(explode(';',$s) as $q){if(trim(preg_replace('/--[^\\r\\n]*/','',$q))!=='')$p->exec($q);} $q=$p->prepare('INSERT INTO schema_migrations(version,checksum) VALUES (?,?)'); $q->execute(['001_auth',hash('sha256',$s)]);"
     result = subprocess.run(PHP_ARGS+['-r',code], cwd=ROOT, env=env, capture_output=True, text=True, creationflags=FLAGS)
     if result.returncode: raise RuntimeError('Local PDO migration failed')

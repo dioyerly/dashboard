@@ -62,8 +62,9 @@ def bridge(target,body):
 def dump(cfg):
     OUTPUT.mkdir(parents=True,exist_ok=True)
     path=OUTPUT/('destination-'+secrets.token_hex(12)+'.sql')
+    client = db.PREP_CLIENT if db.PREP_CLIENT.exists() else db.RUNTIME/'client.ini'
     with path.open('xb') as f:
-        p=subprocess.run([str(db.RUNTIME/'bin/mariadb-dump.exe'),'--defaults-file='+str(db.RUNTIME/'client.ini'),
+        p=subprocess.run([str(db.RUNTIME/'bin/mariadb-dump.exe'),'--defaults-file='+str(client),
             '--host=127.0.0.1','--port='+str(db.state()['port']),'--protocol=tcp','--skip-ssl','--single-transaction',cfg['name']],
             stdout=f,stderr=subprocess.PIPE,creationflags=db.FLAGS)
     if p.returncode or path.stat().st_size<100:raise ValueError('destination_backup_failed')
@@ -82,7 +83,9 @@ def prepare(profile='block3',demo_costs=False):
             'profile':profile,'normalize_known_demo_costs':bool(demo_costs)}
     path=TARGETS/(cfg['name']+'.json')
     with path.open('x',encoding='utf-8') as f:json.dump(marker,f)
-    rootenv=os.environ.copy();rootenv.update(db.environment({'name':cfg['name'],'user':'root','password':db.state()['root_password']}))
+    prep_user, prep_password = db.prep_credentials()
+    prep_password = prep_password or db.state()['root_password']
+    rootenv=os.environ.copy();rootenv.update(db.environment({'name':cfg['name'],'user':prep_user,'password':prep_password}))
     for name,extra in [('migrate_business_local.php',[]),('migrate_catalogs_local.php',[]),
                        ('migrate_catalogs_local.php',['--migration=004_project_stats_optional_origin'])]:
         backup=dump(cfg)
