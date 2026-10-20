@@ -33,7 +33,11 @@ def private_path(path):
 
 def source(path):
     resolved=Path(path).resolve()
-    if not resolved.is_relative_to(ROOT.resolve()):raise ValueError('source_must_be_inside_project')
+    # Private runtime may be a junction to an external local-only directory;
+    # permit it without allowing arbitrary paths outside the project.
+    lexical=Path(path).absolute()
+    if not (lexical.is_relative_to(ROOT.resolve()) or lexical.is_relative_to((ROOT/'.runtime').absolute())):
+        raise ValueError('source_must_be_inside_project')
     return resolved.read_bytes()
 
 
@@ -102,8 +106,8 @@ def prepare(profile='block3',demo_costs=False):
                      input=password+'\n',text=True,env={**rootenv,'CENTRO_PRIVATE_DIR':str(OUTPUT/'auth-private')},capture_output=True,creationflags=db.FLAGS)
     if p.returncode:raise ValueError('synthetic_administrator_failed')
     from configuration_model import EXTRA_TABLES
-    from backup_model import ACTIVITY_TABLES
-    for table in TABLES+(EXTRA_TABLES if profile in ('block4','block7') else [])+(ACTIVITY_TABLES if profile=='block7' else [])+['environments','business_operations','business_audit']:
+    from backup_model import ACTIVITY_TABLES, SNAPSHOT_TABLES
+    for table in TABLES+(EXTRA_TABLES if profile in ('block4','block7') else [])+(ACTIVITY_TABLES if profile=='block7' else [])+(SNAPSHOT_TABLES if profile=='block7' else [])+['environments','business_operations','business_audit']:
         db.sql(f"GRANT SELECT,INSERT ON `{cfg['name']}`.`{table}` TO '{cfg['user']}'@'127.0.0.1';")
     db.sql(f"GRANT SELECT ON `{cfg['name']}`.business_page_cursors TO '{cfg['user']}'@'127.0.0.1';")
     return path

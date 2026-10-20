@@ -76,7 +76,7 @@ final class BackupImport
         foreach($this->tables as $table){
             $ids=[];$normalized[$table]=[];
             foreach($plan['rows'][$table] as $source){
-                $id=$source['id']??'';$hasArchive=!in_array($table,['subscription_events'],true);$archived=$hasArchive?($source['archived_at']??null):null;
+                $id=$source['id']??'';$hasArchive=!in_array($table,['subscription_events','original_financial_snapshots'],true);$archived=$hasArchive?($source['archived_at']??null):null;
                 if(isset($ids[$id]))throw new BusinessError('duplicate_import_id');$ids[$id]=true;
                 unset($source['id'],$source['archived_at']);
                 $data=$this->business->validateImportRow($table,$id,$source);
