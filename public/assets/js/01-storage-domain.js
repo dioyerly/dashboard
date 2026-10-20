@@ -5,7 +5,7 @@ const DataStore = {
   DB: 'centro-operaciones', STORE: 'kv',
   get KEY() { return 'estado-' + this.env; },
   _db: null,
-  _remote: null, _remoteVersion: 0, _csrf: '',
+  _remote: null, _remoteVersion: 0, _csrf: '', _financial: null,
   async _remoteEnabled() {
     if (this._remote !== null) return this._remote;
     try {
@@ -13,6 +13,7 @@ const DataStore = {
       const data = await r.json();
       this._csrf = data.csrf || '';
       this._remote = r.ok && data.authenticated && data.business_storage === 'sql';
+      this._financial = r.ok && data.authenticated && data.financial_api_enabled === true && data.business_storage === 'sql';
     } catch (_) { this._remote = false; }
     return this._remote;
   },
@@ -22,7 +23,8 @@ const DataStore = {
       const r = await fetch('api.php?action=business_state&environment=' + encodeURIComponent(this.env), { credentials: 'same-origin', cache: 'no-store' });
       const data = await r.json();
       if (!r.ok || !data.ok) throw new Error(data.code || 'No se pudo leer MariaDB');
-      if (data.found) { this._remoteVersion = data.version; return data.state; }
+      if (data.found) { this._remoteVersion = data.version; const s=data.state; if(this._financial){try{const fr=await fetch('api.php?action=financial_state&environment='+encodeURIComponent(this.env),{credentials:'same-origin',cache:'no-store'});const fd=await fr.json();if(fr.ok&&fd.ok){s.sales=fd.sales||[];s.expenses=fd.expenses||[];s.treasury=fd.treasury||[];}}catch(_){}} return s; }
+      if (this._financial) { try { const fr=await fetch('api.php?action=financial_state&environment='+encodeURIComponent(this.env),{credentials:'same-origin',cache:'no-store'}); const fd=await fr.json(); if(fr.ok&&fd.ok&&(fd.sales?.length||fd.expenses?.length||fd.treasury?.length)){ const s=emptyState(); s.sales=fd.sales||[]; s.expenses=fd.expenses||[]; s.treasury=fd.treasury||[]; return s; } } catch (_) {} }
     }
     try { const db = this._db || (this._db = await this._open()); const v = await new Promise((res, rej) => { const q = db.transaction(this.STORE, 'readonly').objectStore(this.STORE).get(this.KEY); q.onsuccess = () => res(q.result || null); q.onerror = () => rej(q.error); }); if (v) return v; } catch (e) { console.warn(e); }
     try { const s = localStorage.getItem('co-' + this.KEY); return s ? JSON.parse(s) : null; } catch (e) { return null; }
@@ -30,7 +32,8 @@ const DataStore = {
   async save(data) {
     if (await this._remoteEnabled()) {
       if (!this._csrf) { const s = await fetch('api.php?action=session', { credentials: 'same-origin', cache: 'no-store' }); const d = await s.json(); this._csrf = d.csrf || ''; }
-      const body = { environment: this.env, operation_id: 'state_' + uid('op'), expected_version: this._remoteVersion, state: data };
+      const persisted = this._financial ? { ...data, sales: [], expenses: [], treasury: [] } : data;
+      const body = { environment: this.env, operation_id: 'state_' + uid('op'), expected_version: this._remoteVersion, state: persisted };
       const r = await fetch('api.php?action=business_state', { method: 'POST', credentials: 'same-origin', cache: 'no-store', headers: { 'Content-Type': 'application/json', 'X-CSRF-Token': this._csrf }, body: JSON.stringify(body) });
       const result = await r.json();
       if (!r.ok || !result.ok) { const e = new Error(result.code || 'No se pudo guardar en MariaDB'); e.userMsg = result.code === 'version_conflict' ? 'Los datos cambiaron en otra sesión. Recargá antes de guardar.' : 'No se pudo guardar en MariaDB.'; throw e; }
@@ -41,6 +44,9 @@ const DataStore = {
     catch (e) { localStorage.setItem('co-' + this.KEY, JSON.stringify(data)); return true; }
   }
 };
+async function financialEnabled(){await DataStore._remoteEnabled();return DataStore._financial===true;}
+async function financialCommand(command){if(!(await financialEnabled()))return null;if(!DataStore._csrf)await DataStore._remoteEnabled();const body={environment:DataStore.env,operation_id:'fin_'+uid('op'),command};const r=await fetch('api.php?action=financial_command',{method:'POST',credentials:'same-origin',cache:'no-store',headers:{'Content-Type':'application/json','X-CSRF-Token':DataStore._csrf},body:JSON.stringify(body)});let d={};try{d=await r.json();}catch(_){}if(!r.ok||!d.ok){const e=new Error(d.code||'financial_command_failed');e.userMsg='No se pudo registrar la operación financiera.';throw e;}return d.result;}
+async function transactFinancial(desc,command,applyLocal){const result=await financialCommand(command);if(result===null)return null;if(typeof applyLocal==='function')applyLocal(state,result);return result;}
 
 /* =====================================================================
    ESTADO

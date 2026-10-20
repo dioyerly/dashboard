@@ -26,10 +26,17 @@ try {
         require_once dirname(__DIR__).'/app/FinancialService.php';
         try{$u=$auth->current();$s=new Centro\FinancialService(Centro\Database::connection($config['db']));respond(200,['ok'=>true,...$s->execute($body['environment'],$body['operation_id'],(int)$u['id'],$body['command'])]);}catch(Centro\BusinessError $e){respond($e->status,['ok'=>false,'code'=>$e->reason]);}
     }
+    if ($action === 'financial_state' && $method === 'GET') {
+        if (!$config['financial_api_enabled'] || $config['environment'] !== 'local' || $config['db']['host'] !== '127.0.0.1' || $config['auth_driver'] !== 'mysql') respond(404,['ok'=>false,'code'=>'not_found']);
+        if (!$auth->current()) respond(401,['ok'=>false,'code'=>'session_expired']);
+        require_once dirname(__DIR__).'/app/FinancialState.php'; $env=$_GET['environment']??'';
+        if (!is_string($env)||!preg_match('/\A[A-Za-z0-9_-]{1,64}\z/D',$env)) respond(400,['ok'=>false,'code'=>'invalid_environment']);
+        respond(200,['ok'=>true,...(new Centro\FinancialState(Centro\Database::connection($config['db'])))->snapshot($env)]);
+    }
     if ($action === 'session' && $method === 'GET') {
         $user = $auth->current();
         respond(200, ['ok' => true, 'authenticated' => $user !== null, 'csrf' => Centro\Security::csrf(), 'user' => $user,
-            'setup_required' => !$auth->configured(), 'business_storage' => ($config['business_api_enabled'] && $config['business_storage']==='sql' ? 'sql' : 'local'), 'mysql_sync' => ($config['business_api_enabled'] && $config['business_storage']==='sql')]);
+            'setup_required' => !$auth->configured(), 'business_storage' => ($config['business_api_enabled'] && $config['business_storage']==='sql' ? 'sql' : 'local'), 'mysql_sync' => ($config['business_api_enabled'] && $config['business_storage']==='sql'), 'financial_api_enabled' => $config['financial_api_enabled']]);
     }
     if (!in_array($action, ['login', 'logout', 'touch'], true)) {
         if (!$auth->current()) respond(401, ['ok' => false, 'code' => 'session_expired']);

@@ -1,0 +1,16 @@
+<?php
+declare(strict_types=1);
+namespace Centro;
+final class FinancialState
+{
+    public function __construct(private readonly \PDO $pdo) {}
+    private function q(string $sql,array $args=[]):array{$s=$this->pdo->prepare($sql);$s->execute($args);return $s->fetchAll(\PDO::FETCH_ASSOC);}
+    public function snapshot(string $environment):array{
+        $sales=[];$lines=$this->q('SELECT sale_id,product_id,version_id,description,quantity,unit_price,line_total FROM fin_sale_lines WHERE environment_id=? ORDER BY sale_id,line_no',[$environment]);$by=[];foreach($lines as $l)$by[$l['sale_id']][]=$l;
+        $rows=$this->q('SELECT s.*,COALESCE(a.collected,0) collected,COALESCE(r.refunded,0) refunded FROM fin_sales s LEFT JOIN (SELECT sale_id,SUM(amount) collected FROM fin_sale_allocations WHERE environment_id=? GROUP BY sale_id) a ON a.sale_id=s.id LEFT JOIN (SELECT sale_id,SUM(amount) refunded FROM fin_sale_revisions WHERE environment_id=? AND kind="refund_commercial" GROUP BY sale_id) r ON r.sale_id=s.id WHERE s.environment_id=? ORDER BY s.issued_on,s.created_at',[$environment,$environment,$environment]);
+        foreach($rows as $s){$ls=$by[$s['id']]??[];$qty=$ls?array_sum(array_map(static fn($x)=>(float)$x['quantity'],$ls)):1;$unit=$ls?(float)$ls[0]['unit_price']:(float)$s['total'];$line=$ls[0]??[];$sales[]=['id'=>$s['id'],'createdAt'=>$s['created_at'],'type'=>'unica','date'=>$s['issued_on'],'productId'=>$line['product_id']??'','versionId'=>$line['version_id']??'','projectId'=>'','planId'=>'','subId'=>'','brandId'=>'','channelId'=>'','country'=>'','customerId'=>$s['customer_id']??'','concept'=>$line['description']??'','currency'=>$s['currency_id'],'qty'=>$qty,'unitPrice'=>$unit,'discount'=>0,'coupon'=>'','refunded'=>(float)$s['refunded'],'commission'=>0,'tax'=>0,'payStatus'=>bccomp((string)$s['collected'],(string)$s['total'],2)>=0?'cobrado':'pendiente','delivery'=>'no_aplica','status'=>$s['status'],'origin'=>'sql','source'=>'','externalId'=>'','notes'=>'','history'=>[]];}
+        $expenses=[];foreach($this->q('SELECT e.* FROM fin_expenses e WHERE e.environment_id=? ORDER BY e.incurred_on,e.created_at',[$environment]) as $e)$expenses[]=['id'=>$e['id'],'createdAt'=>$e['created_at'],'concept'=>'Gasto','supplierId'=>$e['supplier_id']??'','category'=>'','amount'=>(float)$e['total'],'currency'=>$e['currency_id'],'date'=>$e['incurred_on'],'dueDate'=>'','frequency'=>'unico','status'=>$e['status'],'payDate'=>'','accountId'=>'','payMethod'=>'','nature'=>'gasto','costType'=>'general','resourceId'=>'','alloc'=>['mode'=>'general','targets'=>[]],'receipt'=>'','origin'=>'sql','notes'=>''];
+        $treasury=[];foreach($this->q('SELECT m.* FROM fin_movements m WHERE m.environment_id=? ORDER BY m.movement_on,m.created_at',[$environment]) as $m)$treasury[]=['id'=>$m['id'],'date'=>$m['movement_on'],'type'=>$m['kind']==='receipt'?'cobro':($m['kind']==='payment'?'pago':($m['kind']==='refund'?'reembolso':$m['kind'])),'accountFrom'=>$m['direction']==='out'?$m['account_id']:'','accountTo'=>$m['direction']==='in'?$m['account_id']:'','amount'=>(float)$m['amount'],'currency'=>$m['currency_id'],'saleId'=>$m['sale_id']??'','expenseId'=>$m['expense_id']??'','note'=>''];
+        return ['sales'=>$sales,'expenses'=>$expenses,'treasury'=>$treasury];
+    }
+}

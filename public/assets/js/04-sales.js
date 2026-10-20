@@ -156,7 +156,15 @@ function saleForm(pre) {
     markInvalid(f, bad); if (bad.length) { $('#slErr', m.el).textContent = c.liquid < 0 ? 'Las comisiones e impuestos superan el neto.' : 'Revisá los campos marcados (un ingreso necesita producto, app o concepto).'; return; }
     if (d.externalId && state.sales.some(s => s.externalId && norm(s.externalId) === norm(d.externalId) && s.status !== 'anulada')) { $('#slErr', m.el).textContent = 'Ya existe una venta con ese ID externo: no se duplica.'; markInvalid(f, ['externalId']); return; }
     sb.disabled = true;
-    try { const id = await transact('venta', st => createSale(st, { ...d, customerId: nc ? '' : d.customerId }, nc)); toast('Venta registrada'); m.close(); render(); } catch (e) { sb.disabled = false; }
+    try {
+      const saleId = uid('sl'), amount = round2(c.net).toFixed(2);
+      const canSql = await financialEnabled() && c.net > 0 && !nc && !d.discount && !d.commission && !d.tax && !d.refunded && d.accountId && d.productId && d.qty > 0;
+      if (canSql) {
+        const command = { kind:'sale_register', sale_id:saleId, customer_id:d.customerId || null, currency:d.currency, amount, date:d.date, settle_now:d.payStatus==='cobrado', account_id:d.accountId || undefined, lines:[{product_id:d.productId, version_id:d.versionId || null, description:d.concept || '', quantity:String(d.qty), unit_price:round2(d.unitPrice).toFixed(2), line_total:amount}] };
+        await transactFinancial('venta', command, (st) => createSale(st, { ...d, customerId: d.customerId, discount: 0, commission: 0, tax: 0, refunded: 0, payStatus: d.payStatus, _id:saleId }, null));
+      } else await transact('venta', st => createSale(st, { ...d, customerId: nc ? '' : d.customerId }, nc));
+      toast('Venta registrada'); m.close(); render();
+    } catch (e) { sb.disabled = false; }
   };
 }
 /* crea una venta (usada por formulario, suscripciones e importaciones) */
@@ -164,7 +172,7 @@ function createSale(st, d, newCust) {
   let customerId = d.customerId || '';
   if (newCust && newCust.name) { const ex = newCust.email && st.customers.find(c => c.email && norm(c.email) === norm(newCust.email)); if (ex) customerId = ex.id; else { const c = { id: uid('cu'), name: newCust.name, email: newCust.email || '', country: d.country || '', createdAt: d.date, notes: '', origin: d.origin || 'manual' }; st.customers.push(c); customerId = c.id; } }
   const p = st.products.find(x => x.id === d.productId), pj = st.projects.find(x => x.id === (d.projectId || p?.projectId));
-  const s = { id: uid('sl'), createdAt: new Date().toISOString(), type: d.type || 'unica', date: d.date, productId: d.productId || '', versionId: d.versionId || '', projectId: d.projectId || p?.projectId || '', planId: d.planId || '', subId: d.subId || '', brandId: d.brandId || p?.brandId || pj?.brandId || '', channelId: d.channelId || '', country: d.country || '', customerId, concept: d.concept || '',
+  const s = { id: d._id || uid('sl'), createdAt: new Date().toISOString(), type: d.type || 'unica', date: d.date, productId: d.productId || '', versionId: d.versionId || '', projectId: d.projectId || p?.projectId || '', planId: d.planId || '', subId: d.subId || '', brandId: d.brandId || p?.brandId || pj?.brandId || '', channelId: d.channelId || '', country: d.country || '', customerId, concept: d.concept || '',
     currency: d.currency, qty: Math.floor(num(d.qty) || 1), unitPrice: round2(num(d.unitPrice)), discount: round2(num(d.discount) || 0), coupon: d.coupon || '', refunded: round2(num(d.refunded) || 0), commission: round2(num(d.commission) || 0), tax: round2(num(d.tax) || 0),
     payStatus: d.payStatus || 'pendiente', delivery: d.delivery || 'no_aplica', status: 'valida', origin: d.origin || 'manual', source: d.source || '', externalId: d.externalId || '', notes: d.notes || '', history: [{ at: new Date().toISOString(), text: 'Registrada' + (d.origin && d.origin !== 'manual' ? ' (' + d.origin + ')' : '') }] };
   st.sales.push(s);
@@ -189,18 +197,18 @@ function openSale(id) {
   d.el.querySelector('[data-collect]')?.addEventListener('click', async () => {
     const res = await confirmDialog({ title: 'Registrar cobro', message: `Neto liquidado: <b>${money(c.liquid, s.currency)}</b>`, ok: 'Registrar', extra: `<div class="form-grid" style="margin-top:10px">${field('Fecha', `<input class="input" type="date" name="date" value="${todayStr()}" max="${todayStr()}">`)}${field('Cuenta', `<select class="input" name="acc">${opts(state.settings.accounts.map(a => ({ id: a.id, label: a.name + ' (' + a.currency + ')' })), '', 'Sin cuenta')}</select>`)}${field('Importe recibido (' + s.currency + ')', `<input class="input" type="number" step="any" name="amt" value="${c.liquid}">`, 'full')}</div>` });
     if (!res) return; const amt = num(res.amt); if (amt == null || amt < 0) { toast('Importe inválido', 'bad'); return; }
-    upd((S2, st) => { S2.payStatus = 'cobrado'; S2.history.push({ at: new Date().toISOString(), text: 'Cobrada ' + money(amt, s.currency) }); st.treasury.push({ id: uid('tr'), date: res.date, type: 'cobro', accountTo: res.acc, amount: round2(amt), currency: s.currency, saleId: id }); logAct(st, 'Cobro', saleTitle(s)); }, 'Cobro registrado');
+    try { if (await financialEnabled()) { await transactFinancial('cobro',{kind:'sale_collect',sale_id:id,amount:round2(amt).toFixed(2),date:res.date,account_id:res.acc,movement_id:uid('mv')},(st)=>{const S2=st.sales.find(x=>x.id===id);if(S2){S2.payStatus='cobrado';S2.history.push({at:new Date().toISOString(),text:'Cobrada '+money(amt,s.currency)});st.treasury.push({id:uid('tr'),date:res.date,type:'cobro',accountTo:res.acc,amount:round2(amt),currency:s.currency,saleId:id});}}); toast('Cobro registrado'); openSale(id); rerender(); } else await upd((S2,st)=>{S2.payStatus='cobrado';S2.history.push({at:new Date().toISOString(),text:'Cobrada '+money(amt,s.currency)});st.treasury.push({id:uid('tr'),date:res.date,type:'cobro',accountTo:res.acc,amount:round2(amt),currency:s.currency,saleId:id});logAct(st,'Cobro',saleTitle(s));},'Cobro registrado'); } catch(e) { }
   });
   d.el.querySelector('[data-refund]')?.addEventListener('click', async () => {
     const maxR = round2(c.gross - c.discount);
     const res = await confirmDialog({ title: 'Registrar reembolso', message: `Reembolsado hasta ahora: ${money(c.refunded, s.currency)}. Máximo: ${money(maxR, s.currency)}.`, ok: 'Registrar', extra: `<div class="form-grid" style="margin-top:10px">${field('Monto total reembolsado', `<input class="input" type="number" min="0" step="any" name="amt" value="${maxR}">`)}${field('Motivo', '<input class="input" name="why">')}</div>` });
     if (!res) return; const amt = num(res.amt); if (amt == null || amt < 0 || amt > maxR) { toast('Monto inválido', 'bad'); return; }
-    upd((S2, st) => { S2.refunded = round2(amt); S2.history.push({ at: new Date().toISOString(), text: `Reembolso total ${money(amt, s.currency)}${res.why ? ' · ' + res.why : ''}` }); logAct(st, 'Reembolso', saleTitle(s) + ' ' + money(amt, s.currency)); }, 'Reembolso registrado');
+    try { if (await financialEnabled()) { await transactFinancial('reembolso',{kind:'sale_refund_commercial',sale_id:id,amount:round2(amt).toFixed(2),expected_version:1},(st)=>{const S2=st.sales.find(x=>x.id===id);if(S2){S2.refunded=round2(amt);S2.history.push({at:new Date().toISOString(),text:`Reembolso total ${money(amt,s.currency)}`});}}); toast('Reembolso registrado'); openSale(id); rerender(); } else await upd((S2,st)=>{S2.refunded=round2(amt);S2.history.push({at:new Date().toISOString(),text:`Reembolso total ${money(amt,s.currency)}${res.why?' · '+res.why:''}`});logAct(st,'Reembolso',saleTitle(s)+' '+money(amt,s.currency));},'Reembolso registrado'); } catch(e) { }
   });
   d.el.querySelector('[data-void]')?.addEventListener('click', async () => {
     const res = await confirmDialog({ title: 'Anular venta', message: 'La venta deja de sumar en todos los indicadores (queda en el historial). Usalo para errores de carga o duplicados; para devoluciones usá “Reembolso”.' + (cobros.length ? '<br><b>Tiene cobros registrados: revisalos en Finanzas.</b>' : ''), ok: 'Anular', tone: 'danger', extra: field('Motivo *', '<input class="input" name="why">') });
     if (!res) return; if (!res.why.trim()) { toast('Indicá el motivo', 'bad'); return; }
-    upd((S2, st) => { S2.status = 'anulada'; S2.history.push({ at: new Date().toISOString(), text: 'Anulada: ' + res.why }); logAct(st, 'Venta anulada', saleTitle(s) + ' · ' + res.why); }, 'Venta anulada');
+    try { if (await financialEnabled()) { await transactFinancial('anular',{kind:'sale_void',sale_id:id,expected_version:1},(st)=>{const S2=st.sales.find(x=>x.id===id);if(S2)S2.status='anulada';}); toast('Venta anulada'); openSale(id); rerender(); } else await upd((S2,st)=>{S2.status='anulada';S2.history.push({at:new Date().toISOString(),text:'Anulada: '+res.why});logAct(st,'Venta anulada',saleTitle(s)+' · '+res.why);},'Venta anulada'); } catch(e) { }
   });
 }
 /* =====================================================================
