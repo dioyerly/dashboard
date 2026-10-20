@@ -26,6 +26,7 @@ final class Business
         'integrations'=>['name','kind','method','status','project_id','last_sync','errors_json','notes','source_stats','source_stats_present'],
         'suppliers'=>['name','kind','url','contact','tax_id','notes'],
         'original_financial_snapshots'=>['collection','ordinal','source_path','payload','content_hash','import_status','normalized_json'],
+        'original_activity_snapshots'=>['collection','ordinal','source_path','payload','content_hash','import_status'],
     ];
     private const REFS = [
         'projects'=>['brand_id'=>'brands','investment_currency'=>'currencies'],
