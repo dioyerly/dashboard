@@ -5,7 +5,7 @@ const DataStore = {
   DB: 'centro-operaciones', STORE: 'kv',
   get KEY() { return 'estado-' + this.env; },
   _db: null,
-  _remote: null, _remoteVersion: 0, _csrf: '', _financial: null,
+  _remote: null, _remoteVersion: 0, _csrf: '', _financial: null, _operational: false,
   async _remoteEnabled() {
     if (this._remote !== null) return this._remote;
     try {
@@ -34,7 +34,7 @@ const DataStore = {
   async save(data) {
     if (await this._remoteEnabled()) {
       if (!this._csrf) { const s = await fetch('api.php?action=session', { credentials: 'same-origin', cache: 'no-store' }); const d = await s.json(); this._csrf = d.csrf || ''; }
-      const persisted = this._financial ? { ...data, sales: [], expenses: [], treasury: [], subs: [] } : data;
+      const persisted = this._financial ? { ...data, sales: [], expenses: [], treasury: [], ...(this._operational ? {subs: []} : {}) } : data;
       const body = { environment: this.env, operation_id: 'state_' + uid('op'), expected_version: this._remoteVersion, state: persisted };
       const r = await fetch('api.php?action=business_state', { method: 'POST', credentials: 'same-origin', cache: 'no-store', headers: { 'Content-Type': 'application/json', 'X-CSRF-Token': this._csrf }, body: JSON.stringify(body) });
       const result = await r.json();
@@ -50,8 +50,11 @@ async function financialEnabled(){await DataStore._remoteEnabled();return DataSt
 async function refreshFinancial(target = state) {
   const r = await fetch('api.php?action=financial_state&environment='+encodeURIComponent(DataStore.env), {credentials:'same-origin',cache:'no-store'});
   const d = await r.json(); if (!r.ok || !d.ok) throw UErr('No se pudo recuperar el estado financiero. Recarg? antes de operar.');
-  for (const key of ['sales','expenses','treasury','subs']) target[key] = d[key] || [];
+  DataStore._operational=d.operationalReady===true;
+  for (const key of ['sales','expenses','treasury']) target[key] = d[key] || [];
+  if(DataStore._operational)target.subs=d.subs||[];
   target._sqlPrices=d.planPrices || [];
+  if(d.subscriptionCustomers){const customers=new Map((target.customers||[]).map(x=>[x.id,x]));for(const customer of d.subscriptionCustomers)if(!customers.has(customer.id))customers.set(customer.id,customer);target.customers=[...customers.values()];}
 }
 async function financialCommand(command) {
   if (!(await financialEnabled())) return null;
@@ -64,7 +67,7 @@ async function financialCommand(command) {
   catch (_) { throw UErr('Respuesta pendiente. Volv? a intentar para recuperar la misma operaci?n sin duplicarla.'); }
   if (!r.ok || !d.ok) {
     if (r.status<500 && ![401,403].includes(r.status)) sessionStorage.removeItem(key);
-    throw UErr((d.code==='version_conflict'?'Los datos cambiaron. Recarg? antes de operar.':'Operaci?n no registrada: '+(d.code||'error')));
+    throw UErr((d.code==='operational_migration_required'?'Esta operaci\u00f3n requiere la migraci\u00f3n 017. No se modificaron los datos.':d.code==='version_conflict'?'Los datos cambiaron. Recarg? antes de operar.':'Operaci?n no registrada: '+(d.code||'error')));
   }
   await refreshFinancial();
   sessionStorage.removeItem(key);
@@ -88,24 +91,60 @@ function sqlPrice(planId,date) {
 async function routeFinancialDraft(before,after) {
   const changed=key=>JSON.stringify(before[key])!==JSON.stringify(after[key]);
   if(changed('subs')) {
+    if(!DataStore._operational)throw UErr('Esta operaci\u00f3n requiere la migraci\u00f3n 017; las suscripciones existentes se conservan.');
     const subs=after.subs.filter(s=>JSON.stringify(s)!==JSON.stringify(before.subs.find(x=>x.id===s.id)));
     if(subs.length!==1 || after.subs.length<before.subs.length)throw UErr('La eliminaci?n de suscripciones no tiene equivalencia SQL segura.');
     const sub=subs[0],old=before.subs.find(x=>x.id===sub.id),events=sub.events.filter(e=>!old?.events.some(x=>x.id===e.id));
-    if(events.length!==1 || JSON.stringify(before.customers)!==JSON.stringify(after.customers))throw UErr('Cre? primero el cliente en el cat?logo SQL.');
-    const event=events[0],date=event.date,price=sqlPrice(sub.planId,date);
+    if(events.length!==1)throw UErr('Solo se permite un evento de suscripci\u00f3n por operaci\u00f3n.');
+    const newCustomer=after.customers.find(c=>c.id===sub.customerId&&!before.customers.some(x=>x.id===c.id));
+    if(JSON.stringify(before.customers)!==JSON.stringify(after.customers) && (old||!newCustomer||after.customers.length!==before.customers.length+1||JSON.stringify(after.customers.filter(c=>c.id!==newCustomer.id))!==JSON.stringify(before.customers)))throw UErr('El cambio de clientes debe registrarse por separado.');
+    const event=events[0],date=event.date;
     const sale=after.sales.find(x=>x.id===event.saleId);
+    const price=(!old||sale||event.type==='cambio_plan')?sqlPrice(sub.planId,date):null;
     if(sale && (sale.commission||sale.tax||sale.discount||sale.refunded||sale.unitPrice<=0))throw UErr('Comisiones, impuestos e importes cero requieren una equivalencia contable revisada; operaci?n bloqueada en SQL.');
     const cash=after.treasury.find(t=>t.saleId===event.saleId);
-    const command={kind:!old?'subscription_register':sale?'subscription_renew':'subscription_status',subscription_id:sub.id,expected_version:old?old._sqlVersion:0,plan_id:sub.planId,customer_id:sub.customerId,date,event:event.type,trial:event.type==='prueba',price_snapshot_id:price.id,note:event.note||''};
+    const command={kind:!old?'subscription_register':sale?'subscription_renew':'subscription_status',subscription_id:sub.id,expected_version:old?old._sqlVersion:0,plan_id:sub.planId,customer_id:sub.customerId,date,event:event.type,trial:event.type==='prueba',price_snapshot_id:price?.id,note:event.note||''};
+    if(newCustomer)command.customer=newCustomer;
     if(sale)Object.assign(command,{sale_id:sale.id,amount:round2(sale.unitPrice).toFixed(2),currency:sale.currency,settle_now:sale.payStatus==='cobrado',confirmed:sale.payStatus==='cobrado',account_id:cash?.accountTo||undefined});
     await financialCommand(command);copyFinancial(after);return true;
   }
+  if(changed('sales')&&!changed('subs')&&!changed('expenses')){
+    const added=after.sales.filter(x=>!before.sales.some(y=>y.id===x.id));
+    if(added.length===1&&after.sales.length===before.sales.length+1&&JSON.stringify(after.sales.filter(x=>x.id!==added[0].id))===JSON.stringify(before.sales)){
+      const x=added[0],cash=after.treasury.filter(t=>!before.treasury.some(y=>y.id===t.id));
+      if(x.discount||x.refunded||x.commission||x.tax||!Number.isInteger(x.qty)||x.qty<1||x.unitPrice<=0)throw UErr('Descuentos, reembolsos y comisiones requieren una equivalencia contable revisada.');
+      if((x.payStatus==='cobrado'&&(cash.length!==1||cash[0].saleId!==x.id||!cash[0].accountTo))||(x.payStatus!=='cobrado'&&cash.length))throw UErr('Indic\u00e1 una cuenta para registrar el cobro sin duplicarlo.');
+      const customer=after.customers.find(c=>c.id===x.customerId&&!before.customers.some(y=>y.id===c.id));
+      if(JSON.stringify(after.customers)!==JSON.stringify(before.customers)&&(!customer||after.customers.length!==before.customers.length+1||JSON.stringify(after.customers.filter(c=>c.id!==customer.id))!==JSON.stringify(before.customers)))throw UErr('El cambio de clientes debe registrarse por separado.');
+      await financialCommand({kind:'sale_register',sale_id:x.id,customer_id:x.customerId||null,customer,amount:round2(x.qty*x.unitPrice).toFixed(2),currency:x.currency,date:x.date,settle_now:x.payStatus==='cobrado',confirmed:x.payStatus==='cobrado',account_id:cash[0]?.accountTo,payment_date:cash[0]?.date,lines:[{product_id:x.productId||null,version_id:x.versionId||null,description:x.concept||'',quantity:String(x.qty),unit_price:round2(x.unitPrice).toFixed(2),line_total:round2(x.qty*x.unitPrice).toFixed(2)}],record:x});copyFinancial(after);return true;
+    }
+  }
+  if(changed('sales') && !changed('subs') && !changed('expenses') && !changed('treasury')) {
+    const edited=after.sales.filter(x=>JSON.stringify(x)!==JSON.stringify(before.sales.find(y=>y.id===x.id)));
+    const fields=['type','projectId','planId','subId','brandId','channelId','country','concept','coupon','delivery','origin','source','externalId','notes'];
+    if(edited.length===1&&after.sales.length===before.sales.length){
+      const x=edited[0],old=before.sales.find(y=>y.id===x.id);
+      const protectedFields=['id','date','currency','customerId','productId','versionId','qty','unitPrice','discount','refunded','commission','tax','payStatus','status'];
+      if(old?._sqlVersion&&protectedFields.every(k=>JSON.stringify(x[k])===JSON.stringify(old[k]))){
+        const record=Object.fromEntries(fields.filter(k=>k in x).map(k=>[k,x[k]]));
+        await financialCommand({kind:'sale_edit',sale_id:x.id,expected_version:old._sqlVersion,record});copyFinancial(after);return true;
+      }
+      if(old?._sqlVersion && x.currency===old.currency && x.date===old.date && x.payStatus===old.payStatus && x.status===old.status && !x.discount && !x.refunded && !x.commission && !x.tax && !(old._sqlLines?.length>1) && Number.isInteger(x.qty) && x.qty>0){
+        const record=Object.fromEntries(fields.filter(k=>k in x).map(k=>[k,x[k]]));
+        await financialCommand({kind:'sale_edit',sale_id:x.id,expected_version:old._sqlVersion,amount:round2(x.qty*x.unitPrice).toFixed(2),customer_id:x.customerId||null,lines:[{product_id:x.productId||null,version_id:x.versionId||null,description:x.concept||'',quantity:String(x.qty),unit_price:round2(x.unitPrice).toFixed(2),line_total:round2(x.qty*x.unitPrice).toFixed(2)}],record});copyFinancial(after);return true;
+      }
+    }
+  }
   if(changed('expenses') && !changed('sales')) {
     const edited=after.expenses.filter(x=>JSON.stringify(x)!==JSON.stringify(before.expenses.find(y=>y.id===x.id)));
+    if(edited.length===1 && after.expenses.length===before.expenses.length+1 && !changed('treasury')){
+      const x=edited[0];if(x.status!=='pendiente')throw UErr('Registr\u00e1 el pago desde el gasto para conservar su movimiento.');
+      await financialCommand({kind:'expense_register',expense_id:x.id,amount:round2(x.amount).toFixed(2),currency:x.currency,date:x.date,supplier_id:x.supplierId||null,record:x});copyFinancial(after);return true;
+    }
     if(edited.length===1 && after.expenses.length===before.expenses.length){
       const x=edited[0],old=before.expenses.find(y=>y.id===x.id);
-      if(!old?._sqlVersion || x.currency!==old.currency || x.status!==old.status || x.supplierId!==old.supplierId || x.date!==old.date || changed('treasury'))throw UErr('Este cambio altera pagos, moneda, fecha o proveedor: requiere revisi?n contable; bloqueado en SQL.');
-      await financialCommand({kind:'expense_edit',expense_id:x.id,amount:round2(x.amount).toFixed(2),expected_version:old._sqlVersion,record:x});copyFinancial(after);return true;
+      if(!old?._sqlVersion || x.status!==old.status || changed('treasury'))throw UErr('Este cambio alterar\u00eda pagos existentes; registr\u00e1 el pago o su reversi\u00f3n por separado.');
+      await financialCommand({kind:'expense_edit',expense_id:x.id,amount:round2(x.amount).toFixed(2),currency:x.currency,date:x.date,supplier_id:x.supplierId||null,expected_version:old._sqlVersion,record:x});copyFinancial(after);return true;
     }
   }
   if(changed('treasury') && !changed('sales') && !changed('expenses')) {
