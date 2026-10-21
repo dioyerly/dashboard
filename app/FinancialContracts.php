@@ -9,6 +9,9 @@ namespace Centro;
 final class FinancialContracts
 {
     public const OPERATIONS=[
+        'capital_contribution'=>['cash_inflow'],
+        'withdrawal'=>['cash_outflow'],
+        'treasury_adjustment'=>['cash_inflow'],
         'sale_register'=>['sale','sale_history'],
         'sale_edit'=>['sale_revision','sale_history'],
         'sale_refund_commercial'=>['commercial_refund_revision','sale_history'],
@@ -39,7 +42,7 @@ final class FinancialContracts
         if(in_array($kind,['sale_edit','sale_collect','sale_refund_commercial','sale_void'],true) && $state!=='valida')throw new \InvalidArgumentException('sale_state_conflict');
         if($kind==='sale_collect' && ($context['pay_status']??null)==='cobrado')throw new \InvalidArgumentException('already_collected');
         if($kind==='expense_pay' && !in_array($state,['pendiente','vencido'],true))throw new \InvalidArgumentException('expense_state_conflict');
-        $effects=self::OPERATIONS[$kind];$cash=in_array($kind,['sale_collect','cash_refund','expense_pay','cash_compensate','transfer'],true);
+        $effects=self::OPERATIONS[$kind];$cash=in_array($kind,['sale_collect','cash_refund','expense_pay','cash_compensate','transfer','capital_contribution','withdrawal','treasury_adjustment'],true);
         if(in_array($kind,['sale_register','expense_register','subscription_register','subscription_renew'],true) && ($command['settle_now']??false)){
             $cash=true;$effects=[...$effects,'explicit_cash_movement','cash_entity_link'];
             if($kind==='subscription_register')$effects=[...$effects,'sale'];

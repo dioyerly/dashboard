@@ -26,6 +26,7 @@ vm.runInContext(utilities + '\n' + declaration(domain, 'emptyState') + '\n' +
   function saleTitle(sale) { return sale.concept || 'Synthetic sale'; }
   function logAct(st, action, detail) { st.log.push({action, detail}); }
   const DataStore = {async save() { return true; }};
+  async function financialEnabled() { return false; } // Exercise the unchanged local branch.
   const sale = {date:'2026-10-16', currency:'ARS', qty:2, unitPrice:100,
     discount:20, refunded:30, commission:10, tax:5, payStatus:'cobrado'};
   const customer = {name:'Synthetic contract', email:'contract@ejemplo.test'};
@@ -63,7 +64,8 @@ async function check(name, expression, kind = 'existing_behavior') {
     return state.sales.length===0 && modeledLocalFinance.length===1 &&
       !modeledRemoteCatalog.some(c=>c.id===modeledLocalFinance[0].customerId);
   })()`, 'fault_model_only_not_real_sql');
-  fs.writeFileSync(path.join(root,'preparation/phase4b-contract-results.json'), JSON.stringify({
+  fs.mkdirSync(path.join(root,'.runtime/operations-work'),{recursive:true});
+  fs.writeFileSync(path.join(root,'.runtime/operations-work/phase4b-contract-results.json'), JSON.stringify({
     scope:'Three existing-function characterizations and two in-memory fault models of a proposed naive split; no real SQL migration or browser persistence exercised',
     checks, business_storage_modified:false, sql_executed:false,
     conclusion:'Existing memory rollback cannot coordinate separate durable stores; a recovery protocol and explicit restore scope are required before activation.'

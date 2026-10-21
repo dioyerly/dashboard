@@ -21,8 +21,11 @@ try {
         if ($method !== 'POST' || !$config['financial_api_enabled'] || $config['environment'] !== 'local' || $config['db']['host'] !== '127.0.0.1' || $config['auth_driver'] !== 'mysql') respond(404,['ok'=>false,'code'=>'not_found']);
         if (!$auth->current()) respond(401,['ok'=>false,'code'=>'session_expired']);
         if (!Centro\Security::validCsrf($_SERVER['HTTP_X_CSRF_TOKEN'] ?? null)) respond(403,['ok'=>false,'code'=>'csrf_invalid']);
-        $raw=file_get_contents('php://input',false,null,0,65537); try{$body=json_decode((string)$raw,true,32,JSON_THROW_ON_ERROR);}catch(Throwable){respond(400,['ok'=>false,'code'=>'invalid_json']);}
-        if (!is_array($body)||!is_string($body['environment']??null)||!is_string($body['operation_id']??null)||!is_array($body['command']??null)) respond(400,['ok'=>false,'code'=>'invalid_request']);
+        if (!str_starts_with(strtolower($_SERVER['CONTENT_TYPE']??''),'application/json')) respond(415,['ok'=>false,'code'=>'json_required']);
+        if ((int)($_SERVER['CONTENT_LENGTH']??0)>65536) respond(413,['ok'=>false,'code'=>'request_too_large']);
+        $raw=file_get_contents('php://input',false,null,0,65537); if($raw===false||strlen($raw)>65536)respond(413,['ok'=>false,'code'=>'request_too_large']); try{$body=json_decode((string)$raw,true,32,JSON_THROW_ON_ERROR);}catch(Throwable){respond(400,['ok'=>false,'code'=>'invalid_json']);}
+        if (!is_array($body)||array_diff(array_keys($body),['environment','operation_id','command'])||!is_string($body['environment']??null)||!is_string($body['operation_id']??null)||!is_array($body['command']??null)) respond(400,['ok'=>false,'code'=>'invalid_request']);
+        if(in_array($body['command']['kind']??'', ['sale_edit','sale_void','sale_collect','cash_refund','sale_refund_commercial','expense_edit','expense_pay','subscription_register','subscription_renew','subscription_status'],true)&&!is_int($body['command']['expected_version']??null))respond(422,['ok'=>false,'code'=>'expected_version_required']);
         require_once dirname(__DIR__).'/app/FinancialService.php';
         try{$u=$auth->current();$s=new Centro\FinancialService(Centro\Database::connection($config['db']));respond(200,['ok'=>true,...$s->execute($body['environment'],$body['operation_id'],(int)$u['id'],$body['command'])]);}catch(Centro\BusinessError $e){respond($e->status,['ok'=>false,'code'=>$e->reason]);}
     }

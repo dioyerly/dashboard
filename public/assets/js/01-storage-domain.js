@@ -23,8 +23,10 @@ const DataStore = {
       const r = await fetch('api.php?action=business_state&environment=' + encodeURIComponent(this.env), { credentials: 'same-origin', cache: 'no-store' });
       const data = await r.json();
       if (!r.ok || !data.ok) throw new Error(data.code || 'No se pudo leer MariaDB');
-      if (data.found) { this._remoteVersion = data.version; const s=data.state; if(this._financial){try{const fr=await fetch('api.php?action=financial_state&environment='+encodeURIComponent(this.env),{credentials:'same-origin',cache:'no-store'});const fd=await fr.json();if(fr.ok&&fd.ok){s.sales=fd.sales||[];s.expenses=fd.expenses||[];s.treasury=fd.treasury||[];}}catch(_){}} return s; }
-      if (this._financial) { try { const fr=await fetch('api.php?action=financial_state&environment='+encodeURIComponent(this.env),{credentials:'same-origin',cache:'no-store'}); const fd=await fr.json(); if(fr.ok&&fd.ok&&(fd.sales?.length||fd.expenses?.length||fd.treasury?.length)){ const s=emptyState(); s.sales=fd.sales||[]; s.expenses=fd.expenses||[]; s.treasury=fd.treasury||[]; return s; } } catch (_) {} }
+      this._remoteVersion = data.version || 0;
+      const loaded = data.found ? data.state : emptyState();
+      if (this._financial) await refreshFinancial(loaded);
+      return loaded;
     }
     try { const db = this._db || (this._db = await this._open()); const v = await new Promise((res, rej) => { const q = db.transaction(this.STORE, 'readonly').objectStore(this.STORE).get(this.KEY); q.onsuccess = () => res(q.result || null); q.onerror = () => rej(q.error); }); if (v) return v; } catch (e) { console.warn(e); }
     try { const s = localStorage.getItem('co-' + this.KEY); return s ? JSON.parse(s) : null; } catch (e) { return null; }
@@ -32,7 +34,7 @@ const DataStore = {
   async save(data) {
     if (await this._remoteEnabled()) {
       if (!this._csrf) { const s = await fetch('api.php?action=session', { credentials: 'same-origin', cache: 'no-store' }); const d = await s.json(); this._csrf = d.csrf || ''; }
-      const persisted = this._financial ? { ...data, sales: [], expenses: [], treasury: [] } : data;
+      const persisted = this._financial ? { ...data, sales: [], expenses: [], treasury: [], subs: [] } : data;
       const body = { environment: this.env, operation_id: 'state_' + uid('op'), expected_version: this._remoteVersion, state: persisted };
       const r = await fetch('api.php?action=business_state', { method: 'POST', credentials: 'same-origin', cache: 'no-store', headers: { 'Content-Type': 'application/json', 'X-CSRF-Token': this._csrf }, body: JSON.stringify(body) });
       const result = await r.json();
@@ -45,8 +47,77 @@ const DataStore = {
   }
 };
 async function financialEnabled(){await DataStore._remoteEnabled();return DataStore._financial===true;}
-async function financialCommand(command){if(!(await financialEnabled()))return null;if(!DataStore._csrf)await DataStore._remoteEnabled();const body={environment:DataStore.env,operation_id:'fin_'+uid('op'),command};const r=await fetch('api.php?action=financial_command',{method:'POST',credentials:'same-origin',cache:'no-store',headers:{'Content-Type':'application/json','X-CSRF-Token':DataStore._csrf},body:JSON.stringify(body)});let d={};try{d=await r.json();}catch(_){}if(!r.ok||!d.ok){const e=new Error(d.code||'financial_command_failed');e.userMsg='No se pudo registrar la operación financiera.';throw e;}return d.result;}
-async function transactFinancial(desc,command,applyLocal){const result=await financialCommand(command);if(result===null)return null;if(typeof applyLocal==='function')applyLocal(state,result);return result;}
+async function refreshFinancial(target = state) {
+  const r = await fetch('api.php?action=financial_state&environment='+encodeURIComponent(DataStore.env), {credentials:'same-origin',cache:'no-store'});
+  const d = await r.json(); if (!r.ok || !d.ok) throw UErr('No se pudo recuperar el estado financiero. Recarg? antes de operar.');
+  for (const key of ['sales','expenses','treasury','subs']) target[key] = d[key] || [];
+  target._sqlPrices=d.planPrices || [];
+}
+async function financialCommand(command) {
+  if (!(await financialEnabled())) return null;
+  const key='centro-pending-financial-'+DataStore.env;
+  const pending=sessionStorage.getItem(key);
+  const body=pending?JSON.parse(pending):{environment:DataStore.env,operation_id:'fin_'+uid('op'),command};
+  sessionStorage.setItem(key,JSON.stringify(body));
+  let r,d;
+  try { r=await fetch('api.php?action=financial_command',{method:'POST',credentials:'same-origin',cache:'no-store',headers:{'Content-Type':'application/json','X-CSRF-Token':DataStore._csrf},body:JSON.stringify(body)}); d=await r.json(); }
+  catch (_) { throw UErr('Respuesta pendiente. Volv? a intentar para recuperar la misma operaci?n sin duplicarla.'); }
+  if (!r.ok || !d.ok) {
+    if (r.status<500 && ![401,403].includes(r.status)) sessionStorage.removeItem(key);
+    throw UErr((d.code==='version_conflict'?'Los datos cambiaron. Recarg? antes de operar.':'Operaci?n no registrada: '+(d.code||'error')));
+  }
+  await refreshFinancial();
+  sessionStorage.removeItem(key);
+  if(pending){const recovered=UErr('Se recuper? la operaci?n pendiente. Revis? el resultado antes de registrar otra.');recovered.financialCommitted=true;throw recovered;}
+  return d.result;
+}
+async function transactFinancial(desc,command,applyLocal) {
+  if(busy)throw UErr('Hay una operaci?n guard?ndose.');
+  busy=true;
+  try {
+    const result=await financialCommand(command);if(result===null)return null;
+    return result;
+  } catch(e){toast(e.userMsg||e.message,'bad');throw e;} finally{busy=false;}
+}
+function copyFinancial(target){for(const key of ['sales','expenses','treasury','subs','_sqlPrices'])target[key]=clone(state[key]);}
+function sqlPrice(planId,date) {
+  const prices=(state._sqlPrices||[]).filter(p=>p.plan_id===planId && p.provenance==='known' && p.valid_from && p.valid_from<=date && (!p.valid_to||date<p.valid_to));
+  if(prices.length!==1)throw UErr('Falta un precio hist?rico SQL inequ?voco para este plan y fecha.');
+  return prices[0];
+}
+async function routeFinancialDraft(before,after) {
+  const changed=key=>JSON.stringify(before[key])!==JSON.stringify(after[key]);
+  if(changed('subs')) {
+    const subs=after.subs.filter(s=>JSON.stringify(s)!==JSON.stringify(before.subs.find(x=>x.id===s.id)));
+    if(subs.length!==1 || after.subs.length<before.subs.length)throw UErr('La eliminaci?n de suscripciones no tiene equivalencia SQL segura.');
+    const sub=subs[0],old=before.subs.find(x=>x.id===sub.id),events=sub.events.filter(e=>!old?.events.some(x=>x.id===e.id));
+    if(events.length!==1 || JSON.stringify(before.customers)!==JSON.stringify(after.customers))throw UErr('Cre? primero el cliente en el cat?logo SQL.');
+    const event=events[0],date=event.date,price=sqlPrice(sub.planId,date);
+    const sale=after.sales.find(x=>x.id===event.saleId);
+    if(sale && (sale.commission||sale.tax||sale.discount||sale.refunded||sale.unitPrice<=0))throw UErr('Comisiones, impuestos e importes cero requieren una equivalencia contable revisada; operaci?n bloqueada en SQL.');
+    const cash=after.treasury.find(t=>t.saleId===event.saleId);
+    const command={kind:!old?'subscription_register':sale?'subscription_renew':'subscription_status',subscription_id:sub.id,expected_version:old?old._sqlVersion:0,plan_id:sub.planId,customer_id:sub.customerId,date,event:event.type,trial:event.type==='prueba',price_snapshot_id:price.id,note:event.note||''};
+    if(sale)Object.assign(command,{sale_id:sale.id,amount:round2(sale.unitPrice).toFixed(2),currency:sale.currency,settle_now:sale.payStatus==='cobrado',confirmed:sale.payStatus==='cobrado',account_id:cash?.accountTo||undefined});
+    await financialCommand(command);copyFinancial(after);return true;
+  }
+  if(changed('expenses') && !changed('sales')) {
+    const edited=after.expenses.filter(x=>JSON.stringify(x)!==JSON.stringify(before.expenses.find(y=>y.id===x.id)));
+    if(edited.length===1 && after.expenses.length===before.expenses.length){
+      const x=edited[0],old=before.expenses.find(y=>y.id===x.id);
+      if(!old?._sqlVersion || x.currency!==old.currency || x.status!==old.status || x.supplierId!==old.supplierId || x.date!==old.date || changed('treasury'))throw UErr('Este cambio altera pagos, moneda, fecha o proveedor: requiere revisi?n contable; bloqueado en SQL.');
+      await financialCommand({kind:'expense_edit',expense_id:x.id,amount:round2(x.amount).toFixed(2),expected_version:old._sqlVersion,record:x});copyFinancial(after);return true;
+    }
+  }
+  if(changed('treasury') && !changed('sales') && !changed('expenses')) {
+    const added=after.treasury.filter(x=>!before.treasury.some(y=>y.id===x.id));
+    if(added.length===1 && after.treasury.length===before.treasury.length+1){
+      const t=added[0],kind={aporte:'capital_contribution',retiro:'withdrawal',ajuste:'treasury_adjustment'}[t.type];
+      if(kind){await financialCommand({kind,movement_id:t.id,account_id:t.type==='retiro'?t.accountFrom:t.accountTo,amount:round2(t.amount).toFixed(2),currency:t.currency,date:t.date,confirmed:true,note:t.note||''});copyFinancial(after);return true;}
+    }
+  }
+  if(['sales','expenses','treasury'].some(changed))throw UErr('Esta operaci?n no tiene una equivalencia SQL segura. Se conserva el historial; no se aplic? el cambio.');
+  return false;
+}
 
 /* =====================================================================
    ESTADO
@@ -95,8 +166,8 @@ let busy = false;
 async function transact(desc, fn) {
   if (busy) { toast('Hay una operación guardándose, esperá un instante', 'bad'); throw new Error('busy'); }
   busy = true; const snap = clone(state);
-  try { const r = fn(state); await DataStore.save(state); return r; }
-  catch (e) { state = snap; console.error(e); toast(e && e.userMsg ? e.userMsg : 'No se pudo guardar: ' + (e.message || e), 'bad'); throw e; }
+  try { const sql=await financialEnabled();const draft=sql?clone(state):state;const r=fn(draft); if(sql && await routeFinancialDraft(snap,draft)){state=draft;return r;} await DataStore.save(draft);state=draft;return r; }
+  catch (e) { if(!e.financialCommitted)state = snap; console.error(e); toast(e && e.userMsg ? e.userMsg : 'No se pudo guardar: ' + (e.message || e), 'bad'); throw e; }
   finally { busy = false; }
 }
 function UErr(m) { const e = new Error(m); e.userMsg = m; return e; }
