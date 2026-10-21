@@ -44,6 +44,7 @@ const DataStore = {
       const result = await r.json();
       if (!r.ok || !result.ok) { const e = new Error(result.code || 'No se pudo guardar en MariaDB'); e.userMsg = result.code === 'version_conflict' ? 'Los datos cambiaron en otra sesión. Recargá antes de guardar.' : 'No se pudo guardar en MariaDB.'; throw e; }
       this._remoteVersion = result.version;
+      if(result.catalog_revision!==undefined){data._catalogRevision=result.catalog_revision;const synchronized=await this.load();for(const key of Object.keys(data))delete data[key];Object.assign(data,synchronized);}
       return true;
     }
     try { const db = this._db || (this._db = await this._open()); await new Promise((res, rej) => { const tx = db.transaction(this.STORE, 'readwrite'); tx.objectStore(this.STORE).put(data, this.KEY); tx.oncomplete = res; tx.onerror = () => rej(tx.error); tx.onabort = () => rej(tx.error); }); return true; }

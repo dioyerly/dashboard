@@ -90,16 +90,20 @@ def stage(archive,entry,environment,out,exercise_rollback=False):
     call(['-r',seed],seed_env,raw.decode('utf-8'))
     fingerprint_code="require 'app/Database.php';require 'app/MigrationMode.php';$c=require 'config/settings.php';echo json_encode(Centro\\MigrationMode::fingerprint(Centro\\Database::connection($c['db']),getenv('CENTRO_MIGRATION_ENV')),JSON_THROW_ON_ERROR);"
     fingerprints=json.loads(call(['-r',fingerprint_code],seed_env))
+    conversion=json.loads(call([ROOT/'tools/historical_conversion.php'],admin,json.dumps({'action':'preview','environment':environment})))
+    if not conversion.get('ok'):raise ValueError('historical_conversion_preview_failed')
+    conversion_path=out/'financial-conversion-preview.json';conversion_path.write_text(json.dumps(conversion,ensure_ascii=False,indent=2),encoding='utf-8')
     value=json.loads(raw)
     blockers=[{'code':'preparation_only_no_real_activation','reason':'This run authorizes synthetic verification only.'},{'code':'source_freeze_required_before_real_cutover'},{'code':'reverse_reconciliation_required_before_writable_cutover'}]
     for collection,table in HISTORICAL.items():
         if value.get(collection):blockers.append({'collection':collection,'code':'historical_only_not_operational','table':table,'count':len(value[collection])})
     if value.get('plans') or value.get('subs'):blockers.append({'code':'historical_prices_and_trial_evidence_require_review'})
-    if any(value.get(key) for key in OPERATIONAL):blockers.append({'code':'normalized_catalog_ui_write_adapters_require_consolidation'})
+    if conversion['data']['candidates']:blockers.append({'code':'historical_conversion_requires_explicit_synthetic_confirmation','convertible_groups':len(conversion['data']['candidates'])})
+    if conversion['data']['pending']:blockers.append({'code':'historical_conversion_decisions_pending','records':len(conversion['data']['pending'])})
     if verified['redactions']:blockers.append({'code':'private_fields_excluded_reconfigure_separately'})
     copies=[c for c in verified['source_copies'] if c['environment']==environment]
     if len({c['sha256'] for c in copies})>1:blockers.append({'code':'source_copies_disagree_explicit_selection_preserved'})
-    plan={'purpose':'synthetic-controlled-migration','database':cfg['name'],'environment':environment,'archive_path':str(independent),'archive_sha256':hashlib.sha256(original).hexdigest(),'source_sha256':hashlib.sha256(raw).hexdigest(),'selected_entry':entry,'operation':operation,'verified':True,'full_activation_allowed':False,'authority':'historical-read-only-preview','operational_collections':OPERATIONAL,'historical_collections':HISTORICAL,'blockers':blockers,'rollback':{'mode':'rollback','original_storage_unchanged':True,'requires_no_operational_sql_writes':True,'archive':str(independent)},'sql_fingerprint':fingerprints}
+    plan={'purpose':'synthetic-controlled-migration','database':cfg['name'],'environment':environment,'archive_path':str(independent),'archive_sha256':hashlib.sha256(original).hexdigest(),'source_sha256':hashlib.sha256(raw).hexdigest(),'selected_entry':entry,'operation':operation,'verified':True,'catalog_write_adapter':'transactional-normalized-business-state','financial_conversion_preview':str(conversion_path),'automatic_financial_conversion':False,'full_activation_allowed':False,'authority':'historical-read-only-preview','operational_collections':OPERATIONAL,'historical_collections':HISTORICAL,'blockers':blockers,'rollback':{'mode':'rollback','original_storage_unchanged':True,'requires_no_operational_sql_writes':True,'archive':str(independent)},'sql_fingerprint':fingerprints}
     (out/'activation-plan.json').write_text(json.dumps(plan,ensure_ascii=False,indent=2),encoding='utf-8')
     (out/'private-access.json').write_text(json.dumps({'config':cfg,'environment':app,'target':str(target),'email':'migration-preview@example.invalid','password':password,'plan':str(out/'activation-plan.json')},indent=2),encoding='utf-8')
     if archive.read_bytes()!=original or independent.read_bytes()!=original:raise ValueError('independent_archive_changed')

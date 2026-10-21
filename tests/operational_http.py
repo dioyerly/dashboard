@@ -67,13 +67,19 @@ try:
         for key in ['sales','expenses','treasury','subs','products','customers','plans','projects','resources','suppliers','events','integrations','review','timeLogs','log','rates']:fixture[key]=[]
         fixture['settings']['baseCurrency']='USD';fixture['settings']['pin']=''
         fixture['settings']['currencies']=[{'code':'USD','symbol':'$'}]
+        # The normalized fixture keeps all categories but uses its actual SQL brand.
+        for category in fixture['settings']['categories']:category['brandId']='brand'
+        if fixture['settings']['hourly'].get('currency'):fixture['settings']['hourly']['currency']='USD'
         fixture['settings']['accounts']=[{'id':'cash','name':'Cash','currency':'USD'}]
         fixture['settings']['brands']=[{'id':'brand','name':'Synthetic','color':'#112233','dark':'#000000','alt':'#ffffff','desc':''}]
         fixture['projects']=[{'id':'project','name':'App','brandId':'brand','kind':'suscripcion','status':'publicada','launchDate':'2020-01-01','stats':[]}]
         fixture['plans']=[{'id':'plan','projectId':'project','name':'Monthly','price':10,'currency':'USD','period':'mensual','trialDays':7}]
         fixture['customers']=[{'id':'customer','name':'Synthetic','email':'synthetic@example.invalid','createdAt':'2020-01-01','country':'AR'}]
         load=api.get('api.php?action=business_state&environment=pruebas').json()
+        fixture['_catalogRevision']=load['state']['_catalogRevision']
         saved=api.post('api.php?action=business_state',headers=headers,data={'environment':'pruebas','operation_id':'state_http_fixture_00000001','expected_version':load['version'],'state':fixture})
+
+        if saved.status!=200:print('Fixture rejection:',saved.json(),flush=True)
         check('nonfinancial fixture save',saved.status==200)
         browser=pw.chromium.launch(headless=True)
         context=browser.new_context(storage_state=api.storage_state(),bypass_csp=True)

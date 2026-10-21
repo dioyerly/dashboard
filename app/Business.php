@@ -175,6 +175,16 @@ final class Business
         });
     }
 
+    /** State and normalized catalogs share the caller's environment lock/transaction. */
+    public function applyStateChanges(string $environment,array $changes):void
+    {
+        if(!$this->pdo->inTransaction())throw new BusinessError('transaction_required');
+        foreach($changes as $change)$this->change($environment,$change);
+        Catalogs::validateAll($this->pdo,$environment);
+        Configuration::validateAll($this->pdo,$environment);
+        if($changes)$this->query('UPDATE environments SET catalog_revision=catalog_revision+1 WHERE id=?',[$environment]);
+    }
+
     /** CLI staging uses the same row rules without applying a command or inventing history. */
     public function validateImportRow(string $resource, string $id, array $data): array
     {
@@ -263,6 +273,8 @@ final class Business
         $old=$this->query("SELECT * FROM $resource WHERE environment_id=? AND id=? FOR UPDATE",[$environment,$id])->fetch()?:null;
         if($resource==='project_user_stats' && ($old || $action!=='create'))throw new BusinessError('immutable_history',409);
         if ($action==='create' ? ($old!==null || $version!==0) : ($old===null || (int)$old['row_version']!==$version || ($action==='restore'?$old['archived_at']===null:$old['archived_at']!==null))) throw new BusinessError('version_conflict',409);
+        if($resource==='accounts'&&$old&&($action==='archive'||isset($change['data']['currency_id'])&&$change['data']['currency_id']!==$old['currency_id'])&&$this->query('SELECT version FROM schema_migrations WHERE version=?',['007_financial_core'])->fetch()&&$this->query('SELECT id FROM fin_movements WHERE environment_id=? AND account_id=? LIMIT 1',[$environment,$id])->fetch())throw new BusinessError($action==='archive'?'entity_in_use':'account_currency_has_movements',409);
+        if($resource==='currencies'&&$action==='archive'&&$this->query('SELECT version FROM schema_migrations WHERE version=?',['007_financial_core'])->fetch())foreach(['fin_sales','fin_expenses','fin_movements'] as $financialTable)if($this->query("SELECT id FROM $financialTable WHERE environment_id=? AND currency_id=? LIMIT 1",[$environment,$id])->fetch())throw new BusinessError('entity_in_use',409);
         if($action==='restore' && ($resource==='plan_prices' || !empty($change['data'])))throw new BusinessError('invalid_restore');
         if ($action==='archive') {
             if($resource==='plan_prices')throw new BusinessError('immutable_price',409);
