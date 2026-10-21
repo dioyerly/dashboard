@@ -8,6 +8,10 @@ require_once __DIR__ . '/Security.php';
 require_once __DIR__ . '/Auth.php';
 
 $config = require dirname(__DIR__) . '/config/settings.php';
+if (($migrationPlan=getenv('CENTRO_CONTROLLED_PLAN'))!==false && $migrationPlan!=='') {
+    require_once __DIR__.'/MigrationMode.php';
+    $config=Centro\MigrationMode::configure($config,$migrationPlan,getenv('CENTRO_CONTROLLED_MODE')?:'preview');
+}
 if (PHP_VERSION_ID < 80300) throw new RuntimeException('PHP 8.3+ required');
 
 function centro_private_directory(string $path): string

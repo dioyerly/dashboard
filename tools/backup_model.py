@@ -38,6 +38,17 @@ REFS = {
 SECRET = re.compile(r'password|passwd|secret|token|api[_-]?key|credential|authorization|^pin$', re.I)
 
 
+def exact_json(value):
+    """Preserve decoded decimal numbers in historical JSON without binary floats."""
+    if isinstance(value, Decimal):
+        if not value.is_finite():raise ValueError('nonfinite_number')
+        return str(value)
+    if isinstance(value, dict):
+        return '{'+','.join(json.dumps(k,ensure_ascii=False)+':'+exact_json(v) for k,v in value.items())+'}'
+    if isinstance(value, list):return '['+','.join(exact_json(v) for v in value)+']'
+    return json.dumps(value,ensure_ascii=False,separators=(',',':'),allow_nan=False)
+
+
 def digest(value):
     return hashlib.sha256(json.dumps(value, ensure_ascii=False, sort_keys=True, separators=(',',':')).encode()).hexdigest()
 
@@ -381,8 +392,8 @@ class Model:
             if i < len(self.rows['integrations']):
                 r=self.rows['integrations'][-1]; errors=o.get('errors',[])
                 if not isinstance(errors,list): self.issue('error',['integrations',i,'errors'],'array_required')
-                r['errors_json']=json.dumps(errors if isinstance(errors,list) else [],ensure_ascii=False,separators=(',',':'))
-                r['source_stats']=json.dumps(o.get('stats'),ensure_ascii=False,separators=(',',':')) if 'stats' in o else None
+                r['errors_json']=exact_json(errors if isinstance(errors,list) else [])
+                r['source_stats']=exact_json(o.get('stats')) if 'stats' in o else None
                 r['source_stats_present']=str(int('stats' in o))
                 if r.get('notes') is None:r['notes']=''
                 self.mapping.append({'path':['integrations',i,'errors'],'table':'integrations','id':r['id'],'column':'errors_json','kind':'json'})
@@ -401,13 +412,13 @@ class Model:
                 if not isinstance(o,dict) or not isinstance(o.get('id'),str):
                     self.issue('error',[collection,i],'invalid_or_missing_id'); continue
                 ident=collection+'_'+o['id']
-                payload=json.dumps(o,ensure_ascii=False,separators=(',',':'))
+                payload=exact_json(o)
                 self.rows['original_financial_snapshots'].append({'id':ident,'collection':collection,'ordinal':str(i),
                     'source_path':collection+'/'+str(i),'payload':payload,'content_hash':hashlib.sha256(payload.encode()).hexdigest(),
                     'import_status':'historical','normalized_json':None})
         for collection in ('resources','events','review','log'):
             for i,o in enumerate(source.get(collection,[])):
-                payload=json.dumps(o,ensure_ascii=False,separators=(',',':'))
+                payload=exact_json(o)
                 rawid=o.get('id') if isinstance(o,dict) else None
                 ident=str(rawid) if isinstance(rawid,str) and rawid else 'row_'+hashlib.sha256(payload.encode()).hexdigest()[:32]
                 self.rows['original_activity_snapshots'].append({'id':ident,'collection':collection,'ordinal':str(i),

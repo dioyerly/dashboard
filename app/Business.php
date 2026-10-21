@@ -195,6 +195,12 @@ final class Business
             $v=$data[$field]??($old[$field]??(in_array($field,$nullable,true)?null:($field==='consent'?0:'')));
             if (array_key_exists($field,$data)) $v=$data[$field];
             if (in_array($field,$nullable,true) && ($v===null || $v==='')) { $row[$field]=null; continue; }
+            if(in_array($field,['payload','normalized_json','errors_json','source_stats'],true)){
+                if($field==='errors_json'&&$v==='')$v='[]';
+                if(!is_string($v)||strlen($v)>16*1024*1024)throw new BusinessError('invalid_json_field');
+                try{json_decode($v,true,128,JSON_THROW_ON_ERROR);}catch(\JsonException){throw new BusinessError('invalid_json_field');}
+                $row[$field]=$v;continue;
+            }
             if (in_array($field,['source_origin_present','source_created_at_present','source_stats_present'],true)) { if(!in_array((string)$v,['0','1'],true)) throw new BusinessError('invalid_presence'); $row[$field]=(string)$v; continue; }
             if ($field==='consent') {
                 if (!in_array($v,[0,1],true)) throw new BusinessError('invalid_consent');
@@ -206,6 +212,10 @@ final class Business
                 if ($length>$max) throw new BusinessError('field_too_long');
             }
             $row[$field]=$v;
+        }
+        if(in_array($resource,['original_financial_snapshots','original_activity_snapshots'],true)){
+            $collections=$resource==='original_financial_snapshots'?['sales','expenses','treasury']:['resources','events','review','log'];
+            if(!in_array($row['collection'],$collections,true)||!ctype_digit($row['ordinal'])||strlen($row['ordinal'])>10||$row['source_path']!==$row['collection'].'/'.$row['ordinal']||!in_array($row['import_status'],['historical','conflict','rejected'],true)||!hash_equals(hash('sha256',$row['payload']),$row['content_hash']))throw new BusinessError('invalid_snapshot_evidence');
         }
         if (isset($row['name']) && $row['name']==='') throw new BusinessError('name_required');
         if ($resource==='currencies' && (!preg_match('/\A[A-Z]{3,5}\z/D',$id) || $row['symbol']==='' || strlen($row['symbol'])>16)) throw new BusinessError('invalid_currency');

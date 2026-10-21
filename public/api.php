@@ -15,6 +15,11 @@ try {
     $action = $_GET['action'] ?? '';
     if (!is_string($action)) respond(400, ['ok' => false, 'code' => 'invalid_request']);
     $method = $_SERVER['REQUEST_METHOD'];
+    if(($config['migration_read_only']??false)&&$method==='POST'&&in_array($action,['business_command','business_state','financial_command'],true)){
+        if(!$auth->current())respond(401,['ok'=>false,'code'=>'session_expired']);
+        if(!Centro\Security::validCsrf($_SERVER['HTTP_X_CSRF_TOKEN']??null))respond(403,['ok'=>false,'code'=>'csrf_invalid']);
+        respond(423,['ok'=>false,'code'=>'migration_preview_read_only']);
+    }
     if (in_array($action, ['business_list','business_command'], true)) require dirname(__DIR__).'/app/business_api.php';
     if ($action === 'business_state') require dirname(__DIR__).'/app/business_state_api.php';
     if ($action === 'financial_command') {
@@ -39,7 +44,7 @@ try {
     if ($action === 'session' && $method === 'GET') {
         $user = $auth->current();
         respond(200, ['ok' => true, 'authenticated' => $user !== null, 'csrf' => Centro\Security::csrf(), 'user' => $user,
-            'setup_required' => !$auth->configured(), 'business_storage' => ($config['business_api_enabled'] && $config['business_storage']==='sql' ? 'sql' : 'local'), 'mysql_sync' => ($config['business_api_enabled'] && $config['business_storage']==='sql'), 'financial_api_enabled' => $config['financial_api_enabled']]);
+            'setup_required' => !$auth->configured(), 'business_storage' => ($config['business_api_enabled'] && $config['business_storage']==='sql' ? 'sql' : 'local'), 'mysql_sync' => ($config['business_api_enabled'] && $config['business_storage']==='sql'), 'financial_api_enabled' => $config['financial_api_enabled'], 'migration_read_only' => $config['migration_read_only']??false]);
     }
     if (!in_array($action, ['login', 'logout', 'touch'], true)) {
         if (!$auth->current()) respond(401, ['ok' => false, 'code' => 'session_expired']);

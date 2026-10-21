@@ -11,10 +11,12 @@ const DataStore = {
     try {
       const r = await fetch('api.php?action=session', { credentials: 'same-origin', cache: 'no-store' });
       const data = await r.json();
+      if(!r.ok||!data.ok||!data.authenticated)throw new Error('authority_unavailable');
+      this._readOnly=data.migration_read_only===true;
       this._csrf = data.csrf || '';
       this._remote = r.ok && data.authenticated && data.business_storage === 'sql';
       this._financial = r.ok && data.authenticated && data.financial_api_enabled === true && data.business_storage === 'sql';
-    } catch (_) { this._remote = false; }
+    } catch (_) { throw UErr('No se pudo confirmar la fuente de datos. No se guardar\u00e1 una copia local alternativa.'); }
     return this._remote;
   },
   _open() { return new Promise((res, rej) => { if (!('indexedDB' in window)) return rej(new Error('Sin IndexedDB')); const r = indexedDB.open(this.DB, 1); r.onupgradeneeded = () => r.result.createObjectStore(this.STORE); r.onsuccess = () => res(r.result); r.onerror = () => rej(r.error); }); },
@@ -32,6 +34,8 @@ const DataStore = {
     try { const s = localStorage.getItem('co-' + this.KEY); return s ? JSON.parse(s) : null; } catch (e) { return null; }
   },
   async save(data) {
+    await this._remoteEnabled();
+    if(this._readOnly)throw UErr('Vista SQL de verificaci\u00f3n: no se permiten escrituras.');
     if (await this._remoteEnabled()) {
       if (!this._csrf) { const s = await fetch('api.php?action=session', { credentials: 'same-origin', cache: 'no-store' }); const d = await s.json(); this._csrf = d.csrf || ''; }
       const persisted = this._financial ? { ...data, sales: [], expenses: [], treasury: [], ...(this._operational ? {subs: []} : {}) } : data;
@@ -58,6 +62,7 @@ async function refreshFinancial(target = state) {
 }
 async function financialCommand(command) {
   if (!(await financialEnabled())) return null;
+  if(DataStore._readOnly)throw UErr('Vista SQL de verificaci\u00f3n: no se permiten operaciones.');
   const key='centro-pending-financial-'+DataStore.env;
   const pending=sessionStorage.getItem(key);
   const body=pending?JSON.parse(pending):{environment:DataStore.env,operation_id:'fin_'+uid('op'),command};
@@ -480,3 +485,92 @@ function computeAlerts() {
 /* =====================================================================
    UI BASE: iconos, modales, toasts, tooltips, gráficos
    ===================================================================== */
+
+
+// Full, read-only local backup. The manifest binds each independent source copy.
+const ControlledBackup = {
+  format: 'centro-operaciones-controlled-backup',
+  parse(text) {
+    const value=JSON.parse(text),tokens=text.match(/"(?:\\.|[^"\\])*"|[{}\[\]:,]|-?(?:0|[1-9][0-9]*)(?:\.[0-9]+)?(?:[eE][+-]?[0-9]+)?|true|false|null/g)||[];let i=0;
+    const consume=()=>{const token=tokens[i++];if(token==='{'){const seen=new Set();if(tokens[i]!=='}'){do{const key=JSON.parse(tokens[i++]);if(seen.has(key))throw UErr('Hay propiedades JSON duplicadas; no se descartaron datos.');seen.add(key);i++;consume();if(tokens[i]!==',')break;i++;}while(true);}i++;}else if(token==='['){if(tokens[i]!==']'){do{consume();if(tokens[i]!==',')break;i++;}while(true);}i++;}};
+    consume();return value;
+  },
+  async hash(text) { return [...new Uint8Array(await crypto.subtle.digest('SHA-256',new TextEncoder().encode(text)))].map(x=>x.toString(16).padStart(2,'0')).join(''); },
+  sanitize(value,path,redactions) {
+    if(Array.isArray(value))return value.map((v,i)=>this.sanitize(v,path.concat(i),redactions));
+    if(value&&typeof value==='object'){
+      if(Object.getPrototypeOf(value)!==Object.prototype)throw UErr('El respaldo contiene un tipo no JSON; no se gener\u00f3 una copia incompleta.');
+      const result={};
+      for(const [key,v] of Object.entries(value)){
+        if(/password|passwd|secret|token|api[_-]?key|credential|authorization|session|cookie|^_?csrf$|^pin$/i.test(key)){
+          if(v!=='')redactions.push({path:path.concat(key),reason:'private_field_excluded'});Object.defineProperty(result,key,{value:'',enumerable:true,writable:true,configurable:true});
+        }else Object.defineProperty(result,key,{value:this.sanitize(v,path.concat(key),redactions),enumerable:true,writable:true,configurable:true});
+      }
+      return result;
+    }
+    if(typeof value==='string'&&(/https?:\/\/[^/\s]+:[^/\s]+@/i.test(value)||/[?&](?:token|access_token|api_key|password|secret)=/i.test(value)||/\b(?:Bearer\s+[A-Za-z0-9._-]+|ghp_[A-Za-z0-9]+|sk-[A-Za-z0-9]{16,})/.test(value))){redactions.push({path,reason:'credential_value_excluded'});return '';}
+    if(value===null||typeof value==='string'||typeof value==='boolean'||typeof value==='number'&&Number.isFinite(value))return value;
+    throw UErr('El respaldo contiene un valor no JSON; no se gener\u00f3 una copia incompleta.');
+  },
+  async localCopies() {
+    const copies=[];
+    if('indexedDB' in window){
+      const databases=indexedDB.databases?await indexedDB.databases():null;
+      if(!databases||databases.some(d=>d.name===DataStore.DB)){
+        const db=await new Promise((resolve,reject)=>{const request=indexedDB.open(DataStore.DB);request.onupgradeneeded=()=>request.transaction.abort();request.onsuccess=()=>resolve(request.result);request.onerror=()=>{if(request.error?.name==='AbortError')resolve(null);else reject(request.error);};request.onblocked=()=>reject(UErr('Cerr\u00e1 las otras pesta\u00f1as antes de exportar.'));});
+        if(db){try{
+          if(!db.objectStoreNames.contains(DataStore.STORE))throw UErr('El almac\u00e9n local no coincide; no se gener\u00f3 un respaldo parcial.');
+          const rows=await new Promise((resolve,reject)=>{const tx=db.transaction(DataStore.STORE,'readonly'),store=tx.objectStore(DataStore.STORE),keys=store.getAllKeys(),values=store.getAll();tx.oncomplete=()=>resolve(keys.result.map((key,i)=>({key,value:values.result[i]})));tx.onerror=()=>reject(tx.error);tx.onabort=()=>reject(tx.error);});
+          for(const row of rows){if(!['estado-pruebas','estado-produccion'].includes(row.key))throw UErr('Hay claves locales desconocidas que requieren revisi\u00f3n.');copies.push({id:'indexedDB:'+row.key,environment:row.key.slice(7),source:'indexedDB',key:row.key,value:row.value});}
+        }finally{db.close();}}
+      }
+    }
+    for(const environment of ['produccion','pruebas']){const key='co-estado-'+environment,raw=localStorage.getItem(key);if(raw!==null){let value;try{value=this.parse(raw);}catch(_){throw UErr('Una copia local no es JSON v\u00e1lido. Se conserv\u00f3 intacta y la exportaci\u00f3n se detuvo.');}copies.push({id:'localStorage:'+key,environment,source:'localStorage',key,value,raw});}}
+    return copies;
+  },
+  async create() {
+    if(busy)throw UErr('Esper\u00e1 a que termine el guardado antes de exportar.');
+    const copies=await this.localCopies();
+    copies.push({id:'visible:'+DataStore.env,environment:DataStore.env,source:'visible',key:'state',value:clone(state)});
+    const snapshots=[],redactions=[];
+    for(const copy of copies){const exclusions=[];const clean=this.sanitize(copy.value,[copy.id],exclusions);redactions.push(...exclusions);const payload=copy.raw&&exclusions.length===0?copy.raw:JSON.stringify(clean);snapshots.push({id:copy.id,environment:copy.environment,source:copy.source,key:copy.key,payload,bytes:new TextEncoder().encode(payload).length,sha256:await this.hash(payload)});}
+    const preferences={};for(const key of ['eco-env','eco-ui']){const v=localStorage.getItem(key);if(v!==null){if(key==='eco-env'){if(!['produccion','pruebas'].includes(v))throw UErr('Ambiente local desconocido.');preferences[key]=v;}else{let parsed;try{parsed=JSON.parse(v);}catch(_){throw UErr('Las preferencias locales no son JSON v\u00e1lido.');}preferences[key]=JSON.stringify(this.sanitize(parsed,['preferences',key],redactions));}}}
+    const exportedAt=new Date().toISOString(),entries=snapshots.map(({payload,...entry})=>entry);
+    const manifestPayload=JSON.stringify({format:this.format,version:1,exportedAt,entries,preferences,redactions});
+    return {format:this.format,version:1,exportedAt,snapshots,preferences,redactions,manifest:{algorithm:'SHA-256',payload:manifestPayload,sha256:await this.hash(manifestPayload)}};
+  },
+  async verify(archive) {
+    if(!archive||archive.format!==this.format||archive.version!==1||archive.manifest?.algorithm!=='SHA-256'||!Array.isArray(archive.snapshots)||archive.snapshots.length<1||archive.snapshots.length>5||typeof archive.manifest.payload!=='string'||!Array.isArray(archive.redactions))throw UErr('Formato de respaldo no admitido.');
+    if(await this.hash(archive.manifest.payload)!==archive.manifest.sha256)throw UErr('El manifiesto del respaldo no coincide.');
+    const bound=this.parse(archive.manifest.payload),ids=new Set();
+    const entries=[];
+    for(const entry of archive.snapshots){
+      if(!entry||!['produccion','pruebas'].includes(entry.environment)||!['indexedDB','localStorage','visible'].includes(entry.source)||ids.has(entry.id)||typeof entry.payload!=='string')throw UErr('Origen de respaldo inv\u00e1lido.');
+      const key=entry.source==='visible'?'state':(entry.source==='indexedDB'?'estado-':'co-estado-')+entry.environment;
+      if(entry.key!==key||entry.id!==(entry.source==='visible'?'visible:'+entry.environment:entry.source+':'+key))throw UErr('La copia tiene un origen ambiguo.');
+      ids.add(entry.id);if(new TextEncoder().encode(entry.payload).length!==entry.bytes||await this.hash(entry.payload)!==entry.sha256)throw UErr('Una copia del respaldo no coincide con su hash.');
+      const value=this.parse(entry.payload),exclusions=[],clean=this.sanitize(value,[entry.id],exclusions);if(JSON.stringify(clean)!==JSON.stringify(value))throw UErr('El respaldo contiene credenciales privadas.');
+      const {payload,...descriptor}=entry;entries.push(descriptor);
+    }
+    if(!archive.preferences||typeof archive.preferences!=='object'||Array.isArray(archive.preferences))throw UErr('Preferencias de respaldo no v\u00e1lidas.');
+    for(const [key,value] of Object.entries(archive.preferences)){
+      if(!['eco-env','eco-ui'].includes(key)||typeof value!=='string')throw UErr('El respaldo contiene preferencias privadas o desconocidas.');
+      if(key==='eco-env'&&!['produccion','pruebas'].includes(value))throw UErr('Ambiente del respaldo desconocido.');
+      if(key==='eco-ui'){const parsed=this.parse(value),redactions=[],clean=this.sanitize(parsed,['preferences',key],redactions);if(JSON.stringify(clean)!==JSON.stringify(parsed))throw UErr('El respaldo contiene credenciales privadas.');}
+    }
+    const actual={format:archive.format,version:archive.version,exportedAt:archive.exportedAt,entries,preferences:archive.preferences,redactions:archive.redactions};
+    if(JSON.stringify(bound)!==JSON.stringify(actual))throw UErr('La identidad o el inventario del respaldo cambi\u00f3.');
+    return archive;
+  },
+  async restoreState(archive) {
+    await this.verify(archive);
+    if(await DataStore._remoteEnabled())throw UErr('La restauraci\u00f3n local no puede escribir en SQL.');
+    const entry=archive.snapshots.find(x=>x.id==='visible:'+DataStore.env);
+    if(!entry)throw UErr('El respaldo no tiene una copia visible para este ambiente.');
+    const data=this.parse(entry.payload);
+    if(data.version!==1||!data.settings)throw UErr('El estado de negocio no es compatible.');
+    const existing=(await this.localCopies()).filter(x=>x.environment===DataStore.env);
+    if(existing.some(x=>JSON.stringify(x.value)!==JSON.stringify(data)))throw UErr('Este ambiente ya contiene datos distintos. Restaur\u00e1 en un perfil nuevo para conservar ambas copias.');
+    return data;
+  }
+};
