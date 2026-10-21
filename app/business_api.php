@@ -1,8 +1,8 @@
 <?php
 declare(strict_types=1);
-// Included only by api.php for explicitly opted-in, local isolated tests.
+// Included only by api.php after the configured SQL API policy allows it.
 if (!$auth->current()) respond(401,['ok'=>false,'code'=>'session_expired']);
-if (!$config['business_api_enabled'] || $config['environment']!=='local' || $config['db']['host']!=='127.0.0.1' || $config['auth_driver']!=='mysql') respond(404,['ok'=>false,'code'=>'not_found']);
+if (!$config['sql_api_allowed'] || !$config['business_api_enabled'] || $config['business_storage']!=='sql') respond(404,['ok'=>false,'code'=>'not_found']);
 require_once __DIR__.'/Business.php';
 try {
     if ($action==='business_list') {

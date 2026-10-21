@@ -1,7 +1,7 @@
 <?php
 declare(strict_types=1);
 if (!$auth->current()) respond(401,['ok'=>false,'code'=>'session_expired']);
-if (!$config['business_api_enabled'] || $config['business_storage']!=='sql' || $config['auth_driver']!=='mysql') respond(404,['ok'=>false,'code'=>'not_found']);
+if (!$config['sql_api_allowed'] || !$config['business_api_enabled'] || $config['business_storage']!=='sql') respond(404,['ok'=>false,'code'=>'not_found']);
 require_once __DIR__.'/BusinessState.php';
 try {
     $service=new Centro\BusinessState(Centro\Database::connection($config['db']),!($config['migration_read_only']??false));

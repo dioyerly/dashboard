@@ -17,6 +17,7 @@ $settings = [
     'business_api_enabled' => $env('CENTRO_BUSINESS_API_ENABLED', '0') === '1',
     'business_storage' => $env('CENTRO_BUSINESS_STORAGE', 'local'),
     'financial_api_enabled' => $env('CENTRO_FINANCIAL_API_ENABLED', '0') === '1',
+    'sql_api_enabled' => $env('CENTRO_SQL_API_ENABLED', '0') === '1',
     'idle_seconds' => $int('CENTRO_IDLE_SECONDS', 1800),
     'absolute_seconds' => $int('CENTRO_ABSOLUTE_SECONDS', 28800),
     'rate_window' => $int('CENTRO_RATE_WINDOW', 900),

@@ -23,7 +23,7 @@ try {
     if (in_array($action, ['business_list','business_command'], true)) require dirname(__DIR__).'/app/business_api.php';
     if ($action === 'business_state') require dirname(__DIR__).'/app/business_state_api.php';
     if ($action === 'financial_command') {
-        if ($method !== 'POST' || !$config['financial_api_enabled'] || $config['environment'] !== 'local' || $config['db']['host'] !== '127.0.0.1' || $config['auth_driver'] !== 'mysql') respond(404,['ok'=>false,'code'=>'not_found']);
+        if ($method !== 'POST' || !$config['sql_api_allowed'] || !$config['financial_api_enabled']) respond(404,['ok'=>false,'code'=>'not_found']);
         if (!$auth->current()) respond(401,['ok'=>false,'code'=>'session_expired']);
         if (!Centro\Security::validCsrf($_SERVER['HTTP_X_CSRF_TOKEN'] ?? null)) respond(403,['ok'=>false,'code'=>'csrf_invalid']);
         if (!str_starts_with(strtolower($_SERVER['CONTENT_TYPE']??''),'application/json')) respond(415,['ok'=>false,'code'=>'json_required']);
@@ -35,7 +35,7 @@ try {
         try{$u=$auth->current();$s=new Centro\FinancialService(Centro\Database::connection($config['db']));respond(200,['ok'=>true,...$s->execute($body['environment'],$body['operation_id'],(int)$u['id'],$body['command'])]);}catch(Centro\BusinessError $e){respond($e->status,['ok'=>false,'code'=>$e->reason]);}
     }
     if ($action === 'financial_state' && $method === 'GET') {
-        if (!$config['financial_api_enabled'] || $config['environment'] !== 'local' || $config['db']['host'] !== '127.0.0.1' || $config['auth_driver'] !== 'mysql') respond(404,['ok'=>false,'code'=>'not_found']);
+        if (!$config['sql_api_allowed'] || !$config['financial_api_enabled']) respond(404,['ok'=>false,'code'=>'not_found']);
         if (!$auth->current()) respond(401,['ok'=>false,'code'=>'session_expired']);
         require_once dirname(__DIR__).'/app/FinancialState.php'; $env=$_GET['environment']??'';
         if (!is_string($env)||!preg_match('/\A[A-Za-z0-9_-]{1,64}\z/D',$env)) respond(400,['ok'=>false,'code'=>'invalid_environment']);
@@ -44,7 +44,7 @@ try {
     if ($action === 'session' && $method === 'GET') {
         $user = $auth->current();
         respond(200, ['ok' => true, 'authenticated' => $user !== null, 'csrf' => Centro\Security::csrf(), 'user' => $user,
-            'setup_required' => !$auth->configured(), 'business_storage' => ($config['business_api_enabled'] && $config['business_storage']==='sql' ? 'sql' : 'local'), 'mysql_sync' => ($config['business_api_enabled'] && $config['business_storage']==='sql'), 'financial_api_enabled' => $config['financial_api_enabled'], 'migration_read_only' => $config['migration_read_only']??false]);
+            'setup_required' => !$auth->configured(), 'business_storage' => ($config['sql_api_allowed'] && $config['business_api_enabled'] && $config['business_storage']==='sql' ? 'sql' : 'local'), 'mysql_sync' => ($config['sql_api_allowed'] && $config['business_api_enabled'] && $config['business_storage']==='sql'), 'financial_api_enabled' => ($config['sql_api_allowed'] && $config['financial_api_enabled']), 'migration_read_only' => $config['migration_read_only']??false]);
     }
     if (!in_array($action, ['login', 'logout', 'touch'], true)) {
         if (!$auth->current()) respond(401, ['ok' => false, 'code' => 'session_expired']);

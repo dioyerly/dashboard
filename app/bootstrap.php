@@ -29,6 +29,14 @@ function centro_private_directory(string $path): string
     return $resolved;
 }
 
+$localSql = $config['environment'] === 'local' && $config['db']['host'] === '127.0.0.1'
+    && $config['db']['enabled'] && $config['auth_driver'] === 'mysql';
+$hostedSql = $config['environment'] === 'production' && ($config['sql_api_enabled'] ?? false) === true
+    && $config['db']['enabled'] && $config['auth_driver'] === 'mysql'
+    && $config['business_api_enabled'] && $config['business_storage'] === 'sql'
+    && $config['financial_api_enabled'] && $config['db']['host'] !== ''
+    && $config['db']['user'] !== '' && $config['db']['password'] !== '';
+$config['sql_api_allowed'] = $localSql || $hostedSql;
 $config['private_dir'] = centro_private_directory($config['private_dir']);
 centro_private_directory($config['root'] . '/app');
 centro_private_directory($config['root'] . '/config');
