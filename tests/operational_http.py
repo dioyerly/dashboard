@@ -13,20 +13,33 @@ env=private['environment'];password=secrets.token_urlsafe(24);env['CENTRO_TEST_P
 code="require 'app/Database.php';$c=require 'config/settings.php';$p=Centro\\Database::connection($c['db']);$q=$p->prepare('UPDATE auth_users SET password_hash=? WHERE id=1');$q->execute([password_hash(getenv('CENTRO_TEST_PASSWORD'),PASSWORD_DEFAULT)]);"
 r=subprocess.run(db.PHP_ARGS+['-r',code],cwd=ROOT,env=env,capture_output=True,text=True,creationflags=db.FLAGS)
 assert r.returncode==0,r.stderr
-servers=[];logs=[];checks=[]
+servers=[];logs=[];checks=[];server_specs={}
 def check(name,ok):
     checks.append({'check':name,'passed':bool(ok)});print(('PASS ' if ok else 'FAIL ')+name,flush=True);assert ok,name
 
 def serve(sql,source_env=None):
     with socket.socket() as s:s.bind(('127.0.0.1',0));port=s.getsockname()[1]
     e=(source_env or env).copy();e['CENTRO_PRIVATE_DIR']=str(OUT/('http-private-'+secrets.token_hex(6)));e.update({'CENTRO_BUSINESS_API_ENABLED':'1' if sql else '0','CENTRO_BUSINESS_STORAGE':'sql' if sql else 'local','CENTRO_FINANCIAL_API_ENABLED':'1' if sql else '0'})
-    log=open(OUT/('http-sql.log' if sql else 'http-local.log'),'w');logs.append(log)
+    log=open(OUT/(('http-sql-' if sql else 'http-local-')+str(port)+'.log'),'w');logs.append(log)
     proc=subprocess.Popen(db.PHP_ARGS+['-S',f'127.0.0.1:{port}','-t',str(ROOT/'public')],cwd=ROOT,env=e,stdout=log,stderr=log,creationflags=db.FLAGS);servers.append(proc)
     for _ in range(50):
         try:
             with socket.create_connection(('127.0.0.1',port),timeout=.2):break
         except OSError:time.sleep(.1)
-    return f'http://127.0.0.1:{port}/'
+    base=f'http://127.0.0.1:{port}/'
+    server_specs[base]={'process':proc,'environment':e,'log':log,'port':port}
+    return base
+
+def restart_server(base):
+    spec=server_specs[base];old=spec['process'];old.terminate();old.wait(timeout=10)
+    process=subprocess.Popen(old.args,cwd=ROOT,env=spec['environment'],stdout=spec['log'],stderr=spec['log'],creationflags=db.FLAGS)
+    servers.append(process);spec['process']=process
+    for _ in range(50):
+        if process.poll() is not None:raise RuntimeError('Synthetic PHP restart failed')
+        try:
+            with socket.create_connection(('127.0.0.1',spec['port']),timeout=.2):return old.pid,process.pid
+        except OSError:time.sleep(.1)
+    raise RuntimeError('Synthetic PHP restart timed out')
 
 def login(request):
     s=request.get('api.php?action=session').json()
@@ -139,8 +152,25 @@ try:
         check('schema 016 preserves unmigrated subscriptions on load',legacy_page.evaluate("DataStore._operational===false&&state.subs.some(x=>x.id==='legacy_unmigrated')"))
         legacy_page.evaluate("async()=>{await transact('settings',st=>{st.settings.business.name='Synthetic legacy update';});}")
         check('unrelated save does not erase unmigrated subscriptions',legacy_api.get('api.php?action=business_state&environment=pruebas').json()['state']['subs']==preserved['subs'])
+        restart_api=pw.request.new_context(base_url=sql)
+        restart_csrf=login(restart_api)
+        before_restart=restart_api.get('api.php?action=financial_state&environment=pruebas').json()
+        business_before_restart=restart_api.get('api.php?action=business_state&environment=pruebas').json()
+        signed_out=restart_api.post('api.php?action=logout',headers={'X-CSRF-Token':restart_csrf},data={})
+        check('explicit logout closes the synthetic SQL session',signed_out.status==200 and restart_api.get('api.php?action=financial_state&environment=pruebas').status==401)
+        previous_pid,new_pid=restart_server(sql)
+        check('only the isolated PHP test server is restarted',previous_pid!=new_pid)
+        login(restart_api)
+        after_restart=restart_api.get('api.php?action=financial_state&environment=pruebas').json()
+        check('complete financial history and balances persist after logout and server restart',before_restart==after_restart)
+        check('business_state persists independently after server restart',business_before_restart==restart_api.get('api.php?action=business_state&environment=pruebas').json())
+        # Each financial row stays in its own SQL source of truth.
+        snapshot=restart_api.get('api.php?action=business_state&environment=pruebas').json()['state']
+        check('business_state contains no duplicate SQL financial collections',all(snapshot.get(k,[])==[] for k in ['sales','expenses','treasury','subs']))
         browser.close()
     (OUT/'http-results.json').write_text(json.dumps({'checks':checks},indent=2),encoding='utf-8')
 finally:
-    for proc in servers:proc.terminate();proc.wait(timeout=10)
+    for proc in servers:
+        if proc.poll() is None:proc.terminate()
+        proc.wait(timeout=10)
     for log in logs:log.close()
