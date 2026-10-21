@@ -73,7 +73,16 @@ async function financialCommand(command) {
   catch (_) { throw UErr('Respuesta pendiente. Volv? a intentar para recuperar la misma operaci?n sin duplicarla.'); }
   if (!r.ok || !d.ok) {
     if (r.status<500 && ![401,403].includes(r.status)) sessionStorage.removeItem(key);
-    throw UErr((d.code==='operational_migration_required'?'Esta operaci\u00f3n requiere la migraci\u00f3n 017. No se modificaron los datos.':d.code==='version_conflict'?'Los datos cambiaron. Recarg? antes de operar.':'Operaci?n no registrada: '+(d.code||'error')));
+    const messages={
+      unsupported_financial_adjustments:'SQL no puede registrar esta venta con descuentos, impuestos, comisiones o reembolsos no equivalentes. No se guardo; conserva los datos del formulario para revisarlos.',
+      sale_has_collections:'No se puede cambiar el importe de una venta que ya tiene cobros. La venta y sus cobros siguen intactos; conserva los datos ingresados para revisarlos.',
+      sale_state_conflict:'La venta anulada no admite esta operacion. No se modifico ningun dato.',
+      over_refund:'El reembolso supera el importe cobrado disponible. No se registro; revisa el importe y la referencia.',
+      commercial_refund_exceeds_collected:'El reembolso comercial supera los cobros registrados. No se registro; conserva el importe para revisarlo.',
+      reference_not_found:'No se encontro la venta o el movimiento asociado. No se registro la operacion; revisa la referencia ingresada.'
+    };
+    const message=messages[d.code]||(d.code==='operational_migration_required'?'Esta operacion requiere la migracion 017. No se modificaron los datos.':d.code==='version_conflict'?'Los datos cambiaron. Recarga antes de operar.':'Operacion no registrada: '+(d.code||'error'));
+    throw UErr(message);
   }
   await refreshFinancial();
   sessionStorage.removeItem(key);
