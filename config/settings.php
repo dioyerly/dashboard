@@ -32,6 +32,16 @@ $settings = [
         'password' => $env('CENTRO_DB_PASSWORD'),
         'tls_ca' => $env('CENTRO_DB_TLS_CA'),
     ],
+    // Temporary DDL-only account used exclusively by tools/migrate.php.
+    'migration_db' => [
+        'enabled' => $env('CENTRO_MIGRATION_DB_ENABLED', '0') === '1',
+        'host' => $env('CENTRO_MIGRATION_DB_HOST'),
+        'port' => $int('CENTRO_MIGRATION_DB_PORT', 3306),
+        'name' => $env('CENTRO_MIGRATION_DB_NAME'),
+        'user' => $env('CENTRO_MIGRATION_DB_USER'),
+        'password' => $env('CENTRO_MIGRATION_DB_PASSWORD'),
+        'tls_ca' => $env('CENTRO_MIGRATION_DB_TLS_CA'),
+    ],
 ];
 // Optional private PHP configuration for hosting environments without environment management.
 // Never place this file or this config directory inside the HTTP document root.

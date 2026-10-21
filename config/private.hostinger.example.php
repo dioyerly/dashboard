@@ -20,4 +20,14 @@ return [
         'password' => '',
         'tls_ca' => '',
     ],
+    // Temporary schema owner for tools/migrate.php. Remove/rotate after migrations.
+    'migration_db' => [
+        'enabled' => false,
+        'host' => '',
+        'port' => 3306,
+        'name' => '',
+        'user' => '',
+        'password' => '',
+        'tls_ca' => '',
+    ],
 ];
