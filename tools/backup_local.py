@@ -103,6 +103,8 @@ def prepare(profile='block3',demo_costs=False):
         if p.returncode:raise ValueError('activity_metadata_migration_failed')
         p=subprocess.run(db.PHP_ARGS+[str(ROOT/'tools/migrate_original_snapshots_local.php'),'--backup='+str(dump(cfg))],env=rootenv,cwd=ROOT,capture_output=True,creationflags=db.FLAGS)
         if p.returncode:raise ValueError('snapshot_migration_failed')
+        p=subprocess.run(db.PHP_ARGS+[str(ROOT/'tools/migrate_original_activity_local.php'),'--backup='+str(dump(cfg))],env=rootenv,cwd=ROOT,capture_output=True,creationflags=db.FLAGS)
+        if p.returncode:raise ValueError('original_activity_migration_failed')
     # A distinct temporary administrator, never copied from file auth/review or the backup.
     password=secrets.token_urlsafe(32)
     admin_private = OUTPUT/'auth-private'/cfg['name']
@@ -111,8 +113,8 @@ def prepare(profile='block3',demo_costs=False):
                      input=password+'\n',text=True,env={**rootenv,'CENTRO_PRIVATE_DIR':str(admin_private)},capture_output=True,creationflags=db.FLAGS)
     if p.returncode:raise ValueError('synthetic_administrator_failed')
     from configuration_model import EXTRA_TABLES
-    from backup_model import ACTIVITY_TABLES, SNAPSHOT_TABLES
-    for table in TABLES+(EXTRA_TABLES if profile in ('block4','block7') else [])+(ACTIVITY_TABLES if profile=='block7' else [])+(SNAPSHOT_TABLES if profile=='block7' else [])+['environments','business_operations','business_audit']:
+    from backup_model import ACTIVITY_TABLES, SNAPSHOT_TABLES, ACTIVITY_SNAPSHOT_TABLES
+    for table in TABLES+(EXTRA_TABLES if profile in ('block4','block7') else [])+(ACTIVITY_TABLES if profile=='block7' else [])+(SNAPSHOT_TABLES if profile=='block7' else [])+(ACTIVITY_SNAPSHOT_TABLES if profile=='block7' else [])+['environments','business_operations','business_audit']:
         db.sql(f"GRANT SELECT,INSERT ON `{cfg['name']}`.`{table}` TO '{cfg['user']}'@'127.0.0.1';")
     db.sql(f"GRANT SELECT ON `{cfg['name']}`.business_page_cursors TO '{cfg['user']}'@'127.0.0.1';")
     return path
@@ -127,7 +129,7 @@ def model_for(raw,environment_name,target=None,profile='block3',demo_costs=False
         if profile=='block7':
             from configuration_model import EXTRA_TABLES
             bm=__import__('backup_model')
-            ordered=TABLES+EXTRA_TABLES+bm.ACTIVITY_TABLES+bm.SNAPSHOT_TABLES
+            ordered=TABLES+EXTRA_TABLES+bm.ACTIVITY_TABLES+bm.SNAPSHOT_TABLES+bm.ACTIVITY_SNAPSHOT_TABLES
             model.rows={k:model.rows[k] for k in ordered}
         return model
     return Model(raw,environment_name,activity=profile=='block7')
