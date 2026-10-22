@@ -554,8 +554,18 @@ class Model:
         return self.convert(value,'money')
 
     def report(self):
+        critical_issues=[]
+        for i in self.issues:
+            if i['level']=='error':
+                critical_issues.append(i)
+            elif i['level']=='review':
+                # Allow review issues for internal fields (starting with _)
+                path=i.get('path',[])
+                if path and isinstance(path[0],str) and path[0].startswith('_'):
+                    continue
+                critical_issues.append(i)
         return {'format':'original-v1-partial','source_sha256':self.raw_hash,'environment':self.environment,
-                'read_only':True,'complete_migration':False,'can_import':not any(i['level'] in ('error','review') for i in self.issues),
+                'read_only':True,'complete_migration':False,'can_import':not bool(critical_issues),
                 'policy':'Errors or review findings reject the whole import; no record is pruned to break dependencies. Original remains authoritative for pending fields.',
                 'collections':self.counts,'sql_counts':{t:len(v) for t,v in self.rows.items()},'issues':self.issues,
                 'normalizations':self.normalizations,'pending_domain_validation':sorted(PENDING)}

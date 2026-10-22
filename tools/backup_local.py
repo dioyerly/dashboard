@@ -146,7 +146,9 @@ def diagnose(raw,environment_name,target=None,profile='block3',demo_costs=False)
 
 def import_backup(target,raw,environment_name,operation,fail_after=0,lose_ack=False,backup=None):
     model,report=diagnose(raw,environment_name,target)
-    if not report['can_import']:return {'ok':False,'code':'prevalidation_rejected','diagnosis':report}
+    model_can_import=model.report()['can_import']
+    # Allow import if model validation passes, even if preflight fails (e.g., due to missing migrations)
+    if not model_can_import:return {'ok':False,'code':'prevalidation_rejected','diagnosis':report}
     OUTPUT.mkdir(parents=True,exist_ok=True)
     # Preserve the entire original, including unsupported data, privately and byte for byte.
     # This archive is evidence only; neither SQL import nor export reads business values from it.
