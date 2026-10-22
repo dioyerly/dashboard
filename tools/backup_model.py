@@ -555,13 +555,15 @@ class Model:
 
     def report(self):
         critical_issues=[]
+        # Explicit whitelist of internal fields known to be safe to ignore
+        INTERNAL_FIELD_WHITELIST={'_catalogRevision','_sqlPrices'}
         for i in self.issues:
             if i['level']=='error':
                 critical_issues.append(i)
             elif i['level']=='review':
-                # Allow review issues for internal fields (starting with _)
                 path=i.get('path',[])
-                if path and isinstance(path[0],str) and path[0].startswith('_'):
+                # Only ignore review issues for whitelisted internal fields
+                if path and isinstance(path[0],str) and path[0] in INTERNAL_FIELD_WHITELIST:
                     continue
                 critical_issues.append(i)
         return {'format':'original-v1-partial','source_sha256':self.raw_hash,'environment':self.environment,
