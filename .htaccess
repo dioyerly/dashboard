@@ -1,0 +1,36 @@
+# Centro de Operaciones - Production Apache Configuration
+# Compatible with .htaccess - no Directory or DirectoryMatch blocks
+
+# === SECURITY: Block sensitive directories and files ===
+
+# Block HTTP access to internal directories
+RewriteEngine On
+RewriteRule ^(app|config|database|tools|storage|preparation|reference)/ - [F,L]
+
+# Block hidden files and backup files
+RewriteRule "^\." - [F,L]
+RewriteRule "private\.php$" - [F,L]
+
+# Disable directory listing
+Options -Indexes
+
+# Protect specific file types using FilesMatch (valid in .htaccess)
+<FilesMatch "^\.env$|\.git$|private\.php$|\.sql$|\.bak$|\.lock$|\.json$|\.ini$">
+    Require all denied
+</FilesMatch>
+
+# === ROUTING: Serve /public/ directory ===
+
+# Don't rewrite if it's a real file in root (but only real files, not directories)
+RewriteCond %{REQUEST_FILENAME} -f
+RewriteRule ^ - [L]
+
+# Don't rewrite if request is already for /public/ (prevent loop)
+RewriteCond %{REQUEST_URI} ^/public/
+RewriteRule ^ - [L]
+
+# Root request (/) goes to /public/index.php
+RewriteRule ^$ public/index.php [L]
+
+# All other requests: try to find them in /public/ directory
+RewriteRule ^(.+)$ public/$1 [L]

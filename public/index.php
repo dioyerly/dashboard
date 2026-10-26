@@ -18,5 +18,11 @@ try {
 } catch (Throwable $error) {
     error_log('Centro dashboard initialization failed [' . get_class($error) . ']');
     http_response_code(503);
-    exit('El acceso privado no est? disponible. Revis? la configuraci?n del servidor.');
+    // Temporary diagnostic: shows exactly what failed
+    echo "El acceso privado no está disponible. Revisá la configuración del servidor.\n\n";
+    echo "Diagnóstico (eliminar después de verificar):\n";
+    echo "Error: " . htmlspecialchars($error->getMessage()) . "\n";
+    echo "Archivo: " . htmlspecialchars($error->getFile()) . ":" . $error->getLine() . "\n";
+    echo "Document Root: " . htmlspecialchars($_SERVER['DOCUMENT_ROOT'] ?? 'no definido') . "\n";
+    exit;
 }
