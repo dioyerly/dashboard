@@ -3,6 +3,12 @@ declare(strict_types=1);
 
 // Only read environment or an explicitly private override; never connect here.
 $root = dirname(__DIR__);
+
+// Handle Hostinger case: if we're inside public_html, go up one more level
+// so that storage/private/ ends up outside public_html (for security)
+if (basename($root) === 'public_html' || basename($root) === 'public') {
+    $root = dirname($root);
+}
 $env = static fn(string $key, string $default = ''): string => (($v = getenv($key)) === false ? $default : $v);
 $int = static function (string $key, int $default) use ($env): int {
     $value = $env($key, (string)$default);
