@@ -1,52 +1,28 @@
-# Centro de Operaciones - Root Security Configuration
-# Protect sensitive directories from direct HTTP access
-# while allowing internal PHP requires
+# Centro de Operaciones - Production Deployment on Hostinger
+# Redirects public requests to /public/ and protects internal directories
+
+# Enable rewriting
+RewriteEngine On
+
+# Block direct access to sensitive directories
+RewriteRule ^(app|config|database|tools|storage|preparation|reference)(/|$) - [F,L]
+
+# Block hidden files (.env, .git, etc.) and backup files
+RewriteRule "^\.|\.json$|\.sql$|\.bak$|\.lock$" - [F,L]
+
+# Block direct access to private.php
+RewriteRule "^config/private\.php$" - [F,L]
 
 # Disable directory listing
 Options -Indexes
 
-# Deny direct access to hidden files and common config files
-<FilesMatch "(^\.env|^\.git|\.ini$|\.json$|\.sql$|\.bak$|\.lock$|private\.php)">
-    Deny from all
+# Protect specific files
+<FilesMatch "\.env$|\.git|private\.php|\.sql$|\.bak$|\.lock$">
+    Require all denied
 </FilesMatch>
 
-# Block access to sensitive directories via HTTP
-# This prevents directory traversal while allowing PHP requires
-<DirectoryMatch "^/(app|config|database|tools|storage|preparation|reference)">
-    # Allow PHP to execute and require files from these directories
-    <IfModule mod_php.c>
-        php_flag engine on
-    </IfModule>
-    # But deny direct HTTP requests
-    <IfModule mod_rewrite.c>
-        RewriteEngine On
-        # Block direct access - respond with 403
-        RewriteCond %{REQUEST_FILENAME} -f
-        RewriteRule ^ - [F,L]
-        RewriteCond %{REQUEST_FILENAME} -d
-        RewriteRule ^ - [F,L]
-    </IfModule>
-</DirectoryMatch>
-
-# Alternative for servers without mod_rewrite: use Require directive
-<Directory "app">
-    Require all denied
-</Directory>
-<Directory "config">
-    Require all denied
-</Directory>
-<Directory "database">
-    Require all denied
-</Directory>
-<Directory "tools">
-    Require all denied
-</Directory>
-<Directory "storage">
-    Require all denied
-</Directory>
-<Directory "preparation">
-    Require all denied
-</Directory>
-<Directory "reference">
-    Require all denied
-</Directory>
+# Redirect all requests to /public/ (unless it's an actual file/directory in root or already in /public/)
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteCond %{REQUEST_FILENAME} !-d
+RewriteCond %{REQUEST_URI} !^/public/
+RewriteRule ^(.*)$ /public/$1 [QSA,L]
