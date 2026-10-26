@@ -1,37 +1,34 @@
-# Centro de Operaciones - Production Deployment on Hostinger
-# Redirects public requests to /public/ and protects internal directories
+# Centro de Operaciones - Production Apache Configuration
+# Compatible with .htaccess - no Directory or DirectoryMatch blocks
 
-# Enable rewriting
+# === SECURITY: Block sensitive directories and files ===
+
+# Block HTTP access to internal directories
 RewriteEngine On
+RewriteRule ^(app|config|database|tools|storage|preparation|reference)/ - [F,L]
 
-# Block direct access to sensitive directories
-RewriteRule ^(app|config|database|tools|storage|preparation|reference)(/|$) - [F,L]
-
-# Block hidden files (.env, .git, etc.) and backup files
-RewriteRule "^\.|\.json$|\.sql$|\.bak$|\.lock$" - [F,L]
-
-# Block direct access to private.php
-RewriteRule "^config/private\.php$" - [F,L]
+# Block hidden files and backup files
+RewriteRule "^\." - [F,L]
+RewriteRule "private\.php$" - [F,L]
 
 # Disable directory listing
 Options -Indexes
 
-# Protect specific files
-<FilesMatch "\.env$|\.git|private\.php|\.sql$|\.bak$|\.lock$">
+# Protect specific file types using FilesMatch (valid in .htaccess)
+<FilesMatch "^\.env$|\.git$|private\.php$|\.sql$|\.bak$|\.lock$|\.json$|\.ini$">
     Require all denied
 </FilesMatch>
 
-# MAIN ROUTING: Redirect requests to /public/
+# === ROUTING: Serve /public/ directory ===
 
-# Never reprocess /public/ requests (prevent infinite rewrite loop)
+# Prevent infinite rewrite: if request is already for /public/, stop
 RewriteCond %{REQUEST_URI} ^/public/
 RewriteRule ^ - [L]
 
-# Special case: Root request (/) → /public/index.php
+# Root request: / goes to /public/index.php
 RewriteRule ^$ public/index.php [QSA,L]
 
-# For all other requests: check if they exist in /public/, otherwise skip rewrite
-# If it's NOT a real file and NOT a real directory in root, rewrite to /public/
+# Everything else: try /public/something unless it's a real file/dir in root
 RewriteCond %{REQUEST_FILENAME} !-f
 RewriteCond %{REQUEST_FILENAME} !-d
 RewriteRule ^(.*)$ public/$1 [QSA,L]
