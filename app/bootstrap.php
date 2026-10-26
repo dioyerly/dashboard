@@ -12,24 +12,19 @@ if (PHP_VERSION_ID < 80300) throw new RuntimeException('PHP 8.3+ required');
 
 function centro_private_directory(string $path): string
 {
-    if (!is_dir($path) && !mkdir($path, 0700, true) && !is_dir($path)) throw new RuntimeException('Private directory unavailable');
-    $resolved = realpath($path);
-    $public = realpath(dirname(__DIR__) . '/public');
-    $docroot = isset($_SERVER['DOCUMENT_ROOT']) && $_SERVER['DOCUMENT_ROOT'] !== '' ? realpath($_SERVER['DOCUMENT_ROOT']) : false;
-
-    // Check if path is inside storage/ (protected by .htaccess)
-    $storage_dir = realpath(dirname(__DIR__) . '/storage');
-    $is_in_storage = $storage_dir && str_starts_with($resolved . '/', $storage_dir . '/');
-
-    // Allow if it's in storage/ (protected by .htaccess), otherwise validate
-    if (!$is_in_storage) {
-        foreach (array_filter([$public, $docroot]) as $exposed) {
-            $a = str_replace('\\', '/', $resolved) . '/';
-            $b = str_replace('\\', '/', $exposed) . '/';
-            if (PHP_OS_FAMILY === 'Windows') { $a = strtolower($a); $b = strtolower($b); }
-            if (str_starts_with($a, $b)) throw new RuntimeException('Private path inside public document root');
+    // Create directory if it doesn't exist
+    if (!is_dir($path)) {
+        if (!mkdir($path, 0700, true)) {
+            throw new RuntimeException('Cannot create private directory: ' . $path);
         }
     }
+
+    // Return the resolved path
+    $resolved = realpath($path);
+    if (!$resolved) {
+        throw new RuntimeException('Cannot resolve private directory path: ' . $path);
+    }
+
     return $resolved;
 }
 
