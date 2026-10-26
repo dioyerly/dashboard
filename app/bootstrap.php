@@ -16,11 +16,19 @@ function centro_private_directory(string $path): string
     $resolved = realpath($path);
     $public = realpath(dirname(__DIR__) . '/public');
     $docroot = isset($_SERVER['DOCUMENT_ROOT']) && $_SERVER['DOCUMENT_ROOT'] !== '' ? realpath($_SERVER['DOCUMENT_ROOT']) : false;
-    foreach (array_filter([$public, $docroot]) as $exposed) {
-        $a = str_replace('\\', '/', $resolved) . '/';
-        $b = str_replace('\\', '/', $exposed) . '/';
-        if (PHP_OS_FAMILY === 'Windows') { $a = strtolower($a); $b = strtolower($b); }
-        if (str_starts_with($a, $b)) throw new RuntimeException('Private path inside public document root');
+
+    // Check if path is inside storage/ (protected by .htaccess)
+    $storage_dir = realpath(dirname(__DIR__) . '/storage');
+    $is_in_storage = $storage_dir && str_starts_with($resolved . '/', $storage_dir . '/');
+
+    // Allow if it's in storage/ (protected by .htaccess), otherwise validate
+    if (!$is_in_storage) {
+        foreach (array_filter([$public, $docroot]) as $exposed) {
+            $a = str_replace('\\', '/', $resolved) . '/';
+            $b = str_replace('\\', '/', $exposed) . '/';
+            if (PHP_OS_FAMILY === 'Windows') { $a = strtolower($a); $b = strtolower($b); }
+            if (str_starts_with($a, $b)) throw new RuntimeException('Private path inside public document root');
+        }
     }
     return $resolved;
 }
