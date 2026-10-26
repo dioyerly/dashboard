@@ -2,24 +2,25 @@
 declare(strict_types=1);
 
 /**
- * Centro de Operaciones - Automatic Setup
+ * Centro de Operaciones - One-Time Setup Wizard
  *
- * Configure database credentials without editing files.
- * This file is safe to delete after setup is complete.
- * Access it at: https://your-domain.com/setup.php
+ * Configure database credentials WITHOUT editing files.
+ * This form can only be used ONCE to set up credentials.
+ * After successful configuration, this file redirects to login.php forever.
+ *
+ * Safe to delete after setup: The guardian file config/private.php blocks all reuse.
  */
 
 $configFile = dirname(__DIR__) . '/config/private.php';
 $alreadyConfigured = is_file($configFile);
 
-// If already configured and not explicitly accessing setup, redirect
-if ($alreadyConfigured && !isset($_POST['force_reconfigure'])) {
+// Already configured? Setup is complete. Redirect to login.
+if ($alreadyConfigured) {
     header('Location: login.php', true, 303);
     exit;
 }
 
 $errors = [];
-$success = false;
 
 // Process form submission
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['db_host'])) {
@@ -81,7 +82,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['db_host'])) {
                 if (file_put_contents($configFile, $configContent) === false) {
                     $errors[] = 'No se puede escribir el archivo de configuración. Verifica los permisos.';
                 } else {
-                    $success = true;
+                    // Configuration saved successfully - redirect to login
+                    // This setup can never run again (guardian file now exists)
+                    header('Location: login.php', true, 303);
+                    exit;
                 }
             } catch (PDOException $e) {
                 $errors[] = 'No se puede conectar a la base de datos: ' . $e->getMessage();
@@ -92,20 +96,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['db_host'])) {
     }
 }
 
-// Detect current values if already configured
 $db_host = '';
 $db_port = '3306';
 $db_name = '';
 $db_user = '';
-if ($alreadyConfigured && isset($_POST['force_reconfigure'])) {
-    @include $configFile;
-    if (isset($GLOBALS['config'])) {
-        $db_host = $GLOBALS['config']['db']['host'] ?? '';
-        $db_port = $GLOBALS['config']['db']['port'] ?? '3306';
-        $db_name = $GLOBALS['config']['db']['name'] ?? '';
-        $db_user = $GLOBALS['config']['db']['user'] ?? '';
-    }
-}
 
 ?>
 <!DOCTYPE html>
@@ -125,11 +119,9 @@ if ($alreadyConfigured && isset($_POST['force_reconfigure'])) {
         input { width: 100%; padding: 10px; border: 1px solid #ddd; border-radius: 4px; font-size: 14px; }
         input:focus { outline: none; border-color: #2c3e50; background: #f9f9f9; }
         .error { background: #f8d7da; border: 1px solid #f5c6cb; color: #721c24; padding: 12px; border-radius: 4px; margin-bottom: 15px; }
-        .success { background: #d4edda; border: 1px solid #c3e6cb; color: #155724; padding: 12px; border-radius: 4px; margin-bottom: 15px; }
         button { width: 100%; padding: 12px; background: #2c3e50; color: white; border: none; border-radius: 4px; font-size: 16px; cursor: pointer; font-weight: 600; }
         button:hover { background: #1a252f; }
         .info { background: #e7f3ff; border-left: 4px solid #2196F3; padding: 12px; margin-bottom: 20px; border-radius: 4px; font-size: 13px; }
-        .next-steps { background: #e8f5e9; border-left: 4px solid #4CAF50; padding: 12px; margin-top: 20px; border-radius: 4px; font-size: 13px; }
     </style>
 </head>
 <body>
@@ -137,25 +129,9 @@ if ($alreadyConfigured && isset($_POST['force_reconfigure'])) {
         <h1>Centro de Operaciones</h1>
         <p class="subtitle">Configurar base de datos</p>
 
-        <?php if ($success): ?>
-            <div class="success">
-                ✓ Configuración guardada correctamente
-            </div>
-            <div class="next-steps">
-                <strong>Próximos pasos:</strong>
-                <ol style="margin-left: 20px; margin-top: 10px;">
-                    <li>Abre <a href="login.php" style="color: #1976d2;">login.php</a> para verificar que funciona</li>
-                    <li>Ejecuta las migraciones: <code>php tools/migrate.php --database=<?php echo htmlspecialchars($db_name); ?> --execute-install --confirm-install=<?php echo htmlspecialchars($db_name); ?></code></li>
-                    <li>Crea el administrador: <code>php tools/create_admin.php --email=tu@email.com --password-stdin</code></li>
-                    <li>Puedes eliminar este archivo (setup.php)</li>
-                </ol>
-            </div>
-            <br>
-            <a href="login.php" style="display: block; text-align: center; padding: 12px; background: #2c3e50; color: white; text-decoration: none; border-radius: 4px;">Ir al login</a>
-        <?php else: ?>
-            <div class="info">
-                Ingresa las credenciales de tu base de datos MySQL en Hostinger. Esta configuración se guardará en <code>config/private.php</code>.
-            </div>
+        <div class="info">
+            Ingresa las credenciales de tu base de datos MySQL en Hostinger. Esta configuración se guardará en <code>config/private.php</code> y no podrá editarse desde aquí de nuevo.
+        </div>
 
             <?php if (!empty($errors)): ?>
                 <div class="error">
@@ -192,15 +168,8 @@ if ($alreadyConfigured && isset($_POST['force_reconfigure'])) {
                 </div>
 
                 <button type="submit">Guardar configuración</button>
-
-                <?php if ($alreadyConfigured): ?>
-                    <input type="hidden" name="force_reconfigure" value="1">
-                    <p style="text-align: center; margin-top: 10px; font-size: 12px; color: #666;">
-                        (Estás reemplazando la configuración existente)
-                    </p>
-                <?php endif; ?>
             </form>
-        <?php endif; ?>
+        </div>
     </div>
 </body>
 </html>
