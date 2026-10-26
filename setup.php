@@ -4,13 +4,6 @@
 
 $root = __DIR__;
 $configFile = $root . '/config/private.php';
-$alreadyConfigured = is_file($configFile);
-
-// Already configured? Redirect to login
-if ($alreadyConfigured && $_SERVER['REQUEST_METHOD'] !== 'POST') {
-    header('Location: /login.php', true, 303);
-    exit;
-}
 
 $errors = [];
 $success = false;
