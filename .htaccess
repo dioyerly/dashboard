@@ -21,14 +21,16 @@ Options -Indexes
 
 # === ROUTING: Serve /public/ directory ===
 
-# Prevent infinite rewrite: if request is already for /public/, stop
+# Don't rewrite if it's a real file in root (but only real files, not directories)
+RewriteCond %{REQUEST_FILENAME} -f
+RewriteRule ^ - [L]
+
+# Don't rewrite if request is already for /public/ (prevent loop)
 RewriteCond %{REQUEST_URI} ^/public/
 RewriteRule ^ - [L]
 
-# Root request: / goes to /public/index.php
-RewriteRule ^$ public/index.php [QSA,L]
+# Root request (/) goes to /public/index.php
+RewriteRule ^$ public/index.php [L]
 
-# Everything else: try /public/something unless it's a real file/dir in root
-RewriteCond %{REQUEST_FILENAME} !-f
-RewriteCond %{REQUEST_FILENAME} !-d
-RewriteRule ^(.*)$ public/$1 [QSA,L]
+# All other requests: try to find them in /public/ directory
+RewriteRule ^(.+)$ public/$1 [L]
