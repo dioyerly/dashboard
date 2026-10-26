@@ -8,14 +8,10 @@ $root = dirname(__DIR__);
 // If deployed in Hostinger structure (/public_html/), private dir must be OUTSIDE public_html
 $current_dir_name = basename($root);
 if ($current_dir_name === 'public_html') {
-    // We're in /home/user/domains/site/public_html/config/
-    // Need to go UP 4 levels to reach /home/user/
-    // dirname(__DIR__) once = /home/user/domains/panel.estrategia.site/public_html
-    // dirname(__DIR__) twice = /home/user/domains/panel.estrategia.site
-    // dirname(__DIR__) 3x = /home/user/domains
-    // dirname(__DIR__) 4x = /home/user
-    $home = dirname(dirname(dirname(dirname(__DIR__))));
-    $default_private_dir = $home . '/centro_operaciones_private/auth';
+    // We're inside public_html - replace 'public_html' with 'centro_operaciones_private'
+    // /home/user/domains/site/public_html/config/ → /home/user/domains/site/centro_operaciones_private/auth
+    $parent_of_public_html = dirname($root);  // /home/user/domains/site
+    $default_private_dir = $parent_of_public_html . '/centro_operaciones_private/auth';
 } else {
     // Standard deployment: private dir alongside app/, config/, etc.
     $default_private_dir = $root . '/storage/private/auth';
