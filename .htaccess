@@ -21,8 +21,17 @@ Options -Indexes
     Require all denied
 </FilesMatch>
 
-# Redirect all requests to /public/ (unless it's an actual file/directory in root or already in /public/)
+# MAIN ROUTING: Redirect requests to /public/
+
+# Never reprocess /public/ requests (prevent infinite rewrite loop)
+RewriteCond %{REQUEST_URI} ^/public/
+RewriteRule ^ - [L]
+
+# Special case: Root request (/) → /public/index.php
+RewriteRule ^$ public/index.php [QSA,L]
+
+# For all other requests: check if they exist in /public/, otherwise skip rewrite
+# If it's NOT a real file and NOT a real directory in root, rewrite to /public/
 RewriteCond %{REQUEST_FILENAME} !-f
 RewriteCond %{REQUEST_FILENAME} !-d
-RewriteCond %{REQUEST_URI} !^/public/
-RewriteRule ^(.*)$ /public/$1 [QSA,L]
+RewriteRule ^(.*)$ public/$1 [QSA,L]
