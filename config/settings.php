@@ -4,11 +4,19 @@ declare(strict_types=1);
 // Only read environment or an explicitly private override; never connect here.
 $root = dirname(__DIR__);
 
-// Handle Hostinger case: if we're inside public_html, go up one more level
-// so that storage/private/ ends up outside public_html (for security)
-if (basename($root) === 'public_html' || basename($root) === 'public') {
-    $root = dirname($root);
+// Detect where we are and calculate private directory accordingly
+// If deployed in Hostinger structure (/public_html/), private dir must be OUTSIDE public_html
+$current_dir_name = basename($root);
+if ($current_dir_name === 'public_html') {
+    // We're in /domains/site/public_html/, private should be in /home/user/centro_private
+    // Go up 3 levels: public_html -> site -> domains -> user home
+    $private_base = dirname(dirname(dirname(__DIR__)));  // /home/user
+    $default_private_dir = $private_base . '/centro_operaciones_private/auth';
+} else {
+    // Standard deployment: private dir alongside app/, config/, etc.
+    $default_private_dir = $root . '/storage/private/auth';
 }
+
 $env = static fn(string $key, string $default = ''): string => (($v = getenv($key)) === false ? $default : $v);
 $int = static function (string $key, int $default) use ($env): int {
     $value = $env($key, (string)$default);
@@ -18,7 +26,7 @@ $int = static function (string $key, int $default) use ($env): int {
 $settings = [
     'root' => $root,
     'environment' => $env('CENTRO_ENV', 'local'),
-    'private_dir' => $env('CENTRO_PRIVATE_DIR', $root . '/storage/private/auth'),
+    'private_dir' => $env('CENTRO_PRIVATE_DIR', $default_private_dir),
     'auth_driver' => $env('CENTRO_AUTH_DRIVER', 'file'),
     'business_api_enabled' => $env('CENTRO_BUSINESS_API_ENABLED', '0') === '1',
     'financial_api_enabled' => $env('CENTRO_FINANCIAL_API_ENABLED', '0') === '1',
