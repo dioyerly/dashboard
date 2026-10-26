@@ -1,7 +1,7 @@
 VIEWS.integraciones = {
   render() {
     const tab = ui.tabs.integ || 'conexiones';
-    let h = pageHead('Integraciones', 'Integraciones', 'Empezá manual, importá archivos y conectá tus apps de a poco. Cada fuente indica su última sincronización, errores y posibles duplicados.', `<button class="btn" data-act="importJSON">${ic('code')} Eventos JSON</button><button class="btn btn-lens" data-act="importCSV">${ic('upload')} Importar CSV</button>`);
+    let h = pageHead('Integraciones', 'Integraciones', 'Empezá manual, importá archivos y conectá tus apps de a poco. Cada fuente indica su última sincronización, errores y posibles duplicados.', `<button class="btn" data-act="importJSON">${ic('code')} Eventos JSON</button><button class="btn" data-act="syncZuhause">${ic('sync')} Sincronizar Zuhause</button><button class="btn btn-lens" data-act="importCSV">${ic('upload')} Importar CSV</button>`);
     h += `<div class="tabs">${[['conexiones', 'Fuentes de datos'], ['review', `Revisión de duplicados${state.review.length ? ' (' + state.review.length + ')' : ''}`], ['spec', 'Especificación para apps']].map(([id, l]) => `<button data-act="tab" data-k="integ" data-t="${id}" class="${tab === id ? 'on' : ''}">${l}</button>`).join('')}</div>`;
     if (tab === 'review') return h + reviewTab();
     if (tab === 'spec') return h + specTab();
@@ -136,15 +136,26 @@ function specTab() {
 }
 ACT.copySpec = () => { try { navigator.clipboard.writeText(JSON_EXAMPLE); toast('Ejemplo copiado'); } catch (e) { toast('No se pudo copiar', 'bad'); } };
 ACT.importJSON = () => {
-  const m = openModal({ title: 'Importar eventos JSON', size: 'lg', body: `<p class="small muted" style="margin-top:0">Pegá un arreglo de eventos (ver “Especificación para apps”) o subí un archivo .json.</p><textarea class="input mono" id="ijT" rows="12" style="font-size:12px" placeholder='[{"source":"mi-app","external_id":"...","type":"sale", ...}]'></textarea><div class="btn-row" style="margin-top:8px"><input type="file" accept=".json,application/json" id="ijF" class="input" style="max-width:320px"></div><div id="ijRes" style="margin-top:12px"></div>`, footer: `<button class="btn btn-ghost" data-cancel>Cerrar</button><button class="btn btn-primary" data-go>Procesar</button>` });
+  const m = openModal({ title: 'Importar eventos JSON', size: 'lg', body: `<p class=”small muted” style=”margin-top:0”>Pegá un arreglo de eventos (ver “Especificación para apps”) o subí un archivo .json.</p><textarea class=”input mono” id=”ijT” rows=”12” style=”font-size:12px” placeholder='[{“source”:”mi-app”,”external_id”:”...”,”type”:”sale”, ...}]'></textarea><div class=”btn-row” style=”margin-top:8px”><input type=”file” accept=”.json,application/json” id=”ijF” class=”input” style=”max-width:320px”></div><div id=”ijRes” style=”margin-top:12px”></div>`, footer: `<button class=”btn btn-ghost” data-cancel>Cerrar</button><button class=”btn btn-primary” data-go>Procesar</button>` });
   m.el.querySelector('[data-cancel]').onclick = () => m.close();
   $('#ijF', m.el).onchange = async e => { const f = e.target.files[0]; if (f) $('#ijT', m.el).value = await f.text(); };
   m.el.querySelector('[data-go]').onclick = async () => {
     let evs; try { evs = JSON.parse($('#ijT', m.el).value); if (!Array.isArray(evs)) evs = evs.events || evs.data || [evs]; } catch (e) { toast('JSON inválido', 'bad'); return; }
     let res; try { res = await transact('json', st => processEvents(st, evs)); } catch (e) { return; }
-    $('#ijRes', m.el).innerHTML = `<div class="btn-row"><span class="badge ok">${res.ok} procesados</span><span class="badge">${res.skip} ya existían</span><span class="badge bad">${res.err.length} con error</span></div>${res.err.length ? `<div class="small neg" style="margin-top:8px">${res.err.slice(0, 10).map(esc).join('<br>')}</div>` : ''}`;
+    $('#ijRes', m.el).innerHTML = `<div class=”btn-row”><span class=”badge ok”>${res.ok} procesados</span><span class=”badge”>${res.skip} ya existían</span><span class=”badge bad”>${res.err.length} con error</span></div>${res.err.length ? `<div class=”small neg” style=”margin-top:8px”>${res.err.slice(0, 10).map(esc).join('<br>')}</div>` : ''}`;
     render();
   };
+};
+ACT.syncZuhause = async () => {
+  try {
+    const resp = await fetch('api.php?action=zuhause_events', { credentials: 'same-origin', cache: 'no-store' });
+    const data = await resp.json();
+    if (!resp.ok || !data.ok) { toast(`Error: ${data.code || 'zuhause_unavailable'}`, 'bad'); return; }
+    if (!Array.isArray(data.events)) { toast('Error: eventos inválidos', 'bad'); return; }
+    let res; try { res = await transact('zuhause', st => processEvents(st, data.events)); } catch (e) { return; }
+    toast(`Sincronizados ${res.ok}. ${res.skip ? res.skip + ' repetidos. ' : ''}${res.err.length ? res.err.length + ' con error.' : ''}`);
+    render();
+  } catch (e) { toast('Error de conexión', 'bad'); }
 };
 function processEvents(st, evs) {
   const out = { ok: 0, skip: 0, err: [] }; const seen = new Set(st.sales.map(s => s.externalId).filter(Boolean)); st.integrations.forEach(i => (i.seen || []).forEach(x => seen.add(x)));

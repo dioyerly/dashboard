@@ -30,6 +30,24 @@ try {
         respond(200, ['ok' => true, 'authenticated' => $user !== null, 'csrf' => Centro\Security::csrf(), 'user' => $user,
             'setup_required' => !$auth->configured(), 'business_storage' => 'local', 'mysql_sync' => false]);
     }
+    if ($action === 'zuhause_events' && $method === 'GET') {
+        if (!$auth->current()) respond(401, ['ok' => false, 'code' => 'session_expired']);
+        $zuhauseToken = (string)($config['zuhause']['export_token'] ?? '');
+        if (empty($zuhauseToken) || strlen($zuhauseToken) < 32) respond(503, ['ok' => false, 'code' => 'zuhause_not_configured']);
+        $ctx = stream_context_create(['http' => ['method' => 'GET', 'timeout' => 15, 'ignore_errors' => true,
+            'header' => "Authorization: Bearer " . $zuhauseToken . "\r\nAccept: application/json\r\n"]]);
+        $raw = @file_get_contents('https://zuhause.estrategia.site/export.php', false, $ctx);
+        if ($raw === false || strlen($raw) > 5000000 || (isset($http_response_header) && strpos(($http_response_header[0] ?? ''), '200') === false)) {
+            respond(502, ['ok' => false, 'code' => 'zuhause_unavailable']);
+        }
+        try {
+            $data = json_decode($raw, true, 512, JSON_THROW_ON_ERROR);
+            if (!is_array($data) || !is_array($data['events'] ?? null)) respond(502, ['ok' => false, 'code' => 'zuhause_unavailable']);
+            respond(200, ['ok' => true, 'events' => $data['events']]);
+        } catch (Throwable) {
+            respond(502, ['ok' => false, 'code' => 'zuhause_unavailable']);
+        }
+    }
     if (!in_array($action, ['login', 'logout', 'touch'], true)) {
         if (!$auth->current()) respond(401, ['ok' => false, 'code' => 'session_expired']);
         respond(404, ['ok' => false, 'code' => 'not_found']);
