@@ -7,10 +7,25 @@ echo "<h1>Bootstrap Diagnostics</h1>";
 echo "<pre>";
 
 try {
-    echo "=== Loading config ===\n";
-    $root = dirname(__DIR__);
+    echo "=== Detecting directory structure ===\n";
+    echo "Current __DIR__: " . __DIR__ . "\n";
+
+    // Auto-detect structure
+    if (is_file(__DIR__ . '/config/settings.php')) {
+        // Everything in current directory (Hostinger case)
+        $root = __DIR__;
+        echo "Detected: Everything in current directory (public_html)\n";
+    } elseif (is_file(dirname(__DIR__) . '/config/settings.php')) {
+        // Standard structure
+        $root = dirname(__DIR__);
+        echo "Detected: Standard structure (config in parent)\n";
+    } else {
+        die("ERROR: Cannot find config/settings.php\n");
+    }
+
     echo "Root: $root\n";
 
+    echo "\n=== Loading config ===\n";
     $config = require $root . '/config/settings.php';
     echo "Config loaded\n";
     echo "Private dir (default): " . $config['private_dir'] . "\n";
@@ -45,23 +60,27 @@ try {
         if ($public) {
             $public_start = $public . '/';
             $private_start = $resolved . '/';
-            echo "\nPrivate starts with public? " . (str_starts_with($private_start, $public_start) ? "YES (BAD)" : "NO (good)") . "\n";
+            $is_inside = str_starts_with($private_start, $public_start);
+            echo "\nPrivate inside public? " . ($is_inside ? "YES (BAD)" : "NO (good)") . "\n";
         }
 
         if ($docroot) {
             $docroot_start = $docroot . '/';
             $private_start = $resolved . '/';
-            echo "Private starts with docroot? " . (str_starts_with($private_start, $docroot_start) ? "YES (BAD)" : "NO (good)") . "\n";
+            $is_inside = str_starts_with($private_start, $docroot_start);
+            echo "Private inside docroot? " . ($is_inside ? "YES (BAD - PROBLEM!)" : "NO (good)") . "\n";
         }
     }
 
-    echo "\n=== Bootstrap load ===\n";
+    echo "\n=== Attempting bootstrap load ===\n";
     require $root . '/app/bootstrap.php';
     echo "Bootstrap loaded successfully!\n";
 
 } catch (Throwable $e) {
     echo "ERROR: " . $e->getMessage() . "\n";
     echo "File: " . $e->getFile() . ":" . $e->getLine() . "\n";
+    echo "\nStack trace:\n";
+    echo $e->getTraceAsString() . "\n";
 }
 
 echo "</pre>";
