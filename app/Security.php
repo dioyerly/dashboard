@@ -36,7 +36,7 @@ final class Security
         ini_set('session.gc_maxlifetime', (string)$config['absolute_seconds']);
         session_save_path($config['private_dir'] . '/sessions');
         session_name('CENTROSESSID');
-        session_set_cookie_params(['lifetime' => 0, 'path' => self::path(), 'secure' => self::secureTransport(), 'httponly' => true, 'samesite' => 'Strict']);
+        session_set_cookie_params(['lifetime' => 0, 'path' => '/', 'secure' => self::secureTransport(), 'httponly' => true, 'samesite' => 'Strict']);
         if (!session_start()) throw new \RuntimeException('Session storage unavailable');
         $_SESSION['csrf'] ??= bin2hex(random_bytes(32));
     }
