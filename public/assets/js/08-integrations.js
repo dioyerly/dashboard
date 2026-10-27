@@ -181,6 +181,27 @@ async function syncSources(list) {
 }
 ACT.syncAll = () => syncSources(SOURCES || []);
 ACT.syncOne = el => syncSources((SOURCES || []).filter(s => s.id === el.dataset.id));
+const SUMMARY_LABELS = { cuentas_total: 'Clientes totales', con_acceso: 'Con acceso ahora', pagando: 'Pagando', en_prueba: 'En prueba (MP)', gracia: 'Cortesía / gracia', solo_lectura: 'Solo lectura', bloqueados: 'Suspendidos', suscripciones_iniciadas_30d: 'Suscripciones (30 días)', landing_visitas_hoy: 'Visitas hoy', landing_visitas_30d: 'Visitas (30 días)', landing_llegaron_precio_30d: 'Llegaron al precio (30 días)', landing_clicks_suscribirme_30d: 'Clics en Suscribirme (30 días)', landing_clicks_whatsapp_30d: 'Clics en WhatsApp (30 días)', landing_clicks_app_30d: 'Clics a la app (30 días)', landing_conversion_pct: 'Conversión (%)', landing_ultimo_evento: 'Último evento de la landing', landing_estado: 'Estado de la landing', generado: 'Generado' };
+const ACCESS_LABELS = { activo: 'Con acceso', solo_lectura: 'Solo lectura', bloqueado: 'Suspendido' };
+const p2 = n => String(n).padStart(2, '0');
+function fmtDMY(v) { const s = String(v ?? ''); const m = s.match(/^(\d{4})-(\d{2})-(\d{2})/); return m ? `${m[3]}/${m[2]}/${m[1]}` : (s || '—'); }
+function fmtDMYHM(v) { const t = new Date(String(v).replace(' ', 'T')); return Number.isNaN(t.getTime()) ? String(v) : `${p2(t.getDate())}/${p2(t.getMonth() + 1)}/${t.getFullYear()} ${p2(t.getHours())}:${p2(t.getMinutes())}`; }
+function summaryValue(k, v) {
+  if (v === null || v === undefined) return '—';
+  if (k === 'landing_ultimo_evento' || k === 'generado') return fmtDMYHM(v);
+  return v && typeof v === 'object' ? JSON.stringify(v) : String(v);
+}
+async function sourceAction(id, cuenta, accion, valor) {
+  let token = '';
+  try { const sr = await fetch('api.php?action=session', { credentials: 'same-origin', cache: 'no-store' }); token = (await sr.json()).csrf || ''; } catch (e) { return { error: 'connection_error' }; }
+  const payload = { id, cuenta, accion }; if (valor) payload.valor = valor;
+  try {
+    const r = await fetch('api.php?action=source_action', { method: 'POST', credentials: 'same-origin', cache: 'no-store', headers: { 'Content-Type': 'application/json', 'X-CSRF-Token': token }, body: JSON.stringify(payload) });
+    const d = await r.json();
+    if (!r.ok || !d.ok) return { error: d.detalle || d.code || 'source_unavailable' };
+    return { result: d.result };
+  } catch (e) { return { error: 'connection_error' }; }
+}
 ACT.viewApp = el => {
   const s = (SOURCES || []).find(x => x.id === el.dataset.id); if (!s) return;
   const tabs = [['summary', 'Resumen'], ['customers', 'Clientes'], ['actions', 'Acciones']];
@@ -192,20 +213,35 @@ ACT.viewApp = el => {
   const show = async k => {
     const my = ++seq;
     $$('[data-vt]', m.el).forEach(b => b.classList.toggle('on', b.dataset.vt === k));
-    if (k === 'actions') { body.innerHTML = '<p class="small muted">Próximamente: suspender o activar clientes y restablecer claves.</p>'; return; }
     body.innerHTML = '<p class="small muted">Cargando...</p>';
-    const r = await fetchSource(s.id, k);
+    const r = await fetchSource(s.id, k === 'actions' ? 'customers' : k);
     if (my !== seq) return;
     if (r.error) { body.innerHTML = err(r.error); return; }
     const d = r.data;
     if (k === 'summary') {
       body.innerHTML = d && typeof d === 'object' && !Array.isArray(d) && Object.keys(d).length
-        ? `<div class="app-grid">${Object.entries(d).map(([a, b]) => `<div class="card"><div class="eyebrow">${esc(a)}</div><b>${esc(cell(b))}</b></div>`).join('')}</div>`
+        ? `<div class="app-grid">${Object.entries(d).map(([a, b]) => `<div class="card"><div class="small muted">${esc(SUMMARY_LABELS[a] || a)}</div><b>${esc(summaryValue(a, b))}</b></div>`).join('')}</div>`
         : `<pre class="mono small">${esc(JSON.stringify(d, null, 2))}</pre>`;
     } else if (Array.isArray(d.customers)) {
-      body.innerHTML = d.customers.length
-        ? `<div class="table-wrap"><table class="rt"><thead><tr><th>Nombre</th><th>Email</th><th>Estado</th><th>Alta</th></tr></thead><tbody>${d.customers.map(c => `<tr><td>${esc(cell(c.name ?? c.nombre))}</td><td>${esc(cell(c.email))}</td><td><span class="badge">${esc(cell(c.status ?? c.estado))}</span></td><td class="small">${esc(cell(c.created_at ?? c.alta ?? c.date).slice(0, 10))}</td></tr>`).join('')}</tbody></table></div>`
-        : '<p class="small muted">No hay clientes registrados.</p>';
+      const act = k === 'actions';
+      const accId = c => { const n = Number(c.cuenta ?? c.cuenta_id ?? c.id); return Number.isInteger(n) && n > 0 ? n : 0; };
+      const btns = c => { const n = accId(c); if (!n) return '<span class="small muted">Sin ID de cuenta</span>'; const b = (a, v, l) => `<button class="btn btn-sm" data-ac="${a}" data-v="${v}" data-id="${esc(s.id)}" data-cuenta="${n}">${l}</button>`; return `<div class="btn-row">${b('set_acceso', 'bloqueado', 'Suspender')}${b('set_acceso', 'activo', 'Activar')}${b('set_acceso', 'auto', 'Volver a automático')}${b('link_clave', '', 'Link de clave')}</div>`; };
+      body.innerHTML = (d.customers.length
+        ? `<div class="table-wrap"><table class="rt"><thead><tr><th>Nombre</th><th>Email</th><th>Estado</th><th>Alta</th>${act ? '<th>Acciones</th>' : ''}</tr></thead><tbody>${d.customers.map(c => { const st = String(c.status ?? c.estado ?? c.acceso ?? ''); return `<tr><td>${esc(cell(c.name ?? c.nombre))}</td><td>${esc(cell(c.email))}</td><td><span class="badge">${esc(ACCESS_LABELS[st] || st || '—')}</span></td><td class="small">${esc(fmtDMY(c.created_at ?? c.alta ?? c.date))}</td>${act ? `<td>${btns(c)}</td>` : ''}</tr>`; }).join('')}</tbody></table></div>`
+        : '<p class="small muted">No hay clientes registrados.</p>') + (act ? '<div id="vaL" style="margin-top:12px"></div>' : '');
+      if (act) $$('[data-ac]', body).forEach(b => b.onclick = async () => {
+        const accion = b.dataset.ac, valor = b.dataset.v, cuenta = Number(b.dataset.cuenta), msgs = { bloqueado: ['Suspender cliente', '¿Suspender el acceso de este cliente?', 'Suspender', 'danger'], activo: ['Activar cliente', '¿Dar acceso a este cliente?', 'Activar', ''], auto: ['Volver a automático', '¿Volver el acceso de este cliente al modo automático?', 'Confirmar', ''] };
+        if (accion === 'set_acceso') { const [title, message, ok, tone] = msgs[valor]; if (!(await confirmDialog({ title, message, ok, tone }))) return; }
+        b.disabled = true;
+        const res = await sourceAction(b.dataset.id, cuenta, accion, valor);
+        b.disabled = false;
+        if (res.error) { toast(`Error: ${res.error}`, 'bad'); return; }
+        toast('Listo');
+        if (accion === 'link_clave') {
+          const link = res.result?.link ?? res.result?.url ?? res.result?.enlace ?? JSON.stringify(res.result);
+          $('#vaL', m.el).innerHTML = `<div class="card"><div class="small muted">Vence en 1 hora. Se muestra una sola vez.</div><input class="input mono" readonly value="${esc(String(link))}" style="margin-top:6px"></div>`;
+        } else show('actions');
+      });
     } else body.innerHTML = '<p class="small muted">Esta app todavía no envía clientes.</p>';
   };
   $$('[data-vt]', m.el).forEach(b => b.onclick = () => show(b.dataset.vt));

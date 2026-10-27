@@ -81,6 +81,45 @@ try {
         if (!is_array($decoded) || ($view === 'events' && !is_array($decoded['events'] ?? null))) respond(502, ['ok' => false, 'code' => 'source_unavailable']);
         respond(200, ['ok' => true, 'view' => $view, 'data' => $decoded]);
     }
+    if ($action === 'source_action') {
+        if ($method !== 'POST') { header('Allow: POST'); respond(405, ['ok' => false, 'code' => 'method_not_allowed']); }
+        if (!$auth->current()) respond(401, ['ok' => false, 'code' => 'session_expired']);
+        if (!Centro\Security::validCsrf($_SERVER['HTTP_X_CSRF_TOKEN'] ?? null)) respond(403, ['ok' => false, 'code' => 'csrf_invalid']);
+        if (!str_starts_with(strtolower($_SERVER['CONTENT_TYPE'] ?? ''), 'application/json')) respond(415, ['ok' => false, 'code' => 'json_required']);
+        $raw = file_get_contents('php://input', false, null, 0, 4097);
+        if ($raw === false || strlen($raw) > 4096) respond(413, ['ok' => false, 'code' => 'request_too_large']);
+        try { $in = json_decode($raw, true, 8, JSON_THROW_ON_ERROR); } catch (Throwable) { respond(400, ['ok' => false, 'code' => 'invalid_request']); }
+        $sid = is_array($in) ? ($in['id'] ?? null) : null;
+        $cuenta = is_array($in) ? ($in['cuenta'] ?? null) : null;
+        $accion = is_array($in) ? ($in['accion'] ?? null) : null;
+        $valor = is_array($in) ? ($in['valor'] ?? null) : null;
+        if (!is_string($sid) || !preg_match('/\A[a-z0-9_-]{1,40}\z/', $sid) || !isset($sources[$sid])) respond(400, ['ok' => false, 'code' => 'invalid_request']);
+        if (!is_int($cuenta) || $cuenta < 1 || $cuenta > 999999999) respond(400, ['ok' => false, 'code' => 'invalid_request']);
+        if (!is_string($accion) || !in_array($accion, ['set_acceso', 'link_clave'], true)) respond(400, ['ok' => false, 'code' => 'invalid_request']);
+        if ($accion === 'set_acceso' && (!is_string($valor) || !in_array($valor, ['auto', 'activo', 'bloqueado'], true))) respond(400, ['ok' => false, 'code' => 'invalid_request']);
+        $srcToken = (string)($sources[$sid]['token'] ?? '');
+        if (strlen($srcToken) < 32) respond(503, ['ok' => false, 'code' => 'source_not_configured']);
+        $srcUrl = (string)($sources[$sid]['url'] ?? '');
+        $srcParts = parse_url($srcUrl);
+        $srcHost = strtolower((string)($srcParts['host'] ?? ''));
+        if (!is_array($srcParts) || ($srcParts['scheme'] ?? '') !== 'https' || !str_ends_with($srcHost, '.estrategia.site')) respond(503, ['ok' => false, 'code' => 'source_invalid_url']);
+        $payload = ['accion' => $accion, 'cuenta' => $cuenta];
+        if ($accion === 'set_acceso') $payload['valor'] = $valor;
+        $ctx = stream_context_create(['http' => ['method' => 'POST', 'timeout' => 15, 'ignore_errors' => true,
+            'header' => "Authorization: Bearer " . $srcToken . "\r\nContent-Type: application/json\r\nAccept: application/json\r\n",
+            'content' => json_encode($payload, JSON_THROW_ON_ERROR)]]);
+        $resp = @file_get_contents($srcUrl, false, $ctx);
+        $srcStatus = 0;
+        if (isset($http_response_header[0]) && preg_match('/\s(\d{3})(\s|$)/', $http_response_header[0], $mm)) $srcStatus = (int)$mm[1];
+        $decoded = null;
+        if (is_string($resp) && strlen($resp) <= 5000000) { try { $decoded = json_decode($resp, true, 512, JSON_THROW_ON_ERROR); } catch (Throwable) { $decoded = null; } }
+        if ($resp === false || $srcStatus !== 200 || !is_array($decoded)) {
+            $fail = ['ok' => false, 'code' => 'source_unavailable'];
+            if (is_array($decoded) && is_string($decoded['error'] ?? null) && preg_match('/\A[A-Za-z0-9_ .-]{1,80}\z/', $decoded['error'])) $fail['detalle'] = $decoded['error'];
+            respond(502, $fail);
+        }
+        respond(200, ['ok' => true, 'result' => $decoded]);
+    }
     if (!in_array($action, ['login', 'logout', 'touch'], true)) {
         if (!$auth->current()) respond(401, ['ok' => false, 'code' => 'session_expired']);
         respond(404, ['ok' => false, 'code' => 'not_found']);
