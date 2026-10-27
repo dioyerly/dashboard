@@ -70,6 +70,7 @@ try {
         $srcHost = strtolower((string)($srcParts['host'] ?? ''));
         if (!is_array($srcParts) || ($srcParts['scheme'] ?? '') !== 'https' || !str_ends_with($srcHost, '.estrategia.site')) respond(503, ['ok' => false, 'code' => 'source_invalid_url']);
         if ($view !== 'events') $srcUrl .= (str_contains($srcUrl, '?') ? '&' : '?') . 'view=' . $view;
+        if ($view === 'summary' && in_array((string)($_GET['d'] ?? ''), ['7', '30', '90'], true)) $srcUrl .= '&d=' . $_GET['d'];
         $ctx = stream_context_create(['http' => ['method' => 'GET', 'timeout' => 15, 'ignore_errors' => true,
             'header' => "Authorization: Bearer " . $srcToken . "\r\nAccept: application/json\r\n"]]);
         $raw = @file_get_contents($srcUrl, false, $ctx);

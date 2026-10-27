@@ -160,9 +160,9 @@ function srcButtons(i) {
   const s = srcFor(i); if (!s) return '';
   return `<div class="btn-row" style="margin-top:10px"><button class="btn btn-sm" data-act="syncOne" data-id="${esc(s.id)}">Sincronizar</button><button class="btn btn-sm" data-act="viewApp" data-id="${esc(s.id)}">Ver app</button></div>`;
 }
-async function fetchSource(id, view) {
+async function fetchSource(id, view, days) {
   try {
-    const r = await fetch('api.php?action=source_data&id=' + encodeURIComponent(id) + '&view=' + view, { credentials: 'same-origin', cache: 'no-store' });
+    const r = await fetch('api.php?action=source_data&id=' + encodeURIComponent(id) + '&view=' + view + (days ? '&d=' + encodeURIComponent(days) : ''), { credentials: 'same-origin', cache: 'no-store' });
     const d = await r.json();
     if (!r.ok || !d.ok) return { error: d.code || 'source_unavailable' };
     return { data: d.data };
@@ -213,9 +213,79 @@ function venceTxt(c) {
   if (Number.isFinite(n) && n >= 0) t += `<br><span class="small muted">faltan ${n} ${n === 1 ? 'día' : 'días'}</span>`;
   return t;
 }
+const nz = v => Number(v) || 0;
+const pesosCent = c => '$ ' + Math.round(nz(c) / 100).toLocaleString('es-AR');
+const pct1 = (a, b) => nz(b) > 0 ? (nz(a) / nz(b) * 100).toFixed(1).replace('.', ',') + '%' : '—';
+const fdm = v => { const m = String(v ?? '').match(/(\d{4})-(\d{2})-(\d{2})/); return m ? `${m[3]}/${m[2]}` : String(v ?? '—'); };
+const fdmhm = v => { const t = new Date(String(v).replace(' ', 'T')); return Number.isNaN(t.getTime()) ? String(v ?? '—') : `${p2(t.getDate())}/${p2(t.getMonth() + 1)} ${p2(t.getHours())}:${p2(t.getMinutes())}`; };
+const rowsOf = a => Array.isArray(a) ? a : (a && typeof a === 'object' ? Object.entries(a).map(([k, v]) => (v && typeof v === 'object' ? { nombre: k, ...v } : { nombre: k, clicks: v })) : []);
+const pick = (x, ...ks) => { for (const k of ks) if (x[k] !== undefined && x[k] !== null) return x[k]; return ''; };
+const bigCard = (label, num, sub) => `<div class="card"><div class="eyebrow">${esc(label)}</div><div style="font-family:var(--head);font-size:28px;font-weight:700;line-height:1.2">${esc(String(num))}</div><div class="tiny muted">${esc(sub || '')}</div></div>`;
+const TRACK_TAG = esc('<script src="track.js" defer></script>');
+const alertBox = html => `<div class="card" style="border-left:3px solid var(--warn);margin-bottom:8px"><div class="small">${html}</div></div>`;
+function resumenHtml(R, per) {
+  if (R.result && typeof R.result === 'object') R = R.result;
+  const L = R.landing || {}, T = L.totales || {}, H = L.hoy || {};
+  const V = nz(T.visitas), P = nz(T.precio), C = nz(T.clicks_suscribirme), SI = nz(R.subs_iniciadas), SC = nz(R.subs_con_cuenta), SP = nz(R.subs_con_pago);
+  const venc = rowsOf(R.por_vencer);
+  const al = [];
+  if (nz(R.sin_cuenta_pagaron) > 0) al.push(`${nz(R.sin_cuenta_pagaron)} persona(s) se suscribieron pero no crearon su acceso. Reenviales el link de alta desde Pagos.`);
+  if (nz(R.eventos_mp_con_error_24h) > 0) al.push(`${nz(R.eventos_mp_con_error_24h)} notificación(es) de Mercado Pago con error o firma inválida en las últimas 24 h.`);
+  if (nz(R.cobros_rechazados_14d) > 0) al.push(`${nz(R.cobros_rechazados_14d)} cobro(s) rechazados en reintento en los últimos 14 días.`);
+  if (nz(R.por_vencer_3d) > 0) al.push(`${nz(R.por_vencer_3d)} cuenta(s) de prueba o gracia vencen en 3 días o menos.`);
+  let alHtml = al.map(t => alertBox(esc(t))).join('');
+  if (!L.tiene_datos) alHtml += alertBox(`Todavía no llegó ninguna visita de la landing. Falta agregar <code>${TRACK_TAG}</code> antes de &lt;/body&gt; en index.html.`);
+  else if (L.ultimo_evento && Date.now() - new Date(String(L.ultimo_evento).replace(' ', 'T')).getTime() > 3 * 86400000) alHtml += alertBox(esc(`La landing no registra visitas desde hace más de 3 días (última: ${fmtDMYHM(L.ultimo_evento)}).`));
+  if (!alHtml) alHtml = '<div class="card small">Todo en orden: sin alertas.</div>';
+  const cards = [
+    bigCard('Visitantes hoy', nz(H.visitas), `últimos ${per} días: ${V}`),
+    bigCard(`Clics en Suscribirme (${per} días)`, C, pct1(C, V) + ' de las visitas'),
+    bigCard(`Suscripciones iniciadas (${per} días)`, SI, `${nz(R.subs_autorizadas)} autorizadas en Mercado Pago`),
+    bigCard('Clientes con acceso', nz(R.con_acceso), `${nz(R.pagando)} pagando · ${nz(R.en_prueba)} en prueba · ${nz(R.gracia)} gracia`),
+    bigCard('Ingreso mensual (pagando)', pesosCent(R.mrr_cent), `${nz(R.solo_lectura)} solo lectura · ${nz(R.bloqueados)} suspendidos`)
+  ].join('');
+  const steps = [['Visitaron la landing', V, 'visitantes únicos por día'], ['Vieron el precio', P, 'llegaron a la sección de precio'], ['Tocaron Suscribirme', C, 'clic en cualquier botón'], ['Iniciaron suscripción en Mercado Pago', SI, 'checkout de Mercado Pago'], ['Crearon su cuenta', SC, 'usuario y clave en la app'], ['Ya les cobraron', SP, 'primer pago aprobado']];
+  const funnel = steps.map(([l, n, sub], i) => `<div style="margin-bottom:10px"><div style="display:flex;justify-content:space-between;gap:8px;flex-wrap:wrap"><span class="small"><b>${esc(l)}</b> <span class="tiny muted">${esc(sub)}</span></span><span class="small"><b>${n}</b>${i ? ` <span class="muted">${pct1(n, steps[i - 1][1])}</span>` : ''}</span></div><div style="height:10px;border-radius:6px;background:var(--line);overflow:hidden;margin-top:4px"><div style="height:100%;width:${Math.max(2, V > 0 ? Math.min(100, n / V * 100) : 0)}%;background:var(--pos)"></div></div></div>`).join('');
+  const vencHtml = venc.length ? `<div class="table-wrap"><table class="rt"><tbody>${venc.map(x => { const cat = String(pick(x, 'categoria', 'tipo')); return `<tr><td>${esc(String(pick(x, 'nombre')))}</td><td class="small muted">${esc(String(pick(x, 'email')))}</td><td><span class="badge">${cat === 'prueba' ? 'prueba' : 'gracia'}</span></td><td class="small">${esc(fdmhm(pick(x, 'vence', 'fecha')))}</td></tr>`; }).join('')}</tbody></table></div>` : '<p class="small muted">Ninguna en los próximos 3 días.</p>';
+  const tips = [];
+  if (V >= 20 && C === 0) tips.push('Hay visitas pero nadie toca Suscribirme. Probá desde tu celular que los botones abran el link de Mercado Pago.');
+  if (C >= 5 && SI === 0) tips.push('Tocan Suscribirme pero no se inicia ninguna suscripción. Abrí el link del plan en una ventana privada y fijate si Mercado Pago lo muestra bien. También revisá que el webhook llegue.');
+  if (SI > 0 && SC < SI) tips.push(`Hay ${SI - SC} suscripción(es) sin cuenta creada. Esa gente pagó o se suscribió y no completó el alta.`);
+  if (V > 0 && P * 100 < V * 25) tips.push('Menos del 25% llega a ver el precio: la portada puede no estar invitando a seguir bajando.');
+  if (V < 20 && C < 5 && SI < 1) tips.push('Todavía hay pocos datos para sacar conclusiones. Mirá de nuevo con más visitas.');
+  return `<div style="margin-bottom:12px">${alHtml}</div><div class="app-grid" style="margin-bottom:16px">${cards}</div><div class="card" style="margin-bottom:16px"><div class="eyebrow" style="margin-bottom:8px">Embudo (${per} días)</div>${funnel}<p class="tiny muted" style="margin:6px 0 0">Las visitas cuentan visitantes únicos por día. Los pasos de Mercado Pago salen de las suscripciones reales.</p></div><div class="card" style="margin-bottom:16px"><div class="eyebrow" style="margin-bottom:8px">Cuentas que vencen pronto</div>${vencHtml}</div>${tips.length ? `<div class="card"><div class="eyebrow" style="margin-bottom:8px">¿Qué me dicen estos números?</div><ul class="small" style="margin:0;padding-left:18px">${tips.map(t => `<li>${esc(t)}</li>`).join('')}</ul></div>` : ''}`;
+}
+function landingTable(title, head, rows) {
+  return `<div class="card" style="margin-bottom:16px"><div class="eyebrow" style="margin-bottom:8px">${esc(title)}</div>${rows.length ? `<div class="table-wrap"><table class="rt"><thead><tr>${head.map(h => `<th>${esc(h)}</th>`).join('')}</tr></thead><tbody>${rows.map(r => `<tr>${r.map(c => `<td class="small">${esc(String(c))}</td>`).join('')}</tr>`).join('')}</tbody></table></div>` : '<p class="small muted">Todavía ninguno.</p>'}</div>`;
+}
+function landingHtml(R, per) {
+  if (R.result && typeof R.result === 'object') R = R.result;
+  const L = R.landing || {}, T = L.totales || {}, H = L.hoy || {};
+  if (!L.tiene_datos) return `<div class="card"><div class="small"><b>Todavía no llegó ninguna visita de la landing.</b> Falta agregar <code>${TRACK_TAG}</code> antes de &lt;/body&gt; en index.html.</div><ol class="small" style="margin:8px 0 0;padding-left:18px"><li>Subí track.php y track.js a la raíz.</li><li>Agregá la línea del script antes de &lt;/body&gt;.</li><li>Entrá desde otro dispositivo y volvé a mirar.</li></ol></div>`;
+  const V = nz(T.visitas);
+  const cards = [
+    bigCard('Visitantes (únicos por día)', V, `hoy: ${nz(H.visitas)}`),
+    bigCard('Llegaron al precio', nz(T.precio), pct1(T.precio, V) + ' de las visitas'),
+    bigCard('Clics en Suscribirme', nz(T.clicks_suscribirme), `hoy: ${nz(H.clicks)} · ${pct1(T.clicks_suscribirme, V)}`),
+    bigCard('Clics en WhatsApp', nz(T.clicks_whatsapp), pct1(T.clicks_whatsapp, V) + ' de las visitas'),
+    bigCard('Scroll hasta 90%', nz(T.scroll90), `50%: ${pct1(T.scroll50, V)}`),
+    bigCard('Ya tengo cuenta', nz(T.clicks_app), 'clics hacia la app')
+  ].join('');
+  const dias = rowsOf(L.por_dia);
+  const dv = x => nz(pick(x, 'visitas')), dc = x => nz(pick(x, 'clicks', 'clicks_suscribirme')), dw = x => nz(pick(x, 'clicks_whatsapp', 'whatsapp')), dd = x => pick(x, 'dia', 'fecha', 'date');
+  const maxV = Math.max(1, ...dias.map(dv));
+  const chart = dias.length ? `<div style="overflow-x:auto"><div style="display:flex;align-items:flex-end;gap:3px;height:120px;min-width:${dias.length * 9}px">${dias.map(x => `<div title="${esc(`${fdm(dd(x))}: ${dv(x)} visitas, ${dc(x)} clics`)}" style="flex:1;min-width:6px;height:100%;position:relative;display:flex;align-items:flex-end"><div style="width:100%;height:${Math.max(1, dv(x) / maxV * 100)}%;background:var(--line-2);border-radius:3px 3px 0 0;position:relative"><div style="position:absolute;left:0;right:0;bottom:0;height:${dv(x) > 0 ? Math.min(100, dc(x) / dv(x) * 100) : 0}%;background:var(--pos);border-radius:3px 3px 0 0"></div></div></div>`).join('')}</div></div><div class="tiny muted" style="margin-top:6px">Claro: visitantes. Oscuro: clics en Suscribirme.</div>` : '<p class="small muted">Todavía ninguno.</p>';
+  const dev = { movil: 'Celular', tablet: 'Tablet', pc: 'Computadora' }, btnT = { menu: 'Menú superior', portada: 'Portada', precio: 'Sección de precio' };
+  const conv = x => pct1(dc(x), dv(x));
+  const origen = rowsOf(L.origen).map(x => { const n = String(pick(x, 'origen', 'nombre', 'clave')); return [n, dv(x), dc(x), conv(x)]; });
+  const disp = rowsOf(L.dispositivo).map(x => { const n = String(pick(x, 'dispositivo', 'nombre', 'clave')); return [dev[n] || n, dv(x), dc(x), conv(x)]; });
+  const bot = rowsOf(L.boton).map(x => { const n = String(pick(x, 'boton', 'nombre', 'clave')); return [btnT[n] || n, nz(pick(x, 'clicks', 'total'))]; });
+  const det = dias.slice().reverse().map(x => [fdm(dd(x)), dv(x), dc(x), conv(x), dw(x)]);
+  return `<div class="app-grid" style="margin-bottom:16px">${cards}</div><div class="card" style="margin-bottom:16px"><div class="eyebrow" style="margin-bottom:8px">Visitantes y clics por día (${per} días)</div>${chart}</div>${landingTable('De dónde llegan', ['Origen', 'Visitas', 'Clics', 'Conversión'], origen)}${landingTable('Dispositivo', ['Dispositivo', 'Visitas', 'Clics', 'Conversión'], disp)}${landingTable('Qué botón tocan', ['Botón', 'Clics'], bot)}${landingTable('Detalle por día', ['Día', 'Visitantes', 'Clics Suscribirme', 'Conversión', 'WhatsApp'], det)}<p class="tiny muted">Último evento recibido: ${esc(L.ultimo_evento ? fmtDMYHM(L.ultimo_evento) : '—')}</p><p class="tiny muted">En el link de tu bio de Instagram usá ?utm_source=instagram_bio y en cada Reel ?utm_source=reel.</p>`;
+}
 ACT.viewApp = el => {
   const s = (SOURCES || []).find(x => x.id === el.dataset.id); if (!s) return;
-  const tabs = [['summary', 'Resumen'], ['customers', 'Clientes']];
+  const tabs = [['summary', 'Resumen'], ['customers', 'Clientes'], ['landing', 'Landing']];
   const m = openModal({ title: esc(s.name), size: 'lg', body: `<div class="tabs" id="vaT">${tabs.map(([k, l]) => `<button data-vt="${k}">${l}</button>`).join('')}</div><div id="vaB" style="margin-top:12px"></div>`, footer: `<button class="btn btn-ghost" data-cancel>Cerrar</button>` });
   m.el.querySelector('[data-cancel]').onclick = () => m.close();
   const body = $('#vaB', m.el); let seq = 0;
@@ -283,18 +353,23 @@ ACT.viewApp = el => {
     showResult(`<div class="card"><div class="small">Cuenta creada.</div>${gen ? `<div class="small muted" style="margin-top:6px">Clave generada. Se muestra una sola vez:</div><input class="input mono" readonly value="${esc(String(gen))}" style="margin-top:6px">` : ''}</div>`);
     await reload();
   };
+  let period = 30;
+  const drawSummary = (d, k) => {
+    const sel = `<div class="btn-row" style="margin-bottom:10px"><span class="small muted">Período:</span><select class="input" id="vaP" style="max-width:140px">${[7, 30, 90].map(n => `<option value="${n}"${n === period ? ' selected' : ''}>${n} días</option>`).join('')}</select></div>`;
+    body.innerHTML = sel + (d && typeof d === 'object' && !Array.isArray(d) ? (k === 'landing' ? landingHtml(d, period) : resumenHtml(d, period)) : `<pre class="mono small">${esc(JSON.stringify(d, null, 2))}</pre>`);
+    $('#vaP', m.el).onchange = e => { period = Number(e.target.value); show(k); };
+  };
   const show = async k => {
     const my = ++seq;
+    const isSum = k === 'summary' || k === 'landing';
     $$('[data-vt]', m.el).forEach(b => b.classList.toggle('on', b.dataset.vt === k));
     body.innerHTML = '<p class="small muted">Cargando...</p>';
-    const r = await fetchSource(s.id, k);
+    const r = await fetchSource(s.id, isSum ? 'summary' : k, isSum ? period : '');
     if (my !== seq) return;
-    if (r.error) { body.innerHTML = err(r.error); return; }
+    if (r.error) { body.innerHTML = err(r.error) + '<button class="btn btn-sm" id="vaR" style="margin-top:8px">Reintentar</button>'; $('#vaR', m.el).onclick = () => show(k); return; }
     const d = r.data;
-    if (k === 'summary') {
-      body.innerHTML = d && typeof d === 'object' && !Array.isArray(d) && Object.keys(d).length
-        ? `<div class="app-grid">${Object.entries(d).map(([a, b]) => `<div class="card"><div class="small muted">${esc(SUMMARY_LABELS[a] || a)}</div><b>${esc(summaryValue(a, b))}</b></div>`).join('')}</div>`
-        : `<pre class="mono small">${esc(JSON.stringify(d, null, 2))}</pre>`;
+    if (isSum) {
+      drawSummary(d, k);
     } else if (Array.isArray(d.customers)) {
       custList = d.customers;
       body.innerHTML = `<div class="btn-row" style="margin-bottom:10px"><input class="input" id="vaQ" placeholder="Buscar por nombre o email" style="max-width:260px" value="${esc(fText)}"><select class="input" id="vaC" style="max-width:200px">${[['', 'Todos'], ['pago', 'Pagando'], ['prueba', 'En prueba (MP)'], ['manual', 'Gracia'], ['solo_lectura', 'Solo lectura'], ['bloqueado', 'Bloqueados']].map(([v, l]) => `<option value="${v}"${v === fCat ? ' selected' : ''}>${l}</option>`).join('')}</select><button class="btn btn-primary" id="vaN">+ Crear cuenta de gracia</button></div><div id="vaL"></div><div id="vaTbl"></div>`;
