@@ -61,7 +61,7 @@ try {
         if (!$auth->current()) respond(401, ['ok' => false, 'code' => 'session_expired']);
         $sid = $_GET['id'] ?? '';
         $view = $_GET['view'] ?? '';
-        if (!is_string($view) || !in_array($view, ['events', 'summary', 'customers'], true)) respond(400, ['ok' => false, 'code' => 'invalid_view']);
+        if (!is_string($view) || !in_array($view, ['events', 'summary', 'customers', 'pagos', 'sistema'], true)) respond(400, ['ok' => false, 'code' => 'invalid_view']);
         if (!is_string($sid) || !preg_match('/\A[a-z0-9_-]{1,40}\z/', $sid) || !isset($sources[$sid])) respond(404, ['ok' => false, 'code' => 'source_not_found']);
         $srcToken = (string)($sources[$sid]['token'] ?? '');
         if (strlen($srcToken) < 32) respond(503, ['ok' => false, 'code' => 'source_not_configured']);

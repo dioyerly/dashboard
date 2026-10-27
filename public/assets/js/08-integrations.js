@@ -283,9 +283,44 @@ function landingHtml(R, per) {
   const det = dias.slice().reverse().map(x => [fdm(dd(x)), dv(x), dc(x), conv(x), dw(x)]);
   return `<div class="app-grid" style="margin-bottom:16px">${cards}</div><div class="card" style="margin-bottom:16px"><div class="eyebrow" style="margin-bottom:8px">Visitantes y clics por día (${per} días)</div>${chart}</div>${landingTable('De dónde llegan', ['Origen', 'Visitas', 'Clics', 'Conversión'], origen)}${landingTable('Dispositivo', ['Dispositivo', 'Visitas', 'Clics', 'Conversión'], disp)}${landingTable('Qué botón tocan', ['Botón', 'Clics'], bot)}${landingTable('Detalle por día', ['Día', 'Visitantes', 'Clics Suscribirme', 'Conversión', 'WhatsApp'], det)}<p class="tiny muted">Último evento recibido: ${esc(L.ultimo_evento ? fmtDMYHM(L.ultimo_evento) : '—')}</p><p class="tiny muted">En el link de tu bio de Instagram usá ?utm_source=instagram_bio y en cada Reel ?utm_source=reel.</p>`;
 }
+const pill = (txt, kind) => `<span class="badge${kind ? ' ' + kind : ''}">${esc(String(txt))}</span>`;
+const fdt = v => v ? esc(fmtDMYHM(v)) : '—';
+const dash = v => v === null || v === undefined || v === '' ? '—' : esc(String(v));
+const listOf = a => Array.isArray(a) ? a : [];
+function htmlTable(head, rows, empty) {
+  return `<div class="table-wrap"><table class="rt"><thead><tr>${head.map(h => `<th>${esc(h)}</th>`).join('')}</tr></thead><tbody>${rows.length ? rows.map(r => `<tr>${r.map(c => `<td class="small">${c}</td>`).join('')}</tr>`).join('') : `<tr><td colspan="${head.length}" class="small muted">${esc(empty)}</td></tr>`}</tbody></table></div>`;
+}
+function montoTxt(cent, cur) {
+  const n = Math.round(nz(cent) / 100).toLocaleString('es-AR');
+  const c = String(cur || '').toUpperCase();
+  return esc(c === 'ARS' || !c ? '$ ' + n : c + ' ' + n);
+}
+function pagosHtml(d) {
+  const sc = listOf(d.sin_cuenta), cu = listOf(d.cuotas);
+  const a = sc.map((x, i) => [esc(String(x.email_pago ?? '—')), x.estado === 'authorized' ? pill('Autorizada', 'ok') : pill('Sin autorizar', 'warn'), fdt(x.creada), x.link_alta ? `<div class="btn-row"><button class="btn btn-sm" data-cp="${i}">Copiar link</button><button class="btn btn-sm" data-vl="${i}">Ver link</button></div>` : '—']);
+  const b = cu.map(x => [fdt(x.fecha), dash(x.email), (x.estado === 'processed' ? pill('Cobrado', 'ok') : x.estado === 'recycling' ? pill('Rechazado, reintentando', 'bad') : pill(x.estado ?? '—')) + (nz(x.reintento) > 0 ? `<div class="tiny muted">(reintento ${nz(x.reintento)})</div>` : ''), montoTxt(x.monto_cent, x.moneda), dash(x.detalle)]);
+  return `<div id="vaL"></div><div class="card" style="margin-bottom:16px"><div class="eyebrow" style="margin-bottom:8px">Se suscribieron pero no crearon su acceso</div>${a.length ? htmlTable(['Email del pago', 'Estado', 'Fecha', 'Link de alta'], a, '') : '<p class="small muted">Nadie está esperando su alta.</p>'}</div><div class="card"><div class="eyebrow" style="margin-bottom:8px">Cuotas cobradas</div>${cu.length ? htmlTable(['Fecha', 'Cliente', 'Estado', 'Monto', 'Detalle'], b, '') : '<p class="small muted">Sin cobros todavía. Si hay gente en prueba, el primer cobro aparece cuando termine.</p>'}</div>`;
+}
+function sistemaHtml(d) {
+  const g = d.diagnostico || {};
+  const yn = (v, yes, no, noKind) => v ? pill(yes, 'ok') : pill(no, noKind || 'bad');
+  const diag = [
+    ['Credencial de Mercado Pago', yn(g.mp_token_cargado, 'cargada', 'falta')],
+    ['Clave secreta del webhook', yn(g.webhook_secret_cargado, 'cargada', 'falta')],
+    ['Link de suscripción', yn(g.link_suscripcion_ok, 'configurado', 'sin completar')],
+    ['Sitio con HTTPS', yn(g.https_ok, 'sí', 'no')],
+    ['Envío de mails', g.mail_real ? pill('real', 'ok') : pill('modo prueba (no envía)', 'warn')],
+    ['Última notificación de Mercado Pago', d.ultima_notificacion_mp ? esc(fmtDMYHM(d.ultima_notificacion_mp)) : pill('ninguna todavía', 'warn')],
+    ['Notificaciones con error (24 h)', nz(d.notificaciones_error_24h) > 0 ? pill(nz(d.notificaciones_error_24h), 'bad') : pill('0', 'ok')],
+    ['Contador de la landing', d.landing_ultimo_evento ? pill('recibiendo (último ' + fmtDMYHM(d.landing_ultimo_evento) + ')', 'ok') : pill('sin datos: falta track.js en la landing', 'warn')]
+  ];
+  const nt = listOf(d.notificaciones).map(x => [fdt(x.recibido), dash(x.topic), dash(x.data_id), x.firma_ok === true ? pill('ok', 'ok') : x.firma_ok === false ? pill('no', 'bad') : '—', x.resultado === 'ok' ? pill('ok', 'ok') : (x.resultado === 'error' || x.resultado === 'firma_invalida') ? pill(x.resultado, 'bad') : dash(x.resultado), `<span class="tiny">${dash(x.detalle)}</span>`]);
+  const au = listOf(d.auditoria).map(x => [fdt(x.ts), dash(x.actor), dash(x.accion), `<span class="tiny">${dash(x.detalle)}</span>`]);
+  return `<div class="card" style="margin-bottom:16px"><div class="eyebrow" style="margin-bottom:8px">Diagnóstico</div>${htmlTable(['Control', 'Estado'], diag, '')}</div><div class="card" style="margin-bottom:16px"><div class="eyebrow" style="margin-bottom:8px">Notificaciones de Mercado Pago (últimas 40)</div>${htmlTable(['Recibido', 'Tema', 'ID', 'Firma', 'Resultado', 'Detalle'], nt, 'Sin registros todavía.')}</div><div class="card"><div class="eyebrow" style="margin-bottom:8px">Auditoría (últimas 60)</div>${htmlTable(['Fecha', 'Quién', 'Acción', 'Detalle'], au, 'Sin registros todavía.')}</div>`;
+}
 ACT.viewApp = el => {
   const s = (SOURCES || []).find(x => x.id === el.dataset.id); if (!s) return;
-  const tabs = [['summary', 'Resumen'], ['customers', 'Clientes'], ['landing', 'Landing']];
+  const tabs = [['summary', 'Resumen'], ['customers', 'Clientes'], ['landing', 'Landing'], ['pagos', 'Pagos'], ['sistema', 'Sistema']];
   const m = openModal({ title: esc(s.name), size: 'lg', body: `<div class="tabs" id="vaT">${tabs.map(([k, l]) => `<button data-vt="${k}">${l}</button>`).join('')}</div><div id="vaB" style="margin-top:12px"></div>`, footer: `<button class="btn btn-ghost" data-cancel>Cerrar</button>` });
   m.el.querySelector('[data-cancel]').onclick = () => m.close();
   const body = $('#vaB', m.el); let seq = 0;
@@ -353,6 +388,14 @@ ACT.viewApp = el => {
     showResult(`<div class="card"><div class="small">Cuenta creada.</div>${gen ? `<div class="small muted" style="margin-top:6px">Clave generada. Se muestra una sola vez:</div><input class="input mono" readonly value="${esc(String(gen))}" style="margin-top:6px">` : ''}</div>`);
     await reload();
   };
+  const linkOf = b => { const x = listOf(lastPagos.sin_cuenta)[Number(b.dataset.cp ?? b.dataset.vl)]; return String(x?.link_alta || ''); };
+  let lastPagos = {};
+  const drawPagos = d => {
+    lastPagos = d && typeof d === 'object' ? d : {};
+    body.innerHTML = pagosHtml(lastPagos);
+    $$('[data-cp]', body).forEach(b => b.onclick = async () => { const link = linkOf(b); if (!link) return; try { await navigator.clipboard.writeText(link); toast('Link copiado'); } catch (e) { toast('No se pudo copiar', 'bad'); } });
+    $$('[data-vl]', body).forEach(b => b.onclick = () => { const link = linkOf(b); if (link) showResult(`<div class="card"><div class="small muted">Mandáselo a la persona por WhatsApp o mail.</div><input class="input mono" readonly value="${esc(link)}" style="margin-top:6px"></div>`); });
+  };
   let period = 30;
   const drawSummary = (d, k) => {
     const sel = `<div class="btn-row" style="margin-bottom:10px"><span class="small muted">Período:</span><select class="input" id="vaP" style="max-width:140px">${[7, 30, 90].map(n => `<option value="${n}"${n === period ? ' selected' : ''}>${n} días</option>`).join('')}</select></div>`;
@@ -370,6 +413,10 @@ ACT.viewApp = el => {
     const d = r.data;
     if (isSum) {
       drawSummary(d, k);
+    } else if (k === 'pagos') {
+      drawPagos(d);
+    } else if (k === 'sistema') {
+      body.innerHTML = d && typeof d === 'object' && !Array.isArray(d) ? sistemaHtml(d) : `<pre class="mono small">${esc(JSON.stringify(d, null, 2))}</pre>`;
     } else if (Array.isArray(d.customers)) {
       custList = d.customers;
       body.innerHTML = `<div class="btn-row" style="margin-bottom:10px"><input class="input" id="vaQ" placeholder="Buscar por nombre o email" style="max-width:260px" value="${esc(fText)}"><select class="input" id="vaC" style="max-width:200px">${[['', 'Todos'], ['pago', 'Pagando'], ['prueba', 'En prueba (MP)'], ['manual', 'Gracia'], ['solo_lectura', 'Solo lectura'], ['bloqueado', 'Bloqueados']].map(([v, l]) => `<option value="${v}"${v === fCat ? ' selected' : ''}>${l}</option>`).join('')}</select><button class="btn btn-primary" id="vaN">+ Crear cuenta de gracia</button></div><div id="vaL"></div><div id="vaTbl"></div>`;
