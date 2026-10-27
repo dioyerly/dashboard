@@ -11,7 +11,7 @@ VIEWS.integraciones = {
       <div class="mini"><div><span>Última sinc.</span><b>${i.lastSync ? dShort(i.lastSync.slice(0, 10)) : '—'}</b></div><div><span>Importados</span><b>${fnum(i.stats?.imported || 0)}</b></div><div><span>Pendientes</span><b>${fnum(state.review.filter(r => r.source === i.name).length)}</b></div></div>
       ${srcButtons(i)}${(i.errors || []).length ? `<div class="tiny neg" style="margin-top:8px">${esc(i.errors.slice(-1)[0])}</div>` : ''}${i.projectId ? `<div class="tiny muted" style="margin-top:6px">App: ${esc(proj(i.projectId)?.name || '')}</div>` : ''}${i.notes ? `<div class="tiny muted" style="margin-top:6px">${esc(i.notes)}</div>` : ''}</div>`).join('')}
       <button class="card app-card" data-act="editInteg" style="border-style:dashed;display:grid;place-items:center;min-height:150px;color:var(--muted);font-weight:600">${ic('plus')} Nueva fuente de datos</button></div>
-      <div class="card" style="margin-top:16px"><div class="eyebrow" style="margin-bottom:6px">Cómo se evita contar dos veces</div><p class="small" style="margin:0">1) Si un registro trae el mismo <b>ID externo</b> que uno existente, se omite. 2) Si coincide fecha, importe, moneda y producto/concepto con otro registro de <b>otra fuente</b>, va a “Revisión de duplicados” en vez de importarse. 3) Los gastos compartidos se registran una vez y se reparten. 4) Los paquetes suman solo como paquete.</p></div>`;
+      ${appsPanel()}<div class="card" style="margin-top:16px"><div class="eyebrow" style="margin-bottom:6px">Cómo se evita contar dos veces</div><p class="small" style="margin:0">1) Si un registro trae el mismo <b>ID externo</b> que uno existente, se omite. 2) Si coincide fecha, importe, moneda y producto/concepto con otro registro de <b>otra fuente</b>, va a “Revisión de duplicados” en vez de importarse. 3) Los gastos compartidos se registran una vez y se reparten. 4) Los paquetes suman solo como paquete.</p></div>`;
     return h;
   }
 };
@@ -179,6 +179,53 @@ async function syncSources(list) {
   toast(`Sincronización: ${ok} procesados, ${skip} repetidos, ${bad} con error.`, bad ? 'bad' : undefined);
   render();
 }
+const FUENTES_ERR = { id_existente: 'Ya hay una app con ese nombre.', invalid_request: 'Revisá el nombre, la URL (https y dominio estrategia.site) y el token (mínimo 32 caracteres).', solo_tabla: 'Esa app viene de la configuración del servidor y no se puede quitar desde acá.', source_unavailable: 'No pude conectar con la app. Revisá que el export.php esté subido y que el token sea el mismo.', db_no_disponible: 'La base de datos del Centro no está disponible para guardar apps.' };
+const fuenteErr = code => FUENTES_ERR[code] || String(code);
+async function apiPost(action, payload) {
+  let token = '';
+  try { const sr = await fetch('api.php?action=session', { credentials: 'same-origin', cache: 'no-store' }); token = (await sr.json()).csrf || ''; } catch (e) { return { error: 'connection_error' }; }
+  try {
+    const r = await fetch('api.php?action=' + action, { method: 'POST', credentials: 'same-origin', cache: 'no-store', headers: { 'Content-Type': 'application/json', 'X-CSRF-Token': token }, body: JSON.stringify(payload) });
+    const d = await r.json();
+    if (!r.ok || !d.ok) return { error: d.code || 'source_unavailable' };
+    return { data: d };
+  } catch (e) { return { error: 'connection_error' }; }
+}
+function appsPanel() {
+  const list = SOURCES || [];
+  const rows = list.map(s => `<tr><td>${esc(s.name)}</td><td class="small muted">${esc(s.host || '—')}</td><td><span class="badge">${s.origen === 'tabla' ? 'Centro' : 'Config'}</span></td><td>${s.origen === 'tabla' ? `<button class="btn btn-sm" data-act="quitarApp" data-id="${esc(s.id)}">Quitar</button>` : ''}</td></tr>`).join('');
+  return `<div class="card" style="margin-top:16px"><div class="card-h" style="margin-bottom:8px"><div class="eyebrow">Apps conectadas</div><button class="btn btn-sm btn-primary" data-act="conectarApp">+ Conectar app</button></div>${rows ? `<div class="table-wrap"><table class="rt"><thead><tr><th>Nombre</th><th>Host</th><th>Origen</th><th></th></tr></thead><tbody>${rows}</tbody></table></div>` : '<p class="small muted" style="margin:0">Todavía no hay apps conectadas.</p>'}</div>`;
+}
+ACT.quitarApp = async el => {
+  if (!(await confirmDialog({ title: 'Quitar app', message: 'Se desconecta esta app del Centro. Los datos ya importados se conservan.', ok: 'Quitar', tone: 'danger' }))) return;
+  const res = await apiPost('fuentes_quitar', { id: el.dataset.id });
+  if (res.error) { toast(fuenteErr(res.error), 'bad'); return; }
+  toast('App quitada');
+  await loadSources(); render();
+};
+ACT.conectarApp = () => {
+  const m = openModal({ title: 'Conectar app', size: 'lg', body: `<form id="caF" class="form-grid">${field('Nombre *', '<input class="input" name="nombre" maxlength="80" placeholder="Ej.: Gaku">', 'full')}${field('URL del export.php *', '<input class="input" name="url" maxlength="300" placeholder="https://zuhause.estrategia.site/export.php">', 'full')}${field('Token *', '<input class="input" name="token" type="password" autocomplete="off" maxlength="200">', 'full')}</form><div id="caR" style="margin-top:12px"></div>`, footer: `<button class="btn btn-ghost" data-cancel>Cancelar</button><button class="btn btn-primary" data-go>Conectar</button>` });
+  m.el.querySelector('[data-cancel]').onclick = () => m.close();
+  const go = m.el.querySelector('[data-go]'), out = $('#caR', m.el), f = $('#caF', m.el);
+  go.onclick = async () => {
+    const nombre = f.elements.nombre.value.trim(), url = f.elements.url.value.trim(), token = f.elements.token.value;
+    if (!nombre || !url || !token) { out.innerHTML = '<div class="small neg">Completá nombre, URL y token.</div>'; return; }
+    go.disabled = true; out.innerHTML = '<p class="small muted">Conectando...</p>';
+    const res = await apiPost('fuentes_agregar', { nombre, url, token });
+    f.elements.token.value = '';
+    if (res.error) { go.disabled = false; out.innerHTML = `<div class="small neg">${esc(fuenteErr(res.error))}</div>`; return; }
+    const id = res.data.id;
+    await loadSources();
+    const t = await fetchSource(id, 'summary');
+    if (!t.error) { toast('App conectada. Ya recibimos sus datos.'); m.close(); render(); return; }
+    out.innerHTML = `<div class="small neg">${esc(fuenteErr(t.error))}</div><button class="btn btn-sm" id="caQ" style="margin-top:8px">Quitar</button>`;
+    $('#caQ', m.el).onclick = async () => {
+      const q = await apiPost('fuentes_quitar', { id });
+      if (q.error) { toast(fuenteErr(q.error), 'bad'); return; }
+      toast('Conexión deshecha'); await loadSources(); m.close(); render();
+    };
+  };
+};
 ACT.syncAll = () => syncSources(SOURCES || []);
 ACT.syncOne = el => syncSources((SOURCES || []).filter(s => s.id === el.dataset.id));
 const SUMMARY_LABELS = { cuentas_total: 'Clientes totales', con_acceso: 'Con acceso ahora', pagando: 'Pagando', en_prueba: 'En prueba (MP)', gracia: 'Cortesía / gracia', solo_lectura: 'Solo lectura', bloqueados: 'Suspendidos', suscripciones_iniciadas_30d: 'Suscripciones (30 días)', landing_visitas_hoy: 'Visitas hoy', landing_visitas_30d: 'Visitas (30 días)', landing_llegaron_precio_30d: 'Llegaron al precio (30 días)', landing_clicks_suscribirme_30d: 'Clics en Suscribirme (30 días)', landing_clicks_whatsapp_30d: 'Clics en WhatsApp (30 días)', landing_clicks_app_30d: 'Clics a la app (30 días)', landing_conversion_pct: 'Conversión (%)', landing_ultimo_evento: 'Último evento de la landing', landing_estado: 'Estado de la landing', generado: 'Generado' };

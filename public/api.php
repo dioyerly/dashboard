@@ -10,6 +10,21 @@ function respond(int $status, array $body): never
     exit;
 }
 
+function fuentes_mapa(array $config): array
+{
+    $sources = [];
+    foreach (($config['sources'] ?? []) as $sid => $src) { if (is_string($sid) && preg_match('/\A[a-z0-9_-]{1,40}\z/', $sid) && is_array($src)) $sources[$sid] = array_merge($src, ['origen' => 'config']); }
+    if (!isset($sources['zuhause']) && !empty($config['zuhause']['export_token'])) $sources['zuhause'] = ['name' => 'Zuhause', 'url' => 'https://zuhause.estrategia.site/export.php', 'token' => (string)$config['zuhause']['export_token'], 'origen' => 'config'];
+    try {
+        $pdo = Centro\Database::connection($config['db']);
+        foreach ($pdo->query('SELECT id, nombre, url, token FROM centro_fuentes') as $row) {
+            if (is_string($row['id']) && preg_match('/\A[a-z0-9_-]{1,40}\z/', $row['id'])) $sources[$row['id']] = ['name' => (string)$row['nombre'], 'url' => (string)$row['url'], 'token' => (string)$row['token'], 'origen' => 'tabla'];
+        }
+    } catch (Throwable) {
+    }
+    return $sources;
+}
+
 try {
     require dirname(__DIR__) . '/app/bootstrap.php';
     $action = $_GET['action'] ?? '';
@@ -48,14 +63,58 @@ try {
             respond(502, ['ok' => false, 'code' => 'zuhause_unavailable']);
         }
     }
-    $sources = [];
-    foreach (($config['sources'] ?? []) as $sid => $src) { if (is_string($sid) && preg_match('/\A[a-z0-9_-]{1,40}\z/', $sid) && is_array($src)) $sources[$sid] = $src; }
-    if (!isset($sources['zuhause']) && !empty($config['zuhause']['export_token'])) $sources['zuhause'] = ['name' => 'Zuhause', 'url' => 'https://zuhause.estrategia.site/export.php', 'token' => (string)$config['zuhause']['export_token']];
+    $sources = in_array($action, ['sources_list', 'source_data', 'source_action', 'fuentes_agregar', 'fuentes_quitar'], true) ? fuentes_mapa($config) : [];
     if ($action === 'sources_list' && $method === 'GET') {
         if (!$auth->current()) respond(401, ['ok' => false, 'code' => 'session_expired']);
         $list = [];
-        foreach ($sources as $sid => $src) $list[] = ['id' => $sid, 'name' => (string)($src['name'] ?? $sid)];
+        foreach ($sources as $sid => $src) $list[] = ['id' => $sid, 'name' => (string)($src['name'] ?? $sid), 'host' => strtolower((string)(parse_url((string)($src['url'] ?? ''), PHP_URL_HOST) ?: '')), 'origen' => $src['origen'] ?? 'config'];
         respond(200, ['ok' => true, 'sources' => $list]);
+    }
+    if ($action === 'fuentes_agregar' || $action === 'fuentes_quitar') {
+        if ($method !== 'POST') { header('Allow: POST'); respond(405, ['ok' => false, 'code' => 'method_not_allowed']); }
+        if (!$auth->current()) respond(401, ['ok' => false, 'code' => 'session_expired']);
+        if (!Centro\Security::validCsrf($_SERVER['HTTP_X_CSRF_TOKEN'] ?? null)) respond(403, ['ok' => false, 'code' => 'csrf_invalid']);
+        if (!str_starts_with(strtolower($_SERVER['CONTENT_TYPE'] ?? ''), 'application/json')) respond(415, ['ok' => false, 'code' => 'json_required']);
+        $raw = file_get_contents('php://input', false, null, 0, 2049);
+        if ($raw === false || strlen($raw) > 2048) respond(413, ['ok' => false, 'code' => 'request_too_large']);
+        try { $in = json_decode($raw, true, 4, JSON_THROW_ON_ERROR); } catch (Throwable) { respond(400, ['ok' => false, 'code' => 'invalid_request']); }
+        if (!is_array($in)) respond(400, ['ok' => false, 'code' => 'invalid_request']);
+        if ($action === 'fuentes_agregar') {
+            $nombre = is_string($in['nombre'] ?? null) ? trim($in['nombre']) : '';
+            $url = is_string($in['url'] ?? null) ? trim($in['url']) : '';
+            $token = is_string($in['token'] ?? null) ? $in['token'] : '';
+            if ($nombre === '' || mb_strlen($nombre) > 80 || preg_match('/[<>]/', $nombre) || $nombre !== strip_tags($nombre)) respond(400, ['ok' => false, 'code' => 'invalid_request']);
+            $parts = strlen($url) <= 300 ? parse_url($url) : false;
+            $host = is_array($parts) ? strtolower((string)($parts['host'] ?? '')) : '';
+            if (!is_array($parts) || ($parts['scheme'] ?? '') !== 'https' || isset($parts['user']) || isset($parts['pass']) || $host === '' || $host === '.estrategia.site' || !str_ends_with($host, '.estrategia.site')) respond(400, ['ok' => false, 'code' => 'invalid_request']);
+            if (strlen($token) < 32 || strlen($token) > 200 || !preg_match('/\A\S+\z/', $token)) respond(400, ['ok' => false, 'code' => 'invalid_request']);
+            $nid = substr(trim((string)preg_replace('/[^a-z0-9]+/', '-', strtolower($nombre)), '-'), 0, 40);
+            $nid = rtrim($nid, '-');
+            if ($nid === '') respond(400, ['ok' => false, 'code' => 'invalid_request']);
+            if (isset($sources[$nid])) respond(409, ['ok' => false, 'code' => 'id_existente']);
+            try {
+                $pdo = Centro\Database::connection($config['db']);
+                $pdo->exec('CREATE TABLE IF NOT EXISTS centro_fuentes (id VARCHAR(40) NOT NULL PRIMARY KEY, nombre VARCHAR(80) NOT NULL, url VARCHAR(300) NOT NULL, token VARCHAR(200) NOT NULL, creado DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP) DEFAULT CHARSET=utf8mb4');
+                $pdo->prepare('INSERT INTO centro_fuentes (id, nombre, url, token) VALUES (?, ?, ?, ?)')->execute([$nid, $nombre, $url, $token]);
+            } catch (PDOException $e) {
+                if ($e->getCode() === '23000') respond(409, ['ok' => false, 'code' => 'id_existente']);
+                respond(503, ['ok' => false, 'code' => 'db_no_disponible']);
+            } catch (Throwable) {
+                respond(503, ['ok' => false, 'code' => 'db_no_disponible']);
+            }
+            respond(200, ['ok' => true, 'id' => $nid]);
+        }
+        $qid = $in['id'] ?? null;
+        if (!is_string($qid) || !preg_match('/\A[a-z0-9_-]{1,40}\z/', $qid)) respond(400, ['ok' => false, 'code' => 'invalid_request']);
+        if (!isset($sources[$qid])) respond(404, ['ok' => false, 'code' => 'source_not_found']);
+        if (($sources[$qid]['origen'] ?? '') !== 'tabla') respond(400, ['ok' => false, 'code' => 'solo_tabla']);
+        try {
+            $pdo = Centro\Database::connection($config['db']);
+            $pdo->prepare('DELETE FROM centro_fuentes WHERE id = ?')->execute([$qid]);
+        } catch (Throwable) {
+            respond(503, ['ok' => false, 'code' => 'db_no_disponible']);
+        }
+        respond(200, ['ok' => true]);
     }
     if ($action === 'source_data' && $method === 'GET') {
         if (!$auth->current()) respond(401, ['ok' => false, 'code' => 'session_expired']);
