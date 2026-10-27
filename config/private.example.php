@@ -12,4 +12,6 @@ return [
         'user' => '',
         'password' => '',
     ],
+    // Apps conectadas. La clave es el id en minusculas y debe coincidir con el campo "source" de los eventos.
+    // 'sources' => ['zuhause' => ['name' => 'Zuhause', 'url' => 'https://zuhause.estrategia.site/export.php', 'token' => 'TOKEN_32_O_MAS']],
 ];

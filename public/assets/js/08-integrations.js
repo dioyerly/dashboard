@@ -1,14 +1,15 @@
 VIEWS.integraciones = {
   render() {
+    if (SOURCES === null) loadSources();
     const tab = ui.tabs.integ || 'conexiones';
-    let h = pageHead('Integraciones', 'Integraciones', 'Empezá manual, importá archivos y conectá tus apps de a poco. Cada fuente indica su última sincronización, errores y posibles duplicados.', `<button class="btn" data-act="importJSON">${ic('code')} Eventos JSON</button><button class="btn" data-act="syncZuhause">${ic('sync')} Sincronizar Zuhause</button><button class="btn btn-lens" data-act="importCSV">${ic('upload')} Importar CSV</button>`);
+    let h = pageHead('Integraciones', 'Integraciones', 'Empezá manual, importá archivos y conectá tus apps de a poco. Cada fuente indica su última sincronización, errores y posibles duplicados.', `<button class="btn" data-act="importJSON">${ic('code')} Eventos JSON</button>${(SOURCES || []).length ? '<button class="btn" data-act="syncAll">Sincronizar todo</button>' : ''}<button class="btn btn-lens" data-act="importCSV">${ic('upload')} Importar CSV</button>`);
     h += `<div class="tabs">${[['conexiones', 'Fuentes de datos'], ['review', `Revisión de duplicados${state.review.length ? ' (' + state.review.length + ')' : ''}`], ['spec', 'Especificación para apps']].map(([id, l]) => `<button data-act="tab" data-k="integ" data-t="${id}" class="${tab === id ? 'on' : ''}">${l}</button>`).join('')}</div>`;
     if (tab === 'review') return h + reviewTab();
     if (tab === 'spec') return h + specTab();
     h += `<div class="app-grid">${state.integrations.map((i, k) => `<div class="card app-card" data-act="editInteg" data-id="${i.id}" style="animation-delay:${k * 40}ms"><span class="bar" style="background:var(--${{ activa: 'pos', error: 'coral', pausada: 'warn' }[i.status] || 'line-2'})"></span>
       <div style="display:flex;justify-content:space-between;gap:8px"><div><b style="font-family:var(--head)">${esc(i.name)}</b><div class="small muted">${esc(statusOf(INTEG_KINDS, i.kind).label)} · ${esc(statusOf(INTEG_METHODS, i.method).label)}</div></div>${badge(INTEG_STATUS, i.status)}</div>
       <div class="mini"><div><span>Última sinc.</span><b>${i.lastSync ? dShort(i.lastSync.slice(0, 10)) : '—'}</b></div><div><span>Importados</span><b>${fnum(i.stats?.imported || 0)}</b></div><div><span>Pendientes</span><b>${fnum(state.review.filter(r => r.source === i.name).length)}</b></div></div>
-      ${(i.errors || []).length ? `<div class="tiny neg" style="margin-top:8px">${esc(i.errors.slice(-1)[0])}</div>` : ''}${i.projectId ? `<div class="tiny muted" style="margin-top:6px">App: ${esc(proj(i.projectId)?.name || '')}</div>` : ''}${i.notes ? `<div class="tiny muted" style="margin-top:6px">${esc(i.notes)}</div>` : ''}</div>`).join('')}
+      ${srcButtons(i)}${(i.errors || []).length ? `<div class="tiny neg" style="margin-top:8px">${esc(i.errors.slice(-1)[0])}</div>` : ''}${i.projectId ? `<div class="tiny muted" style="margin-top:6px">App: ${esc(proj(i.projectId)?.name || '')}</div>` : ''}${i.notes ? `<div class="tiny muted" style="margin-top:6px">${esc(i.notes)}</div>` : ''}</div>`).join('')}
       <button class="card app-card" data-act="editInteg" style="border-style:dashed;display:grid;place-items:center;min-height:150px;color:var(--muted);font-weight:600">${ic('plus')} Nueva fuente de datos</button></div>
       <div class="card" style="margin-top:16px"><div class="eyebrow" style="margin-bottom:6px">Cómo se evita contar dos veces</div><p class="small" style="margin:0">1) Si un registro trae el mismo <b>ID externo</b> que uno existente, se omite. 2) Si coincide fecha, importe, moneda y producto/concepto con otro registro de <b>otra fuente</b>, va a “Revisión de duplicados” en vez de importarse. 3) Los gastos compartidos se registran una vez y se reparten. 4) Los paquetes suman solo como paquete.</p></div>`;
     return h;
@@ -146,16 +147,69 @@ ACT.importJSON = () => {
     render();
   };
 };
-ACT.syncZuhause = async () => {
+let SOURCES = null, sourcesLoading = false;
+async function loadSources() {
+  if (sourcesLoading) return; sourcesLoading = true;
+  try { const r = await fetch('api.php?action=sources_list', { credentials: 'same-origin', cache: 'no-store' }); const d = await r.json(); SOURCES = r.ok && d.ok && Array.isArray(d.sources) ? d.sources : []; }
+  catch (e) { SOURCES = []; }
+  sourcesLoading = false;
+  if ((SOURCES || []).length) render();
+}
+const srcFor = i => (SOURCES || []).find(s => s.id === norm(i.name) || norm(s.name) === norm(i.name));
+function srcButtons(i) {
+  const s = srcFor(i); if (!s) return '';
+  return `<div class="btn-row" style="margin-top:10px"><button class="btn btn-sm" data-act="syncOne" data-id="${esc(s.id)}">Sincronizar</button><button class="btn btn-sm" data-act="viewApp" data-id="${esc(s.id)}">Ver app</button></div>`;
+}
+async function fetchSource(id, view) {
   try {
-    const resp = await fetch('api.php?action=zuhause_events', { credentials: 'same-origin', cache: 'no-store' });
-    const data = await resp.json();
-    if (!resp.ok || !data.ok) { toast(`Error: ${data.code || 'zuhause_unavailable'}`, 'bad'); return; }
-    if (!Array.isArray(data.events)) { toast('Error: eventos inválidos', 'bad'); return; }
-    let res; try { res = await transact('zuhause', st => processEvents(st, data.events)); } catch (e) { return; }
-    toast(`Sincronizados ${res.ok}. ${res.skip ? res.skip + ' repetidos. ' : ''}${res.err.length ? res.err.length + ' con error.' : ''}`);
-    render();
-  } catch (e) { toast('Error de conexión', 'bad'); }
+    const r = await fetch('api.php?action=source_data&id=' + encodeURIComponent(id) + '&view=' + view, { credentials: 'same-origin', cache: 'no-store' });
+    const d = await r.json();
+    if (!r.ok || !d.ok) return { error: d.code || 'source_unavailable' };
+    return { data: d.data };
+  } catch (e) { return { error: 'connection_error' }; }
+}
+async function syncSources(list) {
+  let ok = 0, skip = 0, bad = 0;
+  for (const s of list) {
+    const r = await fetchSource(s.id, 'events');
+    if (r.error) { bad++; toast(`${s.name}: ${r.error}`, 'bad'); continue; }
+    let res; try { res = await transact('source', st => processEvents(st, r.data.events)); } catch (e) { bad++; continue; }
+    ok += res.ok; skip += res.skip; bad += res.err.length;
+  }
+  toast(`Sincronización: ${ok} procesados, ${skip} repetidos, ${bad} con error.`, bad ? 'bad' : undefined);
+  render();
+}
+ACT.syncAll = () => syncSources(SOURCES || []);
+ACT.syncOne = el => syncSources((SOURCES || []).filter(s => s.id === el.dataset.id));
+ACT.viewApp = el => {
+  const s = (SOURCES || []).find(x => x.id === el.dataset.id); if (!s) return;
+  const tabs = [['summary', 'Resumen'], ['customers', 'Clientes'], ['actions', 'Acciones']];
+  const m = openModal({ title: esc(s.name), size: 'lg', body: `<div class="tabs" id="vaT">${tabs.map(([k, l]) => `<button data-vt="${k}">${l}</button>`).join('')}</div><div id="vaB" style="margin-top:12px"></div>`, footer: `<button class="btn btn-ghost" data-cancel>Cerrar</button>` });
+  m.el.querySelector('[data-cancel]').onclick = () => m.close();
+  const body = $('#vaB', m.el); let seq = 0;
+  const err = code => `<div class="small neg">Error: ${esc(code)}</div>`;
+  const cell = v => v && typeof v === 'object' ? JSON.stringify(v) : String(v ?? '');
+  const show = async k => {
+    const my = ++seq;
+    $$('[data-vt]', m.el).forEach(b => b.classList.toggle('on', b.dataset.vt === k));
+    if (k === 'actions') { body.innerHTML = '<p class="small muted">Próximamente: suspender o activar clientes y restablecer claves.</p>'; return; }
+    body.innerHTML = '<p class="small muted">Cargando...</p>';
+    const r = await fetchSource(s.id, k);
+    if (my !== seq) return;
+    if (r.error) { body.innerHTML = err(r.error); return; }
+    const d = r.data;
+    if (k === 'summary') {
+      body.innerHTML = d && typeof d === 'object' && !Array.isArray(d) && Object.keys(d).length
+        ? `<div class="app-grid">${Object.entries(d).map(([a, b]) => `<div class="card"><div class="eyebrow">${esc(a)}</div><b>${esc(cell(b))}</b></div>`).join('')}</div>`
+        : `<pre class="mono small">${esc(JSON.stringify(d, null, 2))}</pre>`;
+    } else if (Array.isArray(d.customers)) {
+      body.innerHTML = d.customers.length
+        ? `<div class="table-wrap"><table class="rt"><thead><tr><th>Nombre</th><th>Email</th><th>Estado</th><th>Alta</th></tr></thead><tbody>${d.customers.map(c => `<tr><td>${esc(cell(c.name ?? c.nombre))}</td><td>${esc(cell(c.email))}</td><td><span class="badge">${esc(cell(c.status ?? c.estado))}</span></td><td class="small">${esc(cell(c.created_at ?? c.alta ?? c.date).slice(0, 10))}</td></tr>`).join('')}</tbody></table></div>`
+        : '<p class="small muted">No hay clientes registrados.</p>';
+    } else body.innerHTML = '<p class="small muted">Esta app todavía no envía clientes.</p>';
+  };
+  $$('[data-vt]', m.el).forEach(b => b.onclick = () => show(b.dataset.vt));
+  show('summary');
 };
 function processEvents(st, evs) {
   const out = { ok: 0, skip: 0, err: [] }; const seen = new Set(st.sales.map(s => s.externalId).filter(Boolean)); st.integrations.forEach(i => (i.seen || []).forEach(x => seen.add(x)));

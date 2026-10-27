@@ -48,6 +48,39 @@ try {
             respond(502, ['ok' => false, 'code' => 'zuhause_unavailable']);
         }
     }
+    $sources = [];
+    foreach (($config['sources'] ?? []) as $sid => $src) { if (is_string($sid) && preg_match('/\A[a-z0-9_-]{1,40}\z/', $sid) && is_array($src)) $sources[$sid] = $src; }
+    if (!isset($sources['zuhause']) && !empty($config['zuhause']['export_token'])) $sources['zuhause'] = ['name' => 'Zuhause', 'url' => 'https://zuhause.estrategia.site/export.php', 'token' => (string)$config['zuhause']['export_token']];
+    if ($action === 'sources_list' && $method === 'GET') {
+        if (!$auth->current()) respond(401, ['ok' => false, 'code' => 'session_expired']);
+        $list = [];
+        foreach ($sources as $sid => $src) $list[] = ['id' => $sid, 'name' => (string)($src['name'] ?? $sid)];
+        respond(200, ['ok' => true, 'sources' => $list]);
+    }
+    if ($action === 'source_data' && $method === 'GET') {
+        if (!$auth->current()) respond(401, ['ok' => false, 'code' => 'session_expired']);
+        $sid = $_GET['id'] ?? '';
+        $view = $_GET['view'] ?? '';
+        if (!is_string($view) || !in_array($view, ['events', 'summary', 'customers'], true)) respond(400, ['ok' => false, 'code' => 'invalid_view']);
+        if (!is_string($sid) || !preg_match('/\A[a-z0-9_-]{1,40}\z/', $sid) || !isset($sources[$sid])) respond(404, ['ok' => false, 'code' => 'source_not_found']);
+        $srcToken = (string)($sources[$sid]['token'] ?? '');
+        if (strlen($srcToken) < 32) respond(503, ['ok' => false, 'code' => 'source_not_configured']);
+        $srcUrl = (string)($sources[$sid]['url'] ?? '');
+        $srcParts = parse_url($srcUrl);
+        $srcHost = strtolower((string)($srcParts['host'] ?? ''));
+        if (!is_array($srcParts) || ($srcParts['scheme'] ?? '') !== 'https' || !str_ends_with($srcHost, '.estrategia.site')) respond(503, ['ok' => false, 'code' => 'source_invalid_url']);
+        if ($view !== 'events') $srcUrl .= (str_contains($srcUrl, '?') ? '&' : '?') . 'view=' . $view;
+        $ctx = stream_context_create(['http' => ['method' => 'GET', 'timeout' => 15, 'ignore_errors' => true,
+            'header' => "Authorization: Bearer " . $srcToken . "\r\nAccept: application/json\r\n"]]);
+        $raw = @file_get_contents($srcUrl, false, $ctx);
+        $srcStatus = 0;
+        if (isset($http_response_header[0]) && preg_match('/\s(\d{3})(\s|$)/', $http_response_header[0], $mm)) $srcStatus = (int)$mm[1];
+        if ($srcStatus === 404) respond(501, ['ok' => false, 'code' => 'view_not_implemented']);
+        if ($raw === false || $srcStatus !== 200 || strlen($raw) > 5000000) respond(502, ['ok' => false, 'code' => 'source_unavailable']);
+        try { $decoded = json_decode($raw, true, 512, JSON_THROW_ON_ERROR); } catch (Throwable) { respond(502, ['ok' => false, 'code' => 'source_unavailable']); }
+        if (!is_array($decoded) || ($view === 'events' && !is_array($decoded['events'] ?? null))) respond(502, ['ok' => false, 'code' => 'source_unavailable']);
+        respond(200, ['ok' => true, 'view' => $view, 'data' => $decoded]);
+    }
     if (!in_array($action, ['login', 'logout', 'touch'], true)) {
         if (!$auth->current()) respond(401, ['ok' => false, 'code' => 'session_expired']);
         respond(404, ['ok' => false, 'code' => 'not_found']);
