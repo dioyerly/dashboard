@@ -191,10 +191,10 @@ function summaryValue(k, v) {
   if (k === 'landing_ultimo_evento' || k === 'generado') return fmtDMYHM(v);
   return v && typeof v === 'object' ? JSON.stringify(v) : String(v);
 }
-async function sourceAction(id, cuenta, accion, valor) {
+async function sourceAction(id, accion, campos) {
   let token = '';
   try { const sr = await fetch('api.php?action=session', { credentials: 'same-origin', cache: 'no-store' }); token = (await sr.json()).csrf || ''; } catch (e) { return { error: 'connection_error' }; }
-  const payload = { id, cuenta, accion }; if (valor) payload.valor = valor;
+  const payload = { ...campos, id, accion };
   try {
     const r = await fetch('api.php?action=source_action', { method: 'POST', credentials: 'same-origin', cache: 'no-store', headers: { 'Content-Type': 'application/json', 'X-CSRF-Token': token }, body: JSON.stringify(payload) });
     const d = await r.json();
@@ -202,19 +202,92 @@ async function sourceAction(id, cuenta, accion, valor) {
     return { result: d.result };
   } catch (e) { return { error: 'connection_error' }; }
 }
+const CAT_TXT = { pago: 'Pagando', prueba: 'En prueba (MP)', manual: 'Gracia', solo_lectura: 'Solo lectura', bloqueado: 'Suspendido' };
+const ERR_MSG = { email_ya_tiene_cuenta: 'Ese email ya tiene una cuenta. Buscala y usá Dar gracia.', tiene_suscripcion_mp: 'Esa cuenta tiene suscripción activa en Mercado Pago.', sin_suscripcion_mp: 'Esa cuenta no tiene suscripción en Mercado Pago.', email_invalido: 'El email no es válido.', nombre_invalido: 'El nombre no es válido.', clave_invalida: 'La clave no es válida.', cuenta_no_encontrada: 'No se encontró la cuenta.' };
+const errText = code => ERR_MSG[code] || String(code);
+function estadoTxt(c) { let t = CAT_TXT[c.categoria] || String(c.estado ?? c.categoria ?? '—'); if (c.override === 'activo') t += ' · Cortesía'; else if (c.override === 'bloqueado') t += ' · Bloqueado'; return t; }
+function venceTxt(c) {
+  const base = c.categoria === 'pago' ? (c.proximo_cobro || c.vence) : (c.vence || c.proximo_cobro);
+  let t = base ? esc(fmtDMYHM(base)) : '—';
+  const n = c.dias_restantes === null || c.dias_restantes === undefined ? NaN : Number(c.dias_restantes);
+  if (Number.isFinite(n) && n >= 0) t += `<br><span class="small muted">faltan ${n} ${n === 1 ? 'día' : 'días'}</span>`;
+  return t;
+}
 ACT.viewApp = el => {
   const s = (SOURCES || []).find(x => x.id === el.dataset.id); if (!s) return;
-  const tabs = [['summary', 'Resumen'], ['customers', 'Clientes'], ['actions', 'Acciones']];
+  const tabs = [['summary', 'Resumen'], ['customers', 'Clientes']];
   const m = openModal({ title: esc(s.name), size: 'lg', body: `<div class="tabs" id="vaT">${tabs.map(([k, l]) => `<button data-vt="${k}">${l}</button>`).join('')}</div><div id="vaB" style="margin-top:12px"></div>`, footer: `<button class="btn btn-ghost" data-cancel>Cerrar</button>` });
   m.el.querySelector('[data-cancel]').onclick = () => m.close();
   const body = $('#vaB', m.el); let seq = 0;
   const err = code => `<div class="small neg">Error: ${esc(code)}</div>`;
   const cell = v => v && typeof v === 'object' ? JSON.stringify(v) : String(v ?? '');
+  let custList = [], fText = '', fCat = '';
+  const showResult = html => { const l = $('#vaL', m.el); if (l) l.innerHTML = html ? `<div style="margin-bottom:12px">${html}</div>` : ''; };
+  const reload = async () => {
+    const r = await fetchSource(s.id, 'customers');
+    if (r.error) { toast(errText(r.error), 'bad'); return; }
+    if (Array.isArray(r.data?.customers)) { custList = r.data.customers; drawTable(); }
+  };
+  const drawTable = () => {
+    const tbl = $('#vaTbl', m.el); if (!tbl) return;
+    const q = norm(fText);
+    const list = custList.filter(c => (!fCat || c.categoria === fCat) && (!q || norm(`${c.nombre ?? ''} ${c.email ?? ''}`).includes(q)));
+    if (!list.length) { tbl.innerHTML = `<p class="small muted">${custList.length ? 'Ningún cliente coincide con el filtro.' : 'No hay clientes registrados.'}</p>`; return; }
+    const btn = (c, a, v, l) => `<button class="btn btn-sm" data-ac="${a}" data-v="${v}" data-id="${esc(s.id)}" data-cuenta="${Number(c.id)}">${l}</button>`;
+    const acts = c => {
+      if (!(Number.isInteger(Number(c.id)) && Number(c.id) > 0)) return '<span class="small muted">Sin ID de cuenta</span>';
+      return `<div class="btn-row">${btn(c, 'dar_gracia', '', 'Dar / extender gracia')}${c.categoria === 'manual' ? btn(c, 'quitar_gracia', '', 'Quitar gracia') : ''}${btn(c, 'set_acceso', 'bloqueado', 'Suspender')}${btn(c, 'set_acceso', 'activo', 'Activar')}${btn(c, 'set_acceso', 'auto', 'Volver a automático')}${btn(c, 'link_clave', '', 'Link de clave')}${c.categoria === 'pago' || c.categoria === 'prueba' ? btn(c, 'resync', '', 'Sincronizar con MP') : ''}</div>`;
+    };
+    tbl.innerHTML = `<div class="table-wrap"><table class="rt"><thead><tr><th>Cliente</th><th>Estado</th><th>Vence / próximo cobro</th><th>Último pago</th><th>Alta e ingreso</th><th>Acciones</th></tr></thead><tbody>${list.map(c => `<tr><td><b>${esc(cell(c.nombre))}</b><div class="small muted">${esc(cell(c.email))}</div>${c.motivo ? `<div class="tiny muted">${esc(cell(c.motivo))}</div>` : ''}</td><td><span class="badge">${esc(estadoTxt(c))}</span></td><td class="small">${venceTxt(c)}</td><td class="small">${c.ultimo_pago ? esc(fmtDMYHM(c.ultimo_pago)) : '—'}${Number(c.monto_cent) > 0 ? `<div class="muted">${esc((Number(c.monto_cent) / 100).toLocaleString('es-AR'))} ${esc(cell(c.moneda))}</div>` : ''}</td><td class="small">Alta ${esc(fmtDMY(c.alta))}<br>Ingreso ${c.ultimo_ingreso ? esc(fmtDMY(c.ultimo_ingreso)) : '—'}</td><td>${acts(c)}</td></tr>`).join('')}</tbody></table></div>`;
+    $$('[data-ac]', tbl).forEach(b => b.onclick = () => doAction(b));
+  };
+  const doAction = async b => {
+    const accion = b.dataset.ac, valor = b.dataset.v, campos = { cuenta: Number(b.dataset.cuenta) };
+    const conf = { bloqueado: ['Suspender cliente', '¿Suspender el acceso de este cliente?', 'Suspender', 'danger'], activo: ['Activar cliente', '¿Dar acceso a este cliente?', 'Activar'], auto: ['Volver a automático', '¿Volver el acceso de este cliente al modo automático?', 'Confirmar'] };
+    if (accion === 'set_acceso') { const [title, message, ok, tone] = conf[valor]; if (!(await confirmDialog({ title, message, ok, tone }))) return; campos.valor = valor; }
+    if (accion === 'quitar_gracia' && !(await confirmDialog({ title: 'Quitar gracia', message: '¿Quitar la gracia de este cliente?', ok: 'Quitar', tone: 'danger' }))) return;
+    if (accion === 'dar_gracia') {
+      const r = await confirmDialog({ title: 'Dar / extender gracia', message: '¿Cuántos días de gracia?', ok: 'Dar gracia', extra: field('Días', '<input class="input" name="dias" type="number" min="1" max="3650" value="7">') });
+      if (!r) return;
+      const dias = Number(r.dias); if (!Number.isInteger(dias) || dias < 1 || dias > 3650) { toast('Días inválidos', 'bad'); return; }
+      campos.dias = dias;
+    }
+    showResult('');
+    b.disabled = true;
+    const res = await sourceAction(b.dataset.id, accion, campos);
+    b.disabled = false;
+    if (res.error) { toast(errText(res.error), 'bad'); return; }
+    toast('Listo');
+    if (accion === 'link_clave') {
+      const link = res.result?.link ?? res.result?.url ?? res.result?.enlace ?? JSON.stringify(res.result);
+      showResult(`<div class="card"><div class="small muted">Vence en 1 hora. Se muestra una sola vez.</div><input class="input mono" readonly value="${esc(String(link))}" style="margin-top:6px"></div>`);
+    } else if (accion === 'dar_gracia' && res.result?.vence) {
+      showResult(`<div class="card small">Gracia hasta ${esc(fmtDMYHM(res.result.vence))}</div>`);
+    }
+    if (accion !== 'link_clave') await reload();
+  };
+  const createGrace = async () => {
+    const r = await confirmDialog({ title: 'Crear cuenta de gracia', message: 'Se crea una cuenta con acceso de cortesía.', ok: 'Crear', extra: field('Nombre *', '<input class="input" name="nombre" maxlength="120">') + field('Email *', '<input class="input" name="email" type="email" maxlength="190">') + field('Días', '<input class="input" name="dias" type="number" min="1" max="3650" value="7">') + field('Motivo', '<input class="input" name="motivo" maxlength="80">') + field('Clave (opcional)', '<input class="input" name="clave" type="password" maxlength="200" autocomplete="off">', '', 'Si la dejás vacía, la app genera una.') });
+    if (!r) return;
+    const nombre = String(r.nombre || '').trim(), email = String(r.email || '').trim(), dias = Number(r.dias || 7);
+    if (!nombre || !email) { toast('Completá nombre y email', 'bad'); return; }
+    if (!Number.isInteger(dias) || dias < 1 || dias > 3650) { toast('Días inválidos', 'bad'); return; }
+    const campos = { nombre, email, dias };
+    if (String(r.motivo || '').trim()) campos.motivo = String(r.motivo).trim();
+    if (r.clave) campos.clave = String(r.clave);
+    showResult('');
+    const res = await sourceAction(s.id, 'crear_gracia', campos);
+    if (res.error) { toast(errText(res.error), 'bad'); return; }
+    toast('Listo');
+    const gen = res.result?.clave_generada;
+    showResult(`<div class="card"><div class="small">Cuenta creada.</div>${gen ? `<div class="small muted" style="margin-top:6px">Clave generada. Se muestra una sola vez:</div><input class="input mono" readonly value="${esc(String(gen))}" style="margin-top:6px">` : ''}</div>`);
+    await reload();
+  };
   const show = async k => {
     const my = ++seq;
     $$('[data-vt]', m.el).forEach(b => b.classList.toggle('on', b.dataset.vt === k));
     body.innerHTML = '<p class="small muted">Cargando...</p>';
-    const r = await fetchSource(s.id, k === 'actions' ? 'customers' : k);
+    const r = await fetchSource(s.id, k);
     if (my !== seq) return;
     if (r.error) { body.innerHTML = err(r.error); return; }
     const d = r.data;
@@ -223,25 +296,12 @@ ACT.viewApp = el => {
         ? `<div class="app-grid">${Object.entries(d).map(([a, b]) => `<div class="card"><div class="small muted">${esc(SUMMARY_LABELS[a] || a)}</div><b>${esc(summaryValue(a, b))}</b></div>`).join('')}</div>`
         : `<pre class="mono small">${esc(JSON.stringify(d, null, 2))}</pre>`;
     } else if (Array.isArray(d.customers)) {
-      const act = k === 'actions';
-      const accId = c => { const n = Number(c.cuenta ?? c.cuenta_id ?? c.id); return Number.isInteger(n) && n > 0 ? n : 0; };
-      const btns = c => { const n = accId(c); if (!n) return '<span class="small muted">Sin ID de cuenta</span>'; const b = (a, v, l) => `<button class="btn btn-sm" data-ac="${a}" data-v="${v}" data-id="${esc(s.id)}" data-cuenta="${n}">${l}</button>`; return `<div class="btn-row">${b('set_acceso', 'bloqueado', 'Suspender')}${b('set_acceso', 'activo', 'Activar')}${b('set_acceso', 'auto', 'Volver a automático')}${b('link_clave', '', 'Link de clave')}</div>`; };
-      body.innerHTML = (d.customers.length
-        ? `<div class="table-wrap"><table class="rt"><thead><tr><th>Nombre</th><th>Email</th><th>Estado</th><th>Alta</th>${act ? '<th>Acciones</th>' : ''}</tr></thead><tbody>${d.customers.map(c => { const st = String(c.status ?? c.estado ?? c.acceso ?? ''); return `<tr><td>${esc(cell(c.name ?? c.nombre))}</td><td>${esc(cell(c.email))}</td><td><span class="badge">${esc(ACCESS_LABELS[st] || st || '—')}</span></td><td class="small">${esc(fmtDMY(c.created_at ?? c.alta ?? c.date))}</td>${act ? `<td>${btns(c)}</td>` : ''}</tr>`; }).join('')}</tbody></table></div>`
-        : '<p class="small muted">No hay clientes registrados.</p>') + (act ? '<div id="vaL" style="margin-top:12px"></div>' : '');
-      if (act) $$('[data-ac]', body).forEach(b => b.onclick = async () => {
-        const accion = b.dataset.ac, valor = b.dataset.v, cuenta = Number(b.dataset.cuenta), msgs = { bloqueado: ['Suspender cliente', '¿Suspender el acceso de este cliente?', 'Suspender', 'danger'], activo: ['Activar cliente', '¿Dar acceso a este cliente?', 'Activar', ''], auto: ['Volver a automático', '¿Volver el acceso de este cliente al modo automático?', 'Confirmar', ''] };
-        if (accion === 'set_acceso') { const [title, message, ok, tone] = msgs[valor]; if (!(await confirmDialog({ title, message, ok, tone }))) return; }
-        b.disabled = true;
-        const res = await sourceAction(b.dataset.id, cuenta, accion, valor);
-        b.disabled = false;
-        if (res.error) { toast(`Error: ${res.error}`, 'bad'); return; }
-        toast('Listo');
-        if (accion === 'link_clave') {
-          const link = res.result?.link ?? res.result?.url ?? res.result?.enlace ?? JSON.stringify(res.result);
-          $('#vaL', m.el).innerHTML = `<div class="card"><div class="small muted">Vence en 1 hora. Se muestra una sola vez.</div><input class="input mono" readonly value="${esc(String(link))}" style="margin-top:6px"></div>`;
-        } else show('actions');
-      });
+      custList = d.customers;
+      body.innerHTML = `<div class="btn-row" style="margin-bottom:10px"><input class="input" id="vaQ" placeholder="Buscar por nombre o email" style="max-width:260px" value="${esc(fText)}"><select class="input" id="vaC" style="max-width:200px">${[['', 'Todos'], ['pago', 'Pagando'], ['prueba', 'En prueba (MP)'], ['manual', 'Gracia'], ['solo_lectura', 'Solo lectura'], ['bloqueado', 'Bloqueados']].map(([v, l]) => `<option value="${v}"${v === fCat ? ' selected' : ''}>${l}</option>`).join('')}</select><button class="btn btn-primary" id="vaN">+ Crear cuenta de gracia</button></div><div id="vaL"></div><div id="vaTbl"></div>`;
+      $('#vaQ', m.el).oninput = e => { fText = e.target.value; drawTable(); };
+      $('#vaC', m.el).onchange = e => { fCat = e.target.value; drawTable(); };
+      $('#vaN', m.el).onclick = createGrace;
+      drawTable();
     } else body.innerHTML = '<p class="small muted">Esta app todavía no envía clientes.</p>';
   };
   $$('[data-vt]', m.el).forEach(b => b.onclick = () => show(b.dataset.vt));

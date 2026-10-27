@@ -94,17 +94,36 @@ try {
         $accion = is_array($in) ? ($in['accion'] ?? null) : null;
         $valor = is_array($in) ? ($in['valor'] ?? null) : null;
         if (!is_string($sid) || !preg_match('/\A[a-z0-9_-]{1,40}\z/', $sid) || !isset($sources[$sid])) respond(400, ['ok' => false, 'code' => 'invalid_request']);
-        if (!is_int($cuenta) || $cuenta < 1 || $cuenta > 999999999) respond(400, ['ok' => false, 'code' => 'invalid_request']);
-        if (!is_string($accion) || !in_array($accion, ['set_acceso', 'link_clave'], true)) respond(400, ['ok' => false, 'code' => 'invalid_request']);
-        if ($accion === 'set_acceso' && (!is_string($valor) || !in_array($valor, ['auto', 'activo', 'bloqueado'], true))) respond(400, ['ok' => false, 'code' => 'invalid_request']);
+        $badReq = fn() => respond(400, ['ok' => false, 'code' => 'invalid_request']);
+        $strOk = fn($v, int $min, int $max) => is_string($v) && mb_strlen($v) >= $min && mb_strlen($v) <= $max;
+        if (!is_string($accion) || !in_array($accion, ['set_acceso', 'link_clave', 'crear_gracia', 'dar_gracia', 'quitar_gracia', 'resync'], true)) $badReq();
+        $payload = ['accion' => $accion];
+        if ($accion !== 'crear_gracia') {
+            if (!is_int($cuenta) || $cuenta < 1 || $cuenta > 999999999) $badReq();
+            $payload['cuenta'] = $cuenta;
+        }
+        if ($accion === 'set_acceso') {
+            if (!is_string($valor) || !in_array($valor, ['auto', 'activo', 'bloqueado'], true)) $badReq();
+            $payload['valor'] = $valor;
+        }
+        if ($accion === 'crear_gracia' || $accion === 'dar_gracia') {
+            $dias = $in['dias'] ?? ($accion === 'crear_gracia' ? 7 : null);
+            if (!is_int($dias) || $dias < 1 || $dias > 3650) $badReq();
+            $payload['dias'] = $dias;
+        }
+        if ($accion === 'crear_gracia') {
+            if (!$strOk($in['nombre'] ?? null, 1, 120) || !$strOk($in['email'] ?? null, 1, 190)) $badReq();
+            $payload['nombre'] = $in['nombre'];
+            $payload['email'] = $in['email'];
+            if (isset($in['motivo']) && $in['motivo'] !== '') { if (!$strOk($in['motivo'], 1, 80)) $badReq(); $payload['motivo'] = $in['motivo']; }
+            if (isset($in['clave']) && $in['clave'] !== '') { if (!$strOk($in['clave'], 1, 200)) $badReq(); $payload['clave'] = $in['clave']; }
+        }
         $srcToken = (string)($sources[$sid]['token'] ?? '');
         if (strlen($srcToken) < 32) respond(503, ['ok' => false, 'code' => 'source_not_configured']);
         $srcUrl = (string)($sources[$sid]['url'] ?? '');
         $srcParts = parse_url($srcUrl);
         $srcHost = strtolower((string)($srcParts['host'] ?? ''));
         if (!is_array($srcParts) || ($srcParts['scheme'] ?? '') !== 'https' || !str_ends_with($srcHost, '.estrategia.site')) respond(503, ['ok' => false, 'code' => 'source_invalid_url']);
-        $payload = ['accion' => $accion, 'cuenta' => $cuenta];
-        if ($accion === 'set_acceso') $payload['valor'] = $valor;
         $ctx = stream_context_create(['http' => ['method' => 'POST', 'timeout' => 15, 'ignore_errors' => true,
             'header' => "Authorization: Bearer " . $srcToken . "\r\nContent-Type: application/json\r\nAccept: application/json\r\n",
             'content' => json_encode($payload, JSON_THROW_ON_ERROR)]]);
@@ -115,7 +134,7 @@ try {
         if (is_string($resp) && strlen($resp) <= 5000000) { try { $decoded = json_decode($resp, true, 512, JSON_THROW_ON_ERROR); } catch (Throwable) { $decoded = null; } }
         if ($resp === false || $srcStatus !== 200 || !is_array($decoded)) {
             $fail = ['ok' => false, 'code' => 'source_unavailable'];
-            if (is_array($decoded) && is_string($decoded['error'] ?? null) && preg_match('/\A[A-Za-z0-9_ .-]{1,80}\z/', $decoded['error'])) $fail['detalle'] = $decoded['error'];
+            if (is_array($decoded) && is_string($decoded['error'] ?? null) && preg_match('/\A[A-Za-z0-9_ .-]{1,80}\z/', $decoded['error'])) { $fail['code'] = 'source_error'; $fail['detalle'] = $decoded['error']; }
             respond(502, $fail);
         }
         respond(200, ['ok' => true, 'result' => $decoded]);
