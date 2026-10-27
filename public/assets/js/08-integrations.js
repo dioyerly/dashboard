@@ -193,7 +193,7 @@ async function apiPost(action, payload) {
 }
 function appsPanel() {
   const list = SOURCES || [];
-  const rows = list.map(s => `<tr><td>${esc(s.name)}</td><td class="small muted">${esc(s.host || '—')}</td><td><span class="badge">${s.origen === 'tabla' ? 'Centro' : 'Config'}</span></td><td>${s.origen === 'tabla' ? `<button class="btn btn-sm" data-act="quitarApp" data-id="${esc(s.id)}">Quitar</button>` : ''}</td></tr>`).join('');
+  const rows = list.map(s => `<tr><td>${esc(s.name)}</td><td class="small muted">${esc(s.host || '—')}</td><td><span class="badge">${s.origen === 'tabla' ? 'Centro' : 'Config'}</span></td><td><div class="btn-row"><button class="btn btn-sm" data-act="viewApp" data-id="${esc(s.id)}">Ver app</button>${s.origen === 'tabla' ? `<button class="btn btn-sm" data-act="quitarApp" data-id="${esc(s.id)}">Quitar</button>` : ''}</div></td></tr>`).join('');
   return `<div class="card" style="margin-top:16px"><div class="card-h" style="margin-bottom:8px"><div class="eyebrow">Apps conectadas</div><button class="btn btn-sm btn-primary" data-act="conectarApp">+ Conectar app</button></div>${rows ? `<div class="table-wrap"><table class="rt"><thead><tr><th>Nombre</th><th>Host</th><th>Origen</th><th></th></tr></thead><tbody>${rows}</tbody></table></div>` : '<p class="small muted" style="margin:0">Todavía no hay apps conectadas.</p>'}</div>`;
 }
 ACT.quitarApp = async el => {
