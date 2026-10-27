@@ -136,13 +136,13 @@ function specTab() {
 }
 ACT.copySpec = () => { try { navigator.clipboard.writeText(JSON_EXAMPLE); toast('Ejemplo copiado'); } catch (e) { toast('No se pudo copiar', 'bad'); } };
 ACT.importJSON = () => {
-  const m = openModal({ title: 'Importar eventos JSON', size: 'lg', body: `<p class=”small muted” style=”margin-top:0”>Pegá un arreglo de eventos (ver “Especificación para apps”) o subí un archivo .json.</p><textarea class=”input mono” id=”ijT” rows=”12” style=”font-size:12px” placeholder='[{“source”:”mi-app”,”external_id”:”...”,”type”:”sale”, ...}]'></textarea><div class=”btn-row” style=”margin-top:8px”><input type=”file” accept=”.json,application/json” id=”ijF” class=”input” style=”max-width:320px”></div><div id=”ijRes” style=”margin-top:12px”></div>`, footer: `<button class=”btn btn-ghost” data-cancel>Cerrar</button><button class=”btn btn-primary” data-go>Procesar</button>` });
+  const m = openModal({ title: 'Importar eventos JSON', size: 'lg', body: `<p class="small muted" style="margin-top:0">Pegá un arreglo de eventos (ver "Especificación para apps") o subí un archivo .json.</p><textarea class="input mono" id="ijT" rows="12" style="font-size:12px" placeholder='[{"source":"mi-app","external_id":"...","type":"sale", ...}]'></textarea><div class="btn-row" style="margin-top:8px"><input type="file" accept=".json,application/json" id="ijF" class="input" style="max-width:320px"></div><div id="ijRes" style="margin-top:12px"></div>`, footer: `<button class="btn btn-ghost" data-cancel>Cerrar</button><button class="btn btn-primary" data-go>Procesar</button>` });
   m.el.querySelector('[data-cancel]').onclick = () => m.close();
   $('#ijF', m.el).onchange = async e => { const f = e.target.files[0]; if (f) $('#ijT', m.el).value = await f.text(); };
   m.el.querySelector('[data-go]').onclick = async () => {
     let evs; try { evs = JSON.parse($('#ijT', m.el).value); if (!Array.isArray(evs)) evs = evs.events || evs.data || [evs]; } catch (e) { toast('JSON inválido', 'bad'); return; }
     let res; try { res = await transact('json', st => processEvents(st, evs)); } catch (e) { return; }
-    $('#ijRes', m.el).innerHTML = `<div class=”btn-row”><span class=”badge ok”>${res.ok} procesados</span><span class=”badge”>${res.skip} ya existían</span><span class=”badge bad”>${res.err.length} con error</span></div>${res.err.length ? `<div class=”small neg” style=”margin-top:8px”>${res.err.slice(0, 10).map(esc).join('<br>')}</div>` : ''}`;
+    $('#ijRes', m.el).innerHTML = `<div class="btn-row"><span class="badge ok">${res.ok} procesados</span><span class="badge">${res.skip} ya existían</span><span class="badge bad">${res.err.length} con error</span></div>${res.err.length ? `<div class="small neg" style="margin-top:8px">${res.err.slice(0, 10).map(esc).join('<br>')}</div>` : ''}`;
     render();
   };
 };
