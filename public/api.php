@@ -64,7 +64,7 @@ try {
             respond(502, ['ok' => false, 'code' => 'zuhause_unavailable']);
         }
     }
-    $sources = in_array($action, ['sources_list', 'source_data', 'source_action', 'fuentes_agregar', 'fuentes_quitar', 'overview'], true) ? fuentes_mapa($config) : [];
+    $sources = in_array($action, ['sources_list', 'source_data', 'source_action', 'fuentes_agregar', 'fuentes_quitar', 'overview', 'conectar_app'], true) ? fuentes_mapa($config) : [];
     if ($action === 'overview' && $method === 'GET') {
         if (!$auth->current()) respond(401, ['ok' => false, 'code' => 'session_expired']);
         $out = Centro\Overview::build($sources);
@@ -76,6 +76,36 @@ try {
         $list = [];
         foreach ($sources as $sid => $src) $list[] = ['id' => $sid, 'name' => (string)($src['name'] ?? $sid), 'host' => strtolower((string)(parse_url((string)($src['url'] ?? ''), PHP_URL_HOST) ?: '')), 'origen' => $src['origen'] ?? 'config'];
         respond(200, ['ok' => true, 'sources' => $list]);
+    }
+    if ($action === 'conectar_app') {
+        if ($method !== 'POST') { header('Allow: POST'); respond(405, ['ok' => false, 'code' => 'method_not_allowed']); }
+        if (!$auth->current()) respond(401, ['ok' => false, 'code' => 'session_expired']);
+        if (!Centro\Security::validCsrf($_SERVER['HTTP_X_CSRF_TOKEN'] ?? null)) respond(403, ['ok' => false, 'code' => 'csrf_invalid']);
+        if (!str_starts_with(strtolower($_SERVER['CONTENT_TYPE'] ?? ''), 'application/json')) respond(415, ['ok' => false, 'code' => 'json_required']);
+        $raw = file_get_contents('php://input', false, null, 0, 1025);
+        try { $in = json_decode((string)$raw, true, 4, JSON_THROW_ON_ERROR); } catch (Throwable) { respond(400, ['ok' => false, 'code' => 'invalid_request']); }
+        $app = is_array($in) && is_string($in['app'] ?? null) ? $in['app'] : '';
+        $codigo = is_array($in) && is_string($in['codigo'] ?? null) ? preg_replace('/\D+/', '', $in['codigo']) : '';
+        $def = null; foreach (Centro\Overview::DEFAULTS as $d) if ($d['id'] === $app) $def = $d;
+        if (!$def || strlen((string)$codigo) !== 8) respond(400, ['ok' => false, 'code' => 'invalid_request']);
+        $clave = bin2hex(random_bytes(24));
+        $body = json_encode(['accion' => 'emparejar', 'codigo' => $codigo, 'clave' => $clave], JSON_THROW_ON_ERROR);
+        $ctx = stream_context_create(['http' => ['method' => 'POST', 'timeout' => 15, 'ignore_errors' => true, 'header' => "Content-Type: application/json\r\nAccept: application/json\r\n", 'content' => $body]]);
+        $res = @file_get_contents($def['url'], false, $ctx);
+        $st = 0; if (isset($http_response_header[0]) && preg_match('/\s(\d{3})(\s|$)/', $http_response_header[0], $mm)) $st = (int)$mm[1];
+        if ($st === 401 || $st === 403) respond(422, ['ok' => false, 'code' => 'codigo_incorrecto']);
+        if ($st === 429) respond(429, ['ok' => false, 'code' => 'demasiados_intentos']);
+        if ($st === 404 || $st === 405 || $st === 400) respond(501, ['ok' => false, 'code' => 'app_sin_conexion_por_codigo']);
+        $dec = is_string($res) ? json_decode($res, true) : null;
+        if ($st !== 200 || !is_array($dec) || empty($dec['ok'])) respond(502, ['ok' => false, 'code' => 'app_no_responde']);
+        try {
+            $pdo = Centro\Database::connection($config['db']);
+            $pdo->exec('CREATE TABLE IF NOT EXISTS centro_fuentes (id VARCHAR(40) NOT NULL PRIMARY KEY, nombre VARCHAR(80) NOT NULL, url VARCHAR(300) NOT NULL, token VARCHAR(200) NOT NULL, creado DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP) DEFAULT CHARSET=utf8mb4');
+            $pdo->prepare('INSERT INTO centro_fuentes (id, nombre, url, token) VALUES (?, ?, ?, ?) ON DUPLICATE KEY UPDATE nombre = VALUES(nombre), url = VALUES(url), token = VALUES(token)')->execute([$def['id'], $def['name'], $def['url'], $clave]);
+        } catch (Throwable) {
+            respond(503, ['ok' => false, 'code' => 'db_no_disponible']);
+        }
+        respond(200, ['ok' => true, 'id' => $def['id']]);
     }
     if ($action === 'fuentes_agregar' || $action === 'fuentes_quitar') {
         if ($method !== 'POST') { header('Allow: POST'); respond(405, ['ok' => false, 'code' => 'method_not_allowed']); }

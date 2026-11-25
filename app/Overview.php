@@ -135,10 +135,23 @@ final class Overview
             if (($res[$id . '|customers']['status'] ?? 0) !== 200 || !is_array($cus)) $cus = [];
             $apps[] = self::app((string)$id, $name, $sum['json'], $cus, $sis);
         }
+        $defHost = [];
+        foreach (self::DEFAULTS as $d1) $defHost[strtolower((string)parse_url($d1['url'], PHP_URL_HOST))] = $d1['id'];
+        $mark = function (array $a) use ($sources, $defHost): array {
+            $a['origen'] = (string)($sources[$a['id']]['origen'] ?? '');
+            $a['conectar_id'] = $defHost[strtolower((string)parse_url((string)($sources[$a['id']]['url'] ?? ''), PHP_URL_HOST))] ?? '';
+            return $a;
+        };
+        $apps = array_map($mark, $apps);
+        if ($tienda) $tienda = $mark($tienda);
+        $hosts = [];
+        foreach ($sources as $s0) $hosts[strtolower((string)parse_url((string)($s0['url'] ?? ''), PHP_URL_HOST))] = true;
+        $pend = [];
+        foreach (self::DEFAULTS as $d0) if (!isset($hosts[strtolower((string)parse_url($d0['url'], PHP_URL_HOST))])) $pend[] = ['id' => $d0['id'], 'name' => $d0['name'], 'kind' => $d0['kind']];
         $alerts = [];
         foreach (array_merge($apps, $tienda ? [$tienda] : []) as $a) foreach ($a['alertas'] as $al) $alerts[] = $al + ['app' => $a['name'], 'app_id' => $a['id']];
         usort($alerts, fn($x, $y) => ['rojo' => 0, 'amarillo' => 1, 'info' => 2][$x['nivel']] <=> ['rojo' => 0, 'amarillo' => 1, 'info' => 2][$y['nivel']]);
-        return ['ok' => true, 'generado' => date('c'), 'apps' => $apps, 'tienda' => $tienda, 'alertas' => $alerts];
+        return ['ok' => true, 'generado' => date('c'), 'apps' => $apps, 'tienda' => $tienda, 'alertas' => $alerts, 'sin_conectar' => $pend];
     }
 
     private static function broken(string $id, string $name, string $kind, string $why): array

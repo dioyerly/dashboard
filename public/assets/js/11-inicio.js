@@ -84,17 +84,20 @@ function inicioReportText(d) {
   return L.join('\n');
 }
 
-function inicioSetupCard() {
-  return `<div class="card in-setup"><div class="eyebrow">Conectar todo con una sola clave</div><h3>Falta la clave compartida</h3>
-    <p class="muted">Con una única clave larga (32 caracteres o más) el panel lee tu tienda y todas tus apps, sin cargar un token por app.</p>
-    <ol class="in-steps"><li>Inventá una clave larga (por ejemplo, 40 letras y números al azar).</li>
-    <li>Ponela en el archivo del servidor <code>config/private.php</code> de este panel: <code>'ecosystem_key' => 'tu-clave'</code></li>
-    <li>Ponela igual en el <code>config.php</code> de cada app: <code>ECOSYSTEM_KEY</code> en Bookwat y Zuhause, <code>ecosystem_key</code> en Gaku y en descargar.</li></ol>
-    <p class="tiny muted">La clave nunca viaja por acá: la escribís vos en tus archivos del servidor.</p></div>`;
+function inicioSetupCard(d) {
+  const pend = d.sin_conectar || [];
+  if (!pend.length) return '';
+  return `<div class="card in-setup"><div class="eyebrow">Conectar tus apps</div><h3>${pend.length === 1 ? 'Falta 1 app' : 'Faltan ' + pend.length + ' apps'} por conectar</h3>
+    <p class="muted">Es fácil: en el admin de la app tocás <b>«Generar código de conexión»</b> y escribís ese código acá. Sin claves ni archivos.</p>
+    <div class="btn-row">${pend.map(a => `<button class="btn btn-lens" data-act="conectarCodigo" data-app="${inEsc(a.id)}" data-name="${inEsc(a.name)}">Conectar ${inEsc(a.name)}</button>`).join('')}</div></div>`;
+}
+function inicioFoot(a) {
+  const cid = a.conectar_id || ''; if (!cid) return '';
+  return `<div class="in-foot"><button class="btn btn-sm btn-ghost" data-act="conectarCodigo" data-app="${inEsc(cid)}" data-name="${inEsc(a.name)}">${a.ok ? 'Renovar conexión' : 'Conectar de nuevo'}</button>${a.origen === 'tabla' ? `<button class="btn btn-sm btn-ghost" data-act="inicioQuitar" data-id="${inEsc(a.id)}" data-name="${inEsc(a.name)}">Desconectar</button>` : ''}</div>`;
 }
 
 function inicioAppCard(a) {
-  if (!a.ok) return `<div class="card s4 in-app in-bad"><div class="in-app-h"><b>${inEsc(a.name)}</b><span class="in-dot rojo"></span></div><p class="in-err">${inEsc(a.error)}</p></div>`;
+  if (!a.ok) return `<div class="card s4 in-app in-bad"><div class="in-app-h"><b>${inEsc(a.name)}</b><span class="in-dot rojo"></span></div><p class="in-err">${inEsc(a.error)}</p>${inicioFoot(a)}</div>`;
   const C = a.clientes, L = a.landing, worst = (a.alertas.find(x => x.nivel === 'rojo') ? 'rojo' : a.alertas.find(x => x.nivel === 'amarillo') ? 'amarillo' : 'ok');
   const rec = a.recientes.slice(0, 4).map(c => `<li><span>${inEsc(c.nombre || c.email)}</span><em>${c.categoria ? inEsc(c.categoria) + ' · ' : ''}${inAgo(c.ultimo_ingreso || c.alta)}</em></li>`).join('');
   return `<div class="card s4 in-app"><div class="in-app-h"><b>${inEsc(a.name)}</b><span class="in-dot ${worst}" title="${worst === 'ok' ? 'Todo bien' : 'Hay alertas'}"></span></div>
@@ -102,12 +105,12 @@ function inicioAppCard(a) {
     <div class="in-rows"><div><span>Visitas landing (30d)</span><b>${fnum(L.visitas)}</b></div><div><span>Clics en suscribirme</span><b>${fnum(L.clicks_sub)}${L.conv_pct !== null ? ` <i>${L.conv_pct}%</i>` : ''}</b></div><div><span>Suscripciones iniciadas</span><b>${fnum(a.iniciadas_30d)}</b></div></div>
     ${L.tiene_datos ? '' : '<p class="in-note">La landing aún no mide visitas.</p>'}
     ${rec ? `<div class="in-sub">Últimos en entrar</div><ul class="in-list">${rec}</ul>` : ''}
-    ${a.alertas.length ? `<div class="in-al">${a.alertas.slice(0, 3).map(x => `<div class="in-pill ${x.nivel}">${inEsc(x.texto)}</div>`).join('')}</div>` : ''}</div>`;
+    ${a.alertas.length ? `<div class="in-al">${a.alertas.slice(0, 3).map(x => `<div class="in-pill ${x.nivel}">${inEsc(x.texto)}</div>`).join('')}</div>` : ''}${inicioFoot(a)}</div>`;
 }
 
 function inicioTienda(T) {
   if (!T) return '';
-  if (!T.ok) return `<div class="card s12 in-app in-bad"><div class="in-app-h"><b>${inEsc(T.name)}</b><span class="in-dot rojo"></span></div><p class="in-err">${inEsc(T.error)}</p></div>`;
+  if (!T.ok) return `<div class="card s12 in-app in-bad"><div class="in-app-h"><b>${inEsc(T.name)}</b><span class="in-dot rojo"></span></div><p class="in-err">${inEsc(T.error)}</p>${inicioFoot(T)}</div>`;
   const e = T.embudo || {}, mx = Math.max(1, e.vieron_producto || 0, e.abrieron_detalle || 0, e.tocaron_comprar || 0, e.compraron || 0);
   const fr = (l, v) => `<div class="in-f"><span>${l}</span><i style="--w:${Math.max(2, Math.round(v / mx * 100))}%"></i><b>${fnum(v)}</b></div>`;
   const prods = (T.productos || []).slice(0, 8);
@@ -137,7 +140,7 @@ VIEWS.inicio = {
         : `<div class="in-status ok"><b>Todo en orden</b><span>No hay alertas en tus apps ni en la tienda.</span></div>`;
     const kpi = (cls, lbl, val, sub) => `<div class="card ${cls} in-kpi"><div class="lbl">${lbl}</div><div class="val">${val}</div><div class="sub">${sub || ''}</div></div>`;
     const v = T ? T.ventas : null, vd = T && T.visitantes_prev > 0 ? Math.round((T.visitantes - T.visitantes_prev) / T.visitantes_prev * 100) : null;
-    let h = head + (d.clave_compartida ? '' : inicioSetupCard()) + estado + '<div class="bento in-top">'
+    let h = head + inicioSetupCard(d) + estado + '<div class="bento in-top">'
       + kpi('s3', 'Ventas · tienda', T ? fnum(v.n) : '—', T ? (v.por_moneda.length ? v.por_moneda.map(x => inCur(x.moneda, x.monto)).join(' + ') : 'sin ventas todavía') + ` · ${T.dias} días` : 'tienda sin conexión')
       + kpi('s3', 'Visitas a la tienda', T ? fnum(T.visitantes) : '—', T ? `${fnum(T.visitantes_hoy)} hoy` + (vd !== null ? ` · <span class="${vd >= 0 ? 'pos' : 'neg'}">${vd >= 0 ? '▲' : '▼'} ${Math.abs(vd)}%</span>` : '') : '')
       + kpi('s3', 'Suscripciones activas', fnum(pag), `${fnum(prueba)} en prueba · ${apps.length} apps`)
@@ -158,4 +161,30 @@ ACT.inicioInforme = () => {
     footer: `<button class="btn" data-in-copy>Copiar</button><button class="btn btn-lens" data-in-print>Imprimir / PDF</button>` });
   m.el.querySelector('[data-in-copy]').onclick = async () => { try { await navigator.clipboard.writeText(txt); toast('Informe copiado'); } catch (e) { toast('No pude copiar', 'warn'); } };
   m.el.querySelector('[data-in-print]').onclick = () => { const w = window.open('', '_blank'); if (!w) return toast('Permití ventanas emergentes para imprimir', 'warn'); w.document.write('<pre style="font:14px/1.6 system-ui;white-space:pre-wrap;padding:24px">' + inEsc(txt) + '</pre>'); w.document.close(); w.print(); };
+};
+
+const INICIO_ERR = { codigo_incorrecto: 'El código no es correcto o ya venció. Generá uno nuevo en la app.', demasiados_intentos: 'Demasiados intentos. Esperá unos minutos.', app_sin_conexion_por_codigo: 'Esa app todavía no tiene la conexión por código (falta actualizarla).', app_no_responde: 'La app no respondió. Probá de nuevo en un momento.', db_no_disponible: 'El panel no pudo guardar la conexión.', session_expired: 'La sesión venció. Volvé a entrar.' };
+ACT.conectarCodigo = el => {
+  const app = el.dataset.app, name = el.dataset.name || app;
+  const m = openModal({ title: 'Conectar ' + esc(name), size: 'sm', body: `<ol class="in-steps"><li>Entrá al admin de <b>${esc(name)}</b>.</li><li>Tocá <b>«Generar código de conexión»</b> (en Sistema / Ajustes).</li><li>Escribí acá los 8 números:</li></ol>
+    <input id="inCode" class="in-code" inputmode="numeric" autocomplete="off" maxlength="9" placeholder="0000 0000"><p class="in-err" id="inCodeErr" role="alert"></p>`,
+    footer: `<button class="btn btn-lens" id="inCodeGo">Conectar</button>` });
+  const inp = m.el.querySelector('#inCode'), err = m.el.querySelector('#inCodeErr'), go = m.el.querySelector('#inCodeGo');
+  inp.focus();
+  inp.oninput = () => { const v = inp.value.replace(/\D+/g, '').slice(0, 8); inp.value = v.length > 4 ? v.slice(0, 4) + ' ' + v.slice(4) : v; };
+  inp.onkeydown = e => { if (e.key === 'Enter') go.click(); };
+  go.onclick = async () => {
+    const code = inp.value.replace(/\D+/g, ''); err.textContent = '';
+    if (code.length !== 8) { err.textContent = 'Son 8 números.'; return; }
+    go.disabled = true; go.textContent = 'Conectando…';
+    const r = await apiPost('conectar_app', { app, codigo: code });
+    if (r.error) { err.textContent = INICIO_ERR[r.error] || 'No se pudo conectar (' + r.error + ').'; go.disabled = false; go.textContent = 'Conectar'; return; }
+    m.close(); toast(name + ' conectada'); inicioLoad(true);
+  };
+};
+ACT.inicioQuitar = async el => {
+  if (!(await confirmDialog({ title: 'Desconectar ' + (el.dataset.name || ''), message: 'El panel deja de leer esta app. Se puede volver a conectar cuando quieras.', ok: 'Desconectar', tone: 'danger' }))) return;
+  const r = await apiPost('fuentes_quitar', { id: el.dataset.id });
+  if (r.error) return toast('No se pudo desconectar', 'bad');
+  toast('Desconectada'); inicioLoad(true);
 };

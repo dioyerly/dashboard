@@ -424,3 +424,5 @@ table.rt tfoot td{font-weight:700;background:var(--panel-2);border-top:1px solid
 @keyframes inSk{to{background-position:-200% 0}}
 .in-report{white-space:pre-wrap;font:13.5px/1.65 var(--sans);margin:0}
 @media (max-width:760px){.in-th,.in-tr{grid-template-columns:minmax(0,2fr) repeat(3,minmax(0,1fr))}.in-th span:nth-child(n+5),.in-tr span:nth-child(n+5){display:none}.in-kpi .val{font-size:28px}}
+.in-foot{display:flex;gap:8px;flex-wrap:wrap;margin-top:14px;padding-top:12px;border-top:1px solid var(--line)}
+.in-code{width:100%;font:600 30px/1.2 var(--mono);letter-spacing:.2em;text-align:center;padding:12px;border:1px solid var(--line-2);border-radius:12px;background:var(--panel-2);color:var(--ink)}
