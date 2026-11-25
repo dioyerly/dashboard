@@ -37,33 +37,51 @@ final class Overview
         return ($id === 'descargar' || str_starts_with($host, 'descargar.')) ? 'tienda' : 'app';
     }
 
-    /** Pedidos de a uno (el hosting comparte procesos entre todos tus sitios: en paralelo se traba). */
-    private static function fetchAll(array $jobs, int $timeout): array
+    /** Pedidos de a uno, con tope de tiempo total por app. Si el resumen falla, no insiste con las otras vistas. */
+    private static function fetchAll(array $jobs, int $timeout, int $budget = 16): array
     {
-        $out = [];
+        $out = []; $t00 = microtime(true); $dead = [];
         foreach ($jobs as $key => $j) {
-            $t0 = microtime(true); $code = 0; $body = '';
+            [$sid, $view] = explode('|', $key, 2);
+            $left = $budget - (microtime(true) - $t00);
+            if (isset($dead[$sid]) || $left < 2) { $out[$key] = ['status' => -1, 'json' => null, 'ms' => 0]; continue; }
+            $tmo = (int)max(2, min($timeout, floor($left)));
+            $t0 = microtime(true); $code = 0; $body = ''; $err = '';
             if (function_exists('curl_init')) {
                 $ch = curl_init($j['url']);
                 curl_setopt_array($ch, [
-                    CURLOPT_RETURNTRANSFER => true, CURLOPT_TIMEOUT => $timeout, CURLOPT_CONNECTTIMEOUT => 6,
+                    CURLOPT_RETURNTRANSFER => true, CURLOPT_TIMEOUT => $tmo, CURLOPT_CONNECTTIMEOUT => 6,
                     CURLOPT_HTTPHEADER => ['Authorization: Bearer ' . $j['token'], 'Accept: application/json'],
                     CURLOPT_PROTOCOLS => CURLPROTO_HTTPS, CURLOPT_REDIR_PROTOCOLS => CURLPROTO_HTTPS, CURLOPT_FOLLOWLOCATION => false,
                     CURLOPT_MAXFILESIZE => 5000000,
                 ]);
                 $b = curl_exec($ch); $code = (int)curl_getinfo($ch, CURLINFO_RESPONSE_CODE); $body = is_string($b) ? $b : '';
+                if ($b === false) $err = (string)curl_error($ch);
                 curl_close($ch);
             } else {
-                $ctx = stream_context_create(['http' => ['method' => 'GET', 'timeout' => $timeout, 'ignore_errors' => true,
+                $ctx = stream_context_create(['http' => ['method' => 'GET', 'timeout' => $tmo, 'ignore_errors' => true,
                     'header' => "Authorization: Bearer " . $j['token'] . "\r\nAccept: application/json\r\n"]]);
                 $raw = @file_get_contents($j['url'], false, $ctx);
                 if (isset($http_response_header[0]) && preg_match('/\s(\d{3})(\s|$)/', $http_response_header[0], $m)) $code = (int)$m[1];
                 $body = $raw === false ? '' : $raw;
             }
-            $r = self::parse($code, $body); $r['ms'] = (int)round((microtime(true) - $t0) * 1000);
+            $r = self::parse($code, $body); $r['ms'] = (int)round((microtime(true) - $t0) * 1000); $r['err'] = $err;
             $out[$key] = $r;
+            if ($view === 'summary' && ($code !== 200 || $r['json'] === null)) $dead[$sid] = true;
         }
         return $out;
+    }
+
+    /** Resumen legible de lo que paso con cada pedido (para mostrar en pantalla cuando algo falla). */
+    private static function diag(array $res, string $id): string
+    {
+        $n = ['summary' => 'resumen', 'customers' => 'clientes', 'sistema' => 'sistema']; $p = [];
+        foreach ($n as $v => $lbl) {
+            $r = $res[$id . '|' . $v] ?? null; if ($r === null) continue;
+            if ($r['status'] === -1) { $p[] = $lbl . ': omitido'; continue; }
+            $p[] = $lbl . ': ' . ($r['status'] ?: 'sin respuesta' . (!empty($r['err']) ? ' (' . $r['err'] . ')' : '')) . ' en ' . round($r['ms'] / 1000, 1) . ' s';
+        }
+        return implode(' · ', $p);
     }
 
     private static function parse(int $code, string $body): array
@@ -120,7 +138,7 @@ final class Overview
             $views = $kind === 'tienda' ? ['summary&d=30', 'sistema'] : ['summary&d=30', 'customers', 'sistema'];
             foreach ($views as $v) $jobs[$id . '|' . explode('&', $v)[0]] = ['url' => $url . $sep . 'view=' . $v, 'token' => $tok];
         }
-        $res = self::fetchAll($jobs, 10);
+        $res = self::fetchAll($jobs, 10, 16);
         $apps = [];
         $tienda = null;
         foreach ($sources as $id => $src) {
@@ -128,13 +146,13 @@ final class Overview
             $name = (string)($src['name'] ?? $id);
             $sum = $res[$id . '|summary'] ?? null;
             if ($sum === null) { $apps[] = self::broken((string)$id, $name, $kind, 'sin clave o direccion invalida'); continue; }
-            if ($sum['json'] === null || $sum['status'] !== 200) { $x = self::broken((string)$id, $name, $kind, self::reason($sum['status']) . ' (HTTP ' . $sum['status'] . ', ' . round(($sum['ms'] ?? 0) / 1000, 1) . ' s)'); if ($kind === 'tienda') $tienda = $x; else $apps[] = $x; continue; }
+            if ($sum['json'] === null || $sum['status'] !== 200) { $x = self::broken((string)$id, $name, $kind, self::reason($sum['status']) . ' — ' . self::diag($res, (string)$id)); if ($kind === 'tienda') $tienda = $x; else $apps[] = $x; continue; }
             $sis = $res[$id . '|sistema']['json'] ?? null;
             if (($res[$id . '|sistema']['status'] ?? 0) !== 200) $sis = null;
-            if ($kind === 'tienda') { $tienda = self::tienda((string)$id, $name, $sum['json'], $sis); continue; }
+            if ($kind === 'tienda') { $tienda = self::tienda((string)$id, $name, $sum['json'], $sis); $tienda['diag'] = self::diag($res, (string)$id); continue; }
             $cus = $res[$id . '|customers']['json']['customers'] ?? null;
             if (($res[$id . '|customers']['status'] ?? 0) !== 200 || !is_array($cus)) $cus = [];
-            $apps[] = self::app((string)$id, $name, $sum['json'], $cus, $sis);
+            $ap = self::app((string)$id, $name, $sum['json'], $cus, $sis); $ap['diag'] = self::diag($res, (string)$id); $apps[] = $ap;
         }
         $defHost = [];
         foreach (self::DEFAULTS as $d1) $defHost[strtolower((string)parse_url($d1['url'], PHP_URL_HOST))] = $d1['id'];

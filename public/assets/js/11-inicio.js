@@ -28,21 +28,26 @@ function inicioMerge() {
   const o = { rojo: 0, amarillo: 1, info: 2 }; d.alertas.sort((x, y) => o[x.nivel] - o[y.nivel]);
   d.generado = new Date().toISOString();
 }
-let inicioTimer = 0;
+let inicioTimer = 0, inicioTick = 0;
 function inicioRepaint() { clearTimeout(inicioTimer); inicioTimer = setTimeout(() => { inicioMerge(); if (ui.route === 'inicio') inicioPaint(); }, 60); }
 async function inicioLoad(force) {
-  if (INICIO.status === 'loading') return;
+  if (INICIO.running) return; /* una sola lectura a la vez: dos juntas traban el hosting */
   if (!force && INICIO.data && Date.now() - INICIO.at < 120000) return;
-  INICIO.status = 'loading';
+  INICIO.status = 'loading'; INICIO.running = true;
+  try { await inicioRun(); } catch (e) { if (!INICIO.data) { INICIO.status = 'error'; INICIO.error = 'Algo falló al leer: ' + (e && e.message); if (ui.route === 'inicio') inicioPaint(); } } finally { INICIO.running = false; INICIO.cur = null; clearInterval(inicioTick); }
+}
+async function inicioRun() {
   const pl = await inicioGet('api.php?action=overview_plan', 15000);
   if (!pl.d || !pl.d.ok) { INICIO.status = 'error'; INICIO.error = pl.status === 401 ? 'La sesión venció. Volvé a entrar.' : 'No pude traer los datos ahora. Probá de nuevo en un momento.'; if (ui.route === 'inicio') inicioPaint(); return; }
   const mk = p => ({ id: p.id, name: p.name, kind: p.kind, conectar_id: p.conectar_id, origen: p.origen, ok: false, loading: true, alertas: [] });
   INICIO.data = { apps: pl.d.plan.filter(p => p.kind !== 'tienda').map(mk), tienda: (pl.d.plan.filter(p => p.kind === 'tienda').map(mk))[0] || null, alertas: [], sin_conectar: pl.d.sin_conectar || [], generado: new Date().toISOString() };
   INICIO.status = 'ok'; INICIO.at = Date.now(); inicioPaint();
   /* de a una: tus sitios comparten los procesos del hosting y pedirlas todas juntas las traba */
+  clearInterval(inicioTick); inicioTick = setInterval(() => { const c = INICIO.cur; if (!c) return; document.querySelectorAll('[data-wait]').forEach(el => { el.textContent = inicioWait({ id: el.dataset.wait }); }); }, 1000);
   for (const p of pl.d.plan) {
-    const t0 = Date.now();
-    const r = await inicioGet('api.php?action=overview&id=' + encodeURIComponent(p.id), 45000);
+    const t0 = Date.now(); INICIO.cur = { id: p.id, t0 };
+    let r;
+    try { r = await inicioGet('api.php?action=overview&id=' + encodeURIComponent(p.id), 30000); } catch (e) { r = { status: 0, d: null }; }
     const secs = Math.round((Date.now() - t0) / 100) / 10;
     const got = r.d && r.d.ok ? (r.d.tienda || (r.d.apps || [])[0]) : null;
     const why = r.aborted ? 'el panel no recibió respuesta en ' + secs + ' s' : (r.status === 0 ? 'sin conexión con el panel' : 'el panel respondió con error (HTTP ' + r.status + ')');
@@ -51,9 +56,17 @@ async function inicioLoad(force) {
     if (p.kind === 'tienda') D.tienda = item; else D.apps = D.apps.map(a => a.id === p.id ? item : a);
     inicioRepaint();
   }
-  INICIO.at = Date.now();
+  INICIO.cur = null; clearInterval(inicioTick); INICIO.at = Date.now(); inicioRepaint();
 }
-function inicioPaint() { const page = $('#view .page'); if (page && ui.route === 'inicio') page.innerHTML = VIEWS.inicio.render(); }
+function inicioPaint() {
+  const page = $('#view .page'); if (!page || ui.route !== 'inicio') return;
+  try { page.innerHTML = VIEWS.inicio.render(); }
+  catch (e) { /* si un dato raro rompe el dibujo, que se vea el motivo en pantalla en vez de quedar congelado */
+    page.innerHTML = `<div class="card in-bad"><p class="in-err"><b>No pude dibujar el Inicio:</b> ${inEsc(e && e.message)}</p><button class="btn" data-act="inicioRefresh">Reintentar</button></div>`; }
+}
+function inicioCard(fn, a) {
+  try { return fn(a); } catch (e) { return `<div class="card s4 in-app in-bad"><div class="in-app-h"><b>${inEsc(a && a.name)}</b><span class="in-dot rojo"></span></div><p class="in-err">No pude dibujar esta tarjeta: ${inEsc(e && e.message)}</p></div>`; }
+}
 
 function inicioInsights(d) {
   const T = d.tienda && d.tienda.ok ? d.tienda : null;
@@ -123,8 +136,12 @@ function inicioFoot(a) {
   return `<div class="in-foot"><button class="btn btn-sm btn-ghost" data-act="conectarCodigo" data-app="${inEsc(cid)}" data-name="${inEsc(a.name)}">${a.ok ? 'Renovar conexión' : 'Conectar de nuevo'}</button>${a.origen === 'tabla' ? `<button class="btn btn-sm btn-ghost" data-act="inicioQuitar" data-id="${inEsc(a.id)}" data-name="${inEsc(a.name)}">Desconectar</button>` : ''}</div>`;
 }
 
+function inicioWait(a) {
+  const c = INICIO.cur; if (!c || c.id !== a.id) return 'en espera';
+  return 'leyendo… ' + Math.floor((Date.now() - c.t0) / 1000) + ' s';
+}
 function inicioAppCard(a) {
-  if (a.loading) return `<div class="card s4 in-app"><div class="in-app-h"><b>${inEsc(a.name)}</b><span class="tiny muted">leyendo…</span></div><div class="in-skel"></div></div>`;
+  if (a.loading) return `<div class="card s4 in-app"><div class="in-app-h"><b>${inEsc(a.name)}</b><span class="tiny muted" data-wait="${inEsc(a.id)}">${inicioWait(a)}</span></div><div class="in-skel"></div></div>`;
   if (!a.ok) return `<div class="card s4 in-app in-bad"><div class="in-app-h"><b>${inEsc(a.name)}</b><span class="in-dot rojo"></span></div><p class="in-err">${inEsc(a.error)}</p>${inicioFoot(a)}</div>`;
   const C = a.clientes, L = a.landing, worst = (a.alertas.find(x => x.nivel === 'rojo') ? 'rojo' : a.alertas.find(x => x.nivel === 'amarillo') ? 'amarillo' : 'ok');
   const rec = a.recientes.slice(0, 4).map(c => `<li><span>${inEsc(c.nombre || c.email)}</span><em>${c.categoria ? inEsc(c.categoria) + ' · ' : ''}${inAgo(c.ultimo_ingreso || c.alta)}</em></li>`).join('');
@@ -138,7 +155,7 @@ function inicioAppCard(a) {
 
 function inicioTienda(T) {
   if (!T) return '';
-  if (T.loading) return `<div class="card s12 in-app"><div class="in-app-h"><b>${inEsc(T.name)}</b><span class="tiny muted">leyendo…</span></div><div class="in-skel"></div></div>`;
+  if (T.loading) return `<div class="card s12 in-app"><div class="in-app-h"><b>${inEsc(T.name)}</b><span class="tiny muted" data-wait="${inEsc(T.id)}">${inicioWait(T)}</span></div><div class="in-skel"></div></div>`;
   if (!T.ok) return `<div class="card s12 in-app in-bad"><div class="in-app-h"><b>${inEsc(T.name)}</b><span class="in-dot rojo"></span></div><p class="in-err">${inEsc(T.error)}</p>${inicioFoot(T)}</div>`;
   const e = T.embudo || {}, mx = Math.max(1, e.vieron_producto || 0, e.abrieron_detalle || 0, e.tocaron_comprar || 0, e.compraron || 0);
   const fr = (l, v) => `<div class="in-f"><span>${l}</span><i style="--w:${Math.max(2, Math.round(v / mx * 100))}%"></i><b>${fnum(v)}</b></div>`;
@@ -177,8 +194,8 @@ VIEWS.inicio = {
       + kpi('s3', 'Conversión tienda', T && T.conv_pct !== null ? T.conv_pct + '%' : '—', T ? `${fnum(T.sesiones)} sesiones` : '')
       + '</div>';
     if (d.alertas.length) h += `<div class="card in-alerts"><div class="card-h"><h3>Alertas</h3><span class="tiny muted">${d.alertas.length}</span></div>${d.alertas.slice(0, 10).map(a => `<div class="in-alert ${a.nivel}"><i></i><span><b>${inEsc(a.app)}</b> ${inEsc(a.texto)}</span></div>`).join('')}</div>`;
-    h += '<div class="in-sec">Tus apps</div><div class="bento">' + apps.map(inicioAppCard).join('') + '</div>';
-    h += '<div class="in-sec">Tienda · descargar</div><div class="bento">' + inicioTienda(d.tienda) + '</div>';
+    h += '<div class="in-sec">Tus apps</div><div class="bento">' + apps.map(a => inicioCard(inicioAppCard, a)).join('') + '</div>';
+    h += '<div class="in-sec">Tienda · descargar</div><div class="bento">' + inicioCard(inicioTienda, d.tienda) + '</div>';
     return h;
   },
   after() { inicioLoad(false); }
