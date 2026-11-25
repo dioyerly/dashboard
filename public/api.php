@@ -22,7 +22,8 @@ function fuentes_mapa(array $config): array
         }
     } catch (Throwable) {
     }
-    return $sources;
+    require_once dirname(__DIR__) . '/app/Overview.php';
+    return Centro\Overview::withDefaults($sources, (string)($config['ecosystem_key'] ?? ''));
 }
 
 try {
@@ -63,7 +64,13 @@ try {
             respond(502, ['ok' => false, 'code' => 'zuhause_unavailable']);
         }
     }
-    $sources = in_array($action, ['sources_list', 'source_data', 'source_action', 'fuentes_agregar', 'fuentes_quitar'], true) ? fuentes_mapa($config) : [];
+    $sources = in_array($action, ['sources_list', 'source_data', 'source_action', 'fuentes_agregar', 'fuentes_quitar', 'overview'], true) ? fuentes_mapa($config) : [];
+    if ($action === 'overview' && $method === 'GET') {
+        if (!$auth->current()) respond(401, ['ok' => false, 'code' => 'session_expired']);
+        $out = Centro\Overview::build($sources);
+        $out['clave_compartida'] = strlen((string)($config['ecosystem_key'] ?? '')) >= 32;
+        respond(200, $out);
+    }
     if ($action === 'sources_list' && $method === 'GET') {
         if (!$auth->current()) respond(401, ['ok' => false, 'code' => 'session_expired']);
         $list = [];

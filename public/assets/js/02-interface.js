@@ -1,4 +1,5 @@
 const ICONS = {
+  inicio: '<path d="m3 10 9-7 9 7v10a1 1 0 0 1-1 1h-5v-7H9v7H4a1 1 0 0 1-1-1Z"/>',
   pulso: '<path d="M22 12h-4l-3 9L9 3l-3 9H2"/>',
   marcas: '<circle cx="12" cy="12" r="3"/><circle cx="5" cy="6" r="2"/><circle cx="19" cy="6" r="2"/><circle cx="12" cy="20" r="2"/><path d="M6.5 7.5 10 10.5M17.5 7.5 14 10.5M12 15v3"/>',
   apps: '<rect x="3" y="3" width="7" height="7" rx="2"/><rect x="14" y="3" width="7" height="7" rx="2"/><rect x="3" y="14" width="7" height="7" rx="2"/><path d="M17.5 14v7M14 17.5h7"/>',
@@ -295,6 +296,7 @@ function groupBars(el, { labels, series, fmt = v => v, height = 220, signed = fa
    SHELL: barra superior con lentes de marca, ticker, dock, ⌘K
    ===================================================================== */
 const ROUTES = [
+  { id: 'inicio', label: 'Inicio', desc: 'Todo de un vistazo' },
   { id: 'pulso', label: 'Pulso', desc: 'Visión ejecutiva' },
   { id: 'marcas', label: 'Marcas' },
   { id: 'apps', label: 'Aplicaciones' },
@@ -309,7 +311,7 @@ const ROUTES = [
   { id: 'reportes', label: 'Reportes' },
   { id: 'ajustes', label: 'Ajustes' }
 ];
-const DOCK_GROUPS = [['pulso', 'marcas', 'apps'], ['ventas', 'suscripciones', 'gastos', 'finanzas'], ['infra', 'calendario', 'clientes'], ['integraciones', 'reportes', 'ajustes']];
+const DOCK_GROUPS = [['inicio', 'pulso', 'marcas', 'apps'], ['ventas', 'suscripciones', 'gastos', 'finanzas'], ['infra', 'calendario', 'clientes'], ['integraciones', 'reportes', 'ajustes']];
 const VIEWS = {}, ACT = {}, CHG = {}, INP = {};
 let unlocked = false;
 
@@ -330,7 +332,7 @@ function render() {
   if (!state.setupDone) return renderOnboarding(root);
   if (state.settings.pin && !unlocked) return renderLock(root);
   if (!$('#view')) renderShell(root);
-  if (!VIEWS[ui.route]) ui.route = 'pulso';
+  if (!VIEWS[ui.route]) ui.route = 'inicio';
   applyLens(); updateShell();
   const v = VIEWS[ui.route];
   $('#view').innerHTML = `<div class="page">${v.render()}</div>`;
@@ -344,7 +346,7 @@ function renderShell(root) {
   document.body.className = '';
   root.innerHTML = `${DataStore.env === 'pruebas' ? '<div class="env-strip" title="Ambiente de pruebas"></div>' : ''}
   <header class="topbar" id="topbar">
-    <button class="logo" data-act="go" data-r="pulso" aria-label="Ir al Pulso">
+    <button class="logo" data-act="go" data-r="inicio" aria-label="Ir al Inicio">
       <span class="logo-mark"><svg viewBox="0 0 38 38" aria-hidden="true"><circle cx="19" cy="19" r="17" fill="none" stroke="var(--line-2)" stroke-dasharray="2 4"/><g class="orbit" id="logoOrbit"></g><circle cx="19" cy="19" r="5.5" fill="var(--struct)"/></svg></span>
       <span class="logo-txt"><b id="bizName"></b><span>Centro de operaciones</span></span>
     </button>
@@ -504,7 +506,7 @@ function renderOnboarding(root) {
         if (!S.currencies.some(c => c.code === code)) S.currencies.push({ code, symbol: d.base === 'otra' ? (d.os || code) : (code === 'USD' ? 'US$' : '$') });
         st.setupDone = true; logAct(st, 'Configuración inicial', d.name);
       });
-      unlocked = true; ui.route = 'pulso'; location.hash = '#/pulso'; $('#root').innerHTML = ''; applyLens(); render(); toast('Listo. Usá ⌘K o el botón + del dock para cargar lo primero.');
+      unlocked = true; ui.route = 'inicio'; location.hash = '#/inicio'; $('#root').innerHTML = ''; applyLens(); render(); toast('Listo. Usá ⌘K o el botón + del dock para cargar lo primero.');
     } catch (err) { }
   });
 }
