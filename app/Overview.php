@@ -104,7 +104,20 @@ final class Overview
     private static function n($v): int { return is_numeric($v) ? (int)$v : 0; }
     private static function f($v): float { return is_numeric($v) ? (float)$v : 0.0; }
 
-    /** @param array<string,array> $sources */
+    /** Lista rápida (sin red) de lo que el panel va a leer y de lo que falta conectar. */
+    public static function plan(array $sources): array
+    {
+        $plan = []; $hosts = [];
+        foreach ($sources as $id => $src) {
+            $plan[] = ['id' => (string)$id, 'name' => (string)($src['name'] ?? $id), 'kind' => self::kindOf((string)$id, $src)];
+            $hosts[strtolower((string)parse_url((string)($src['url'] ?? ''), PHP_URL_HOST))] = true;
+        }
+        $pend = [];
+        foreach (self::DEFAULTS as $d0) if (!isset($hosts[strtolower((string)parse_url($d0['url'], PHP_URL_HOST))])) $pend[] = ['id' => $d0['id'], 'name' => $d0['name'], 'kind' => $d0['kind']];
+        return ['plan' => $plan, 'sin_conectar' => $pend];
+    }
+
+    /** @param array<string,array> $sources  (si es una sola fuente, devuelve solo esa) */
     public static function build(array $sources): array
     {
         $jobs = [];

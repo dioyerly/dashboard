@@ -14,17 +14,40 @@ const inAgo = iso => {
   const d = Math.round(m / 1440); return d === 1 ? 'ayer' : 'hace ' + d + ' días';
 };
 
+async function inicioGet(url, ms) {
+  const ctl = new AbortController(), t = setTimeout(() => ctl.abort(), ms);
+  try { const r = await fetch(url, { credentials: 'same-origin', cache: 'no-store', signal: ctl.signal }); const d = await r.json().catch(() => null); return { status: r.status, d }; }
+  catch (e) { return { status: 0, d: null, aborted: e && e.name === 'AbortError' }; }
+  finally { clearTimeout(t); }
+}
+function inicioMerge() {
+  const d = INICIO.data; if (!d) return;
+  const all = d.apps.concat(d.tienda ? [d.tienda] : []);
+  d.alertas = [];
+  all.forEach(a => (a.alertas || []).forEach(x => d.alertas.push(Object.assign({}, x, { app: a.name, app_id: a.id }))));
+  const o = { rojo: 0, amarillo: 1, info: 2 }; d.alertas.sort((x, y) => o[x.nivel] - o[y.nivel]);
+  d.generado = new Date().toISOString();
+}
+let inicioTimer = 0;
+function inicioRepaint() { clearTimeout(inicioTimer); inicioTimer = setTimeout(() => { inicioMerge(); if (ui.route === 'inicio') inicioPaint(); }, 60); }
 async function inicioLoad(force) {
   if (INICIO.status === 'loading') return;
   if (!force && INICIO.data && Date.now() - INICIO.at < 120000) return;
-  INICIO.status = 'loading'; if (ui.route === 'inicio') inicioPaint();
-  try {
-    const r = await fetch('api.php?action=overview', { credentials: 'same-origin', cache: 'no-store' });
-    const d = await r.json().catch(() => null);
-    if (!r.ok || !d || !d.ok) { INICIO.status = 'error'; INICIO.error = r.status === 401 ? 'La sesión venció. Volvé a entrar.' : 'No pude traer los datos ahora. Probá de nuevo en un momento.'; }
-    else { INICIO.status = 'ok'; INICIO.data = d; INICIO.at = Date.now(); INICIO.error = ''; }
-  } catch (e) { INICIO.status = 'error'; INICIO.error = 'Sin conexión con el servidor.'; }
-  if (ui.route === 'inicio') inicioPaint();
+  INICIO.status = 'loading';
+  const pl = await inicioGet('api.php?action=overview_plan', 15000);
+  if (!pl.d || !pl.d.ok) { INICIO.status = 'error'; INICIO.error = pl.status === 401 ? 'La sesión venció. Volvé a entrar.' : 'No pude traer los datos ahora. Probá de nuevo en un momento.'; if (ui.route === 'inicio') inicioPaint(); return; }
+  const mk = p => ({ id: p.id, name: p.name, kind: p.kind, ok: false, loading: true, alertas: [] });
+  INICIO.data = { apps: pl.d.plan.filter(p => p.kind !== 'tienda').map(mk), tienda: (pl.d.plan.filter(p => p.kind === 'tienda').map(mk))[0] || null, alertas: [], sin_conectar: pl.d.sin_conectar || [], generado: new Date().toISOString() };
+  INICIO.status = 'ok'; INICIO.at = Date.now(); inicioPaint();
+  await Promise.all(pl.d.plan.map(async p => {
+    const r = await inicioGet('api.php?action=overview&id=' + encodeURIComponent(p.id), 25000);
+    const got = r.d && r.d.ok ? (r.d.tienda || (r.d.apps || [])[0]) : null;
+    const item = got || { id: p.id, name: p.name, kind: p.kind, ok: false, error: r.aborted ? 'tardó demasiado en responder' : 'no pude leerla ahora', alertas: [{ nivel: 'rojo', texto: 'No pude leer los datos: ' + (r.aborted ? 'tardó demasiado en responder' : 'error de conexión') }] };
+    const D = INICIO.data;
+    if (p.kind === 'tienda') D.tienda = item; else D.apps = D.apps.map(a => a.id === p.id ? item : a);
+    inicioRepaint();
+  }));
+  INICIO.at = Date.now();
 }
 function inicioPaint() { const page = $('#view .page'); if (page && ui.route === 'inicio') page.innerHTML = VIEWS.inicio.render(); }
 
@@ -97,6 +120,7 @@ function inicioFoot(a) {
 }
 
 function inicioAppCard(a) {
+  if (a.loading) return `<div class="card s4 in-app"><div class="in-app-h"><b>${inEsc(a.name)}</b><span class="tiny muted">leyendo…</span></div><div class="in-skel"></div></div>`;
   if (!a.ok) return `<div class="card s4 in-app in-bad"><div class="in-app-h"><b>${inEsc(a.name)}</b><span class="in-dot rojo"></span></div><p class="in-err">${inEsc(a.error)}</p>${inicioFoot(a)}</div>`;
   const C = a.clientes, L = a.landing, worst = (a.alertas.find(x => x.nivel === 'rojo') ? 'rojo' : a.alertas.find(x => x.nivel === 'amarillo') ? 'amarillo' : 'ok');
   const rec = a.recientes.slice(0, 4).map(c => `<li><span>${inEsc(c.nombre || c.email)}</span><em>${c.categoria ? inEsc(c.categoria) + ' · ' : ''}${inAgo(c.ultimo_ingreso || c.alta)}</em></li>`).join('');
@@ -110,6 +134,7 @@ function inicioAppCard(a) {
 
 function inicioTienda(T) {
   if (!T) return '';
+  if (T.loading) return `<div class="card s12 in-app"><div class="in-app-h"><b>${inEsc(T.name)}</b><span class="tiny muted">leyendo…</span></div><div class="in-skel"></div></div>`;
   if (!T.ok) return `<div class="card s12 in-app in-bad"><div class="in-app-h"><b>${inEsc(T.name)}</b><span class="in-dot rojo"></span></div><p class="in-err">${inEsc(T.error)}</p>${inicioFoot(T)}</div>`;
   const e = T.embudo || {}, mx = Math.max(1, e.vieron_producto || 0, e.abrieron_detalle || 0, e.tocaron_comprar || 0, e.compraron || 0);
   const fr = (l, v) => `<div class="in-f"><span>${l}</span><i style="--w:${Math.max(2, Math.round(v / mx * 100))}%"></i><b>${fnum(v)}</b></div>`;
@@ -156,6 +181,7 @@ VIEWS.inicio = {
 ACT.inicioRefresh = () => inicioLoad(true);
 ACT.inicioInforme = () => {
   if (!INICIO.data) return;
+  if (INICIO.data.apps.concat(INICIO.data.tienda ? [INICIO.data.tienda] : []).some(a => a.loading)) return toast('Esperá a que terminen de cargar las apps', 'warn');
   const txt = inicioReportText(INICIO.data);
   const m = openModal({ title: 'Informe del ecosistema', size: 'lg', body: `<pre class="in-report" id="inReport">${inEsc(txt)}</pre>`,
     footer: `<button class="btn" data-in-copy>Copiar</button><button class="btn btn-lens" data-in-print>Imprimir / PDF</button>` });

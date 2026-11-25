@@ -64,9 +64,17 @@ try {
             respond(502, ['ok' => false, 'code' => 'zuhause_unavailable']);
         }
     }
-    $sources = in_array($action, ['sources_list', 'source_data', 'source_action', 'fuentes_agregar', 'fuentes_quitar', 'overview', 'conectar_app'], true) ? fuentes_mapa($config) : [];
+    $sources = in_array($action, ['sources_list', 'source_data', 'source_action', 'fuentes_agregar', 'fuentes_quitar', 'overview', 'overview_plan', 'conectar_app'], true) ? fuentes_mapa($config) : [];
+    if ($action === 'overview_plan' && $method === 'GET') {
+        if (!$auth->current()) respond(401, ['ok' => false, 'code' => 'session_expired']);
+        if (session_status() === PHP_SESSION_ACTIVE) session_write_close();
+        respond(200, ['ok' => true] + Centro\Overview::plan($sources));
+    }
     if ($action === 'overview' && $method === 'GET') {
         if (!$auth->current()) respond(401, ['ok' => false, 'code' => 'session_expired']);
+        if (session_status() === PHP_SESSION_ACTIVE) session_write_close(); /* no trabar otros pedidos mientras se leen las apps */
+        $only = $_GET['id'] ?? null;
+        if (is_string($only) && $only !== '') { if (!isset($sources[$only])) respond(404, ['ok' => false, 'code' => 'source_not_found']); $sources = [$only => $sources[$only]]; }
         $out = Centro\Overview::build($sources);
         $out['clave_compartida'] = strlen((string)($config['ecosystem_key'] ?? '')) >= 32;
         respond(200, $out);
