@@ -92,6 +92,7 @@ function openProduct(id) {
     <div class="eyebrow" style="margin-bottom:6px">Ingresos por canal</div>${barsHTML(Object.entries(st.byC).sort((a, b) => b[1] - a[1]).map(([c, v]) => ({ label: channel(c)?.name || 'Sin canal', value: v, color: brandColor(p.brandId) })), { fmt: v => moneyShort(v) })}
     ${p.bundle?.length ? `<div class="eyebrow" style="margin:16px 0 6px">Incluye</div><div class="btn-row">${p.bundle.map(b => `<span class="badge">${esc(product(b)?.name || '')}</span>`).join('')}</div>` : ''}
     ${inBundles.length ? `<div class="eyebrow" style="margin:16px 0 6px">Forma parte de</div><div class="btn-row">${inBundles.map(b => `<span class="badge gold">${esc(b.name)}</span>`).join('')}</div>` : ''}
+    ${typeof productStoreHTML === 'function' ? productStoreHTML(p) : ''}
     ${p.resources?.length ? `<div class="eyebrow" style="margin:16px 0 6px">Recursos</div><div class="feed">${p.resources.map(x => `<div class="small mono" style="padding:4px 0;word-break:break-all">${/^https?:/.test(x) ? `<a href="${esc(x)}" target="_blank" rel="noopener">${esc(x)}</a>` : esc(x)}</div>`).join('')}</div>` : ''}`,
     footer: `<button class="btn" data-sell>${ic('zap')} Registrar venta</button><button class="btn btn-primary" data-edit>${ic('edit')} Editar</button>` });
   d.el.querySelector('[data-edit]').onclick = () => { d.close(); productForm(p); };
@@ -182,6 +183,7 @@ function openSale(id) {
       ${s.currency !== base() ? `<div class="tiny muted" style="margin-top:6px">TC: ${rateNote(s.currency, s.date)} → neto ${conv(c.net, s.currency, s.date) == null ? 'sin convertir' : money(conv(c.net, s.currency, s.date))}</div>` : ''}</div>
     ${cobros.length ? `<div class="eyebrow" style="margin-bottom:6px">Cobros</div>${cobros.map(t => `<div class="small">${dDate(t.date)} · ${money(t.amount, t.currency)} · ${esc(account(t.accountTo)?.name || 'sin cuenta')}</div>`).join('')}` : ''}
     ${s.notes ? `<p class="small"><b>Notas:</b> ${esc(s.notes)}</p>` : ''}
+    ${typeof saleTrailHTML === 'function' ? saleTrailHTML(s) : ''}
     <div class="eyebrow" style="margin:14px 0 6px">Historial</div>${(s.history || []).slice().reverse().map(h => `<div class="small muted">${new Date(h.at).toLocaleString(locale())} · ${esc(h.text)}</div>`).join('')}`,
     footer: s.status === 'anulada' ? '' : `<button class="btn btn-danger" data-void style="margin-right:auto">Anular</button><select class="input sm" style="width:auto" data-deliv>${opts(DELIVERY, s.delivery)}</select><button class="btn" data-refund>Reembolso</button>${s.payStatus !== 'cobrado' ? `<button class="btn btn-primary" data-collect>Marcar cobrada</button>` : ''}` });
   const upd = async (fn, msg) => { try { await transact('venta', st => { const S2 = st.sales.find(x => x.id === id); fn(S2, st); }); toast(msg); openSale(id); rerender(); } catch (e) { } };

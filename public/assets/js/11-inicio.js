@@ -24,8 +24,14 @@ function inicioMerge() {
   const d = INICIO.data; if (!d) return;
   const all = d.apps.concat(d.tienda ? [d.tienda] : []);
   d.alertas = [];
-  all.forEach(a => (a.alertas || []).forEach(x => d.alertas.push(Object.assign({}, x, { app: a.name, app_id: a.id }))));
-  const o = { rojo: 0, amarillo: 1, info: 2 }; d.alertas.sort((x, y) => o[x.nivel] - o[y.nivel]);
+  all.forEach(a => (a.alertas || []).forEach(x => {
+    if (a.kind === 'tienda' && /sin pagar|quedaron sin pagar|quedo sin pagar/i.test(x.texto) && (a.pedidos_lista || []).length) return; /* se reemplaza por uno por pedido, con su recorrido */
+    d.alertas.push(Object.assign({}, x, { app: a.name, app_id: a.id }));
+  }));
+  const T = d.tienda;
+  if (T && T.ok) (T.pedidos_lista || []).filter(o => o.estado === 'pending' && Date.now() - Date.parse(String(o.creado).replace(' ', 'T')) > 3600000 && Date.now() - Date.parse(String(o.creado).replace(' ', 'T')) < 7 * 86400000)
+    .forEach(o => d.alertas.push({ nivel: 'info', texto: `Pedido #${o.id} sin pagar: ${o.producto} · ${inCur(o.moneda, o.monto)} · ${o.email} · ${inAgo(o.creado)}`, app: T.name, app_id: T.id, pedido: o.id }));
+  const o = { rojo: 0, amarillo: 1, info: 3 }, rk = a => a.pedido ? 2 : o[a.nivel]; d.alertas.sort((x, y) => rk(x) - rk(y));
   d.generado = new Date().toISOString();
 }
 let inicioTimer = 0, inicioTick = 0;
@@ -34,7 +40,7 @@ async function inicioLoad(force) {
   if (INICIO.running) return; /* una sola lectura a la vez: dos juntas traban el hosting */
   if (!force && INICIO.data && Date.now() - INICIO.at < 120000) return;
   INICIO.status = 'loading'; INICIO.running = true;
-  try { await inicioRun(); } catch (e) { if (!INICIO.data) { INICIO.status = 'error'; INICIO.error = 'Algo falló al leer: ' + (e && e.message); if (ui.route === 'inicio') inicioPaint(); } } finally { INICIO.running = false; INICIO.cur = null; clearInterval(inicioTick); }
+  try { await inicioRun(); } catch (e) { if (!INICIO.data) { INICIO.status = 'error'; INICIO.error = 'Algo falló al leer: ' + (e && e.message); if (ui.route === 'inicio') inicioPaint(); } } finally { INICIO.running = false; INICIO.cur = null; clearInterval(inicioTick); if (typeof syncAuto === 'function') setTimeout(syncAuto, 400); }
 }
 async function inicioRun() {
   const pl = await inicioGet('api.php?action=overview_plan', 15000);
@@ -124,81 +130,94 @@ function inicioReportText(d) {
   return L.join('\n');
 }
 
-function inicioSetupCard(d) {
-  const pend = d.sin_conectar || [];
-  if (!pend.length) return '';
-  return `<div class="card in-setup"><div class="eyebrow">Conectar tus apps</div><h3>${pend.length === 1 ? 'Falta 1 app' : 'Faltan ' + pend.length + ' apps'} por conectar</h3>
-    <p class="muted">Es fácil: en el admin de la app tocás <b>«Generar código de conexión»</b> y escribís ese código acá. Sin claves ni archivos.</p>
-    <div class="btn-row">${pend.map(a => `<button class="btn btn-lens" data-act="conectarCodigo" data-app="${inEsc(a.id)}" data-name="${inEsc(a.name)}">Conectar ${inEsc(a.name)}</button>`).join('')}</div></div>`;
-}
 function inicioFoot(a) {
   const cid = a.conectar_id || ''; if (!cid) return '';
   return `<div class="in-foot"><button class="btn btn-sm btn-ghost" data-act="conectarCodigo" data-app="${inEsc(cid)}" data-name="${inEsc(a.name)}">${a.ok ? 'Renovar conexión' : 'Conectar de nuevo'}</button>${a.via === 'tabla' ? `<button class="btn btn-sm btn-ghost" data-act="inicioQuitar" data-id="${inEsc(a.id)}" data-name="${inEsc(a.name)}">Desconectar</button>` : ''}</div>`;
 }
-
 function inicioWait(a) {
   const c = INICIO.cur; if (!c || c.id !== a.id) return 'en espera';
   return 'leyendo… ' + Math.floor((Date.now() - c.t0) / 1000) + ' s';
 }
-function inicioAppCard(a) {
-  if (a.loading) return `<div class="card s4 in-app"><div class="in-app-h"><b>${inEsc(a.name)}</b><span class="tiny muted" data-wait="${inEsc(a.id)}">${inicioWait(a)}</span></div><div class="in-skel"></div></div>`;
-  if (!a.ok) return `<div class="card s4 in-app in-bad"><div class="in-app-h"><b>${inEsc(a.name)}</b><span class="in-dot rojo"></span></div><p class="in-err">${inEsc(a.error)}</p>${inicioFoot(a)}</div>`;
-  const C = a.clientes, L = a.landing, worst = (a.alertas.find(x => x.nivel === 'rojo') ? 'rojo' : a.alertas.find(x => x.nivel === 'amarillo') ? 'amarillo' : 'ok');
-  const rec = a.recientes.slice(0, 4).map(c => `<li><span>${inEsc(c.nombre || c.email)}</span><em>${c.categoria ? inEsc(c.categoria) + ' · ' : ''}${inAgo(c.ultimo_ingreso || c.alta)}</em></li>`).join('');
-  return `<div class="card s4 in-app"><div class="in-app-h"><b>${inEsc(a.name)}</b><span class="in-dot ${worst}" title="${worst === 'ok' ? 'Todo bien' : 'Hay alertas'}"></span></div>
-    <div class="in-big"><div><b>${fnum(C.pagando)}</b><span>pagando</span></div><div><b>${fnum(C.en_prueba)}</b><span>en prueba</span></div><div><b>${fnum(C.total)}</b><span>cuentas</span></div></div>
-    <div class="in-rows"><div><span>Visitas landing (30d)</span><b>${fnum(L.visitas)}</b></div><div><span>Clics en suscribirme</span><b>${fnum(L.clicks_sub)}${L.conv_pct !== null ? ` <i>${L.conv_pct}%</i>` : ''}</b></div><div><span>Suscripciones iniciadas</span><b>${fnum(a.iniciadas_30d)}</b></div></div>
-    ${L.tiene_datos ? '' : '<p class="in-note">La landing aún no mide visitas.</p>'}
-    ${rec ? `<div class="in-sub">Últimos en entrar</div><ul class="in-list">${rec}</ul>` : ''}
-    ${a.alertas.length ? `<div class="in-al">${a.alertas.slice(0, 3).map(x => `<div class="in-pill ${x.nivel}">${inEsc(x.texto)}</div>`).join('')}</div>` : ''}${inicioFoot(a)}</div>`;
+const inSafe = (fn, a, fb) => { try { return fn(a); } catch (e) { return fb ? fb(a, e) : ''; } };
+const inMoneyList = T => (T.ventas && T.ventas.por_moneda || []).map(x => `${inCur(x.moneda, x.monto)}${x.n > 1 ? ' <i>(' + x.n + ')</i>' : ''}`).join(' + ') || 'sin ventas todavía';
+
+/* franja de conexión: chica, solo si falta algo */
+function inicioSetupStrip(d) {
+  const pend = d.sin_conectar || []; if (!pend.length) return '';
+  return `<div class="in-strip"><span>Sin conectar: <b>${pend.map(a => inEsc(a.name)).join(', ')}</b>. En el admin de la app tocá «Generar código de conexión» y escribilo acá.</span><span class="btn-row">${pend.map(a => `<button class="btn btn-sm" data-act="conectarCodigo" data-app="${inEsc(a.id)}" data-name="${inEsc(a.name)}">Conectar ${inEsc(a.name)}</button>`).join('')}</span></div>`;
+}
+function inicioSyncStrip() {
+  if (typeof SYNC === 'undefined') return '';
+  if (SYNC.running) return `<div class="in-strip"><span><b>Sincronizando</b> con tu tienda y tus apps… (productos, ventas, cuentas)</span></div>`;
+  if (SYNC.error) return `<div class="in-strip bad"><span>No pude sincronizar: ${inEsc(SYNC.error)}</span><button class="btn btn-sm" data-act="syncAhora">Reintentar</button></div>`;
+  const r = SYNC.report; if (!r) return '';
+  const bits = [[r.ventas, 'venta'], [r.subs, 'suscripción', 'suscripciones'], [r.clientes, 'cliente'], [r.prod_new, 'producto nuevo', 'productos nuevos'], [r.apps, 'app registrada', 'apps registradas']].filter(x => x[0] > 0).map(x => `${x[0]} ${x[0] === 1 ? x[1] : (x[2] || x[1] + 's')}`);
+  return `<div class="in-strip ok"><span>Sincronizado ${inAgo(new Date(SYNC.at).toISOString())}: ${bits.length ? 'se cargaron ' + bits.join(', ') + '.' : 'todo al día, nada nuevo.'}${r.prod_link ? ' ' + r.prod_link + ' productos vinculados a tu tienda.' : ''}${(r.fallaron || []).length ? ' <b>No pude leer: ' + r.fallaron.map(inEsc).join(', ') + '.</b>' : ''}</span><button class="btn btn-sm" data-act="syncAhora">Sincronizar ahora</button></div>`;
 }
 
-function inicioTienda(T) {
-  if (!T) return '';
-  if (T.loading) return `<div class="card s12 in-app"><div class="in-app-h"><b>${inEsc(T.name)}</b><span class="tiny muted" data-wait="${inEsc(T.id)}">${inicioWait(T)}</span></div><div class="in-skel"></div></div>`;
-  if (!T.ok) return `<div class="card s12 in-app in-bad"><div class="in-app-h"><b>${inEsc(T.name)}</b><span class="in-dot rojo"></span></div><p class="in-err">${inEsc(T.error)}</p>${inicioFoot(T)}</div>`;
+/* tabla de apps: una fila por app, todo lo importante junto */
+function inicioAppRow(a) {
+  if (a.loading) return `<tr><td class="firstc"><b>${inEsc(a.name)}</b></td><td colspan="8" class="muted"><span data-wait="${inEsc(a.id)}">${inicioWait(a)}</span></td></tr>`;
+  if (!a.ok) return `<tr class="in-bad-row"><td class="firstc"><b>${inEsc(a.name)}</b></td><td colspan="6" class="in-err">${inEsc(a.error)}</td><td class="right">${inicioFoot(a)}</td></tr>`;
+  const C = a.clientes, L = a.landing, worst = a.alertas.find(x => x.nivel === 'rojo') ? 'rojo' : a.alertas.find(x => x.nivel === 'amarillo') ? 'amarillo' : 'ok';
+  const last = (a.recientes || [])[0];
+  return `<tr><td class="firstc"><span class="in-dot ${worst}"></span> <b>${inEsc(a.name)}</b></td><td class="right num">${fnum(C.pagando)}</td><td class="right num">${fnum(C.en_prueba)}</td><td class="right num">${fnum(C.gracia)}</td><td class="right num">${fnum(C.total)}</td>
+    <td class="right num">${fnum(L.visitas)}</td><td class="right num">${fnum(L.clicks_sub)}${L.conv_pct !== null ? ` <i class="muted">${L.conv_pct}%</i>` : ''}</td><td class="small muted">${last ? inEsc(last.nombre || last.email) + ' · ' + inAgo(last.ultimo_ingreso || last.alta) : '—'}</td><td class="right">${inicioFoot(a)}</td></tr>`;
+}
+function inicioAppsTable(apps) {
+  return `<div class="card in-card"><div class="card-h"><h3>Tus apps</h3><span class="tiny muted">cuentas y landing, últimos 30 días</span></div><div class="table-wrap"><table class="rt in-t"><thead><tr><th>App</th><th class="right">Pagando</th><th class="right">En prueba</th><th class="right">Gracia</th><th class="right">Cuentas</th><th class="right">Visitas landing</th><th class="right">Clics suscribirme</th><th>Último en entrar</th><th></th></tr></thead><tbody>${apps.map(a => inSafe(inicioAppRow, a, (x, e) => `<tr><td colspan="9" class="in-err">${inEsc(x.name)}: no pude dibujar (${inEsc(e.message)})</td></tr>`)).join('')}</tbody></table></div></div>`;
+}
+
+const IN_EST = { paid: ['ok', 'Pagado'], pending: ['wait', 'Sin pagar'] };
+function inicioOrders(T) {
+  const L = (T.pedidos_lista || []).slice(0, 8);
+  return `<div class="card in-card"><div class="card-h"><h3>Pedidos de la tienda</h3><span class="tiny muted">tocá uno para ver su recorrido</span></div>${L.length ? `<div class="table-wrap"><table class="rt in-t"><thead><tr><th>Fecha</th><th>Producto</th><th class="right">Monto</th><th>Estado</th><th>Medio</th><th>Llegó desde</th></tr></thead><tbody>${L.map(o => { const e = IN_EST[o.estado] || ['bad', 'Falló']; return `<tr class="click" data-act="syncVerPedido" data-id="${o.id}"><td class="small">${inAgo(o.creado)}</td><td class="firstc">${inEsc(o.producto)}${o.propio ? ' <span class="badge">prueba tuya</span>' : ''}</td><td class="right num">${inCur(o.moneda, o.monto)}</td><td><b class="in-st ${e[0]}">${e[1]}</b></td><td class="small">${o.metodo === 'pp' ? 'PayPal' : 'Mercado Pago'}</td><td class="small muted">${inEsc(o.origen || '—')}</td></tr>`; }).join('')}</tbody></table></div>` : '<p class="muted">Todavía no hay pedidos.</p>'}</div>`;
+}
+function inicioProductos(T) {
+  const prods = (T.productos || []).slice(0, 10);
+  return `<div class="card in-card"><div class="card-h"><h3>Productos más vistos</h3><span class="tiny muted">tienda · últimos ${T.dias} días</span></div>${prods.length ? `<div class="table-wrap"><table class="rt in-t"><thead><tr><th>Producto</th><th class="right">Vistas</th><th class="right">Detalle</th><th class="right">Comprar</th><th class="right">WhatsApp</th><th class="right">Vendidos</th></tr></thead><tbody>${prods.map(p => `<tr><td class="firstc">${inEsc(p.nombre)}</td><td class="right num">${p.seen}</td><td class="right num">${p.det}</td><td class="right num">${p.buy}</td><td class="right num">${p.wa}</td><td class="right num"><b>${p.sold}</b></td></tr>`).join('')}</tbody></table></div>` : '<p class="muted">Todavía no hay vistas de productos en este período.</p>'}</div>`;
+}
+function inicioEmbudo(T) {
   const e = T.embudo || {}, mx = Math.max(1, e.vieron_producto || 0, e.abrieron_detalle || 0, e.tocaron_comprar || 0, e.compraron || 0);
   const fr = (l, v) => `<div class="in-f"><span>${l}</span><i style="--w:${Math.max(2, Math.round(v / mx * 100))}%"></i><b>${fnum(v)}</b></div>`;
-  const prods = (T.productos || []).slice(0, 8);
-  const pmx = Math.max(1, ...prods.map(p => p.det * 3 + p.seen));
-  return `<div class="card s8 in-tienda"><div class="card-h"><h3>Productos más vistos · tienda</h3><span class="tiny muted">últimos ${T.dias} días</span></div>
-    ${prods.length ? `<div class="in-tbl"><div class="in-th"><span>Producto</span><span>Vistas</span><span>Detalle</span><span>Comprar</span><span>WhatsApp</span><span>Vendidos</span></div>${prods.map(p => `<div class="in-tr"><span class="in-pn"><i style="--w:${Math.round((p.det * 3 + p.seen) / pmx * 100)}%"></i><u>${inEsc(p.nombre)}</u></span><span>${p.seen}</span><span>${p.det}</span><span>${p.buy}</span><span>${p.wa}</span><span><b>${p.sold}</b></span></div>`).join('')}</div>` : '<p class="muted">Todavía no hay vistas de productos en este período.</p>'}</div>
-    <div class="card s4"><div class="card-h"><h3>Embudo de la tienda</h3></div>${fr('Vieron un producto', e.vieron_producto || 0)}${fr('Abrieron el detalle', e.abrieron_detalle || 0)}${fr('Tocaron Comprar', e.tocaron_comprar || 0)}${fr('Compraron', e.compraron || 0)}
-    <div class="in-sub" style="margin-top:14px">Pedidos</div><div class="in-rows"><div><span>Pagados</span><b>${fnum(T.pedidos.pagados)}</b></div><div><span>Sin pagar</span><b>${fnum(T.pedidos.pendientes)}</b></div><div><span>Fallidos / devueltos</span><b>${fnum(T.pedidos.fallidos)}</b></div></div></div>
-    <div class="card s6"><div class="card-h"><h3>De dónde llegan</h3></div>${(T.origen || []).length ? (T.origen || []).map(o => `<div class="in-f"><span>${inEsc(o.origen)}</span><i style="--w:${Math.max(3, Math.round(o.sesiones / Math.max(1, T.origen[0].sesiones) * 100))}%"></i><b>${fnum(o.sesiones)}</b></div>`).join('') : '<p class="muted">Sin datos todavía.</p>'}</div>
-    <div class="card s6"><div class="card-h"><h3>Últimos pedidos</h3></div>${(T.ultimos_pedidos || []).length ? `<ul class="in-list">${T.ultimos_pedidos.slice(0, 6).map(o => `<li><span>${inEsc(o.producto)}</span><em><b class="in-st ${o.estado === 'paid' ? 'ok' : o.estado === 'pending' ? 'wait' : 'bad'}">${o.estado === 'paid' ? 'Pagado' : o.estado === 'pending' ? 'Sin pagar' : 'Falló'}</b> ${inCur(o.moneda, o.monto)} · ${inAgo(o.fecha)}</em></li>`).join('')}</ul>` : '<p class="muted">Todavía no hay pedidos.</p>'}</div>`;
+  const org = Array.isArray(T.origen) ? T.origen : [];
+  return `<div class="card in-card"><div class="card-h"><h3>Embudo y orígenes</h3></div>${fr('Vieron un producto', e.vieron_producto || 0)}${fr('Abrieron el detalle', e.abrieron_detalle || 0)}${fr('Tocaron Comprar', e.tocaron_comprar || 0)}${fr('Compraron', e.compraron || 0)}
+    <div class="in-sub">De dónde llegan</div>${org.length ? org.slice(0, 5).map(o => `<div class="in-f"><span>${inEsc(o.origen)}</span><i style="--w:${Math.max(3, Math.round(o.sesiones / Math.max(1, org[0].sesiones) * 100))}%"></i><b>${fnum(o.sesiones)}</b></div>`).join('') : '<p class="muted small">Sin datos todavía.</p>'}</div>`;
 }
 
 VIEWS.inicio = {
   render() {
     const d = INICIO.data, T = d && d.tienda && d.tienda.ok ? d.tienda : null;
-    const head = pageHead('Inicio', 'Todo tu ecosistema, de un vistazo', d ? `Actualizado ${inAgo(d.generado)}. Datos reales de tu tienda y de cada app.` : 'Trayendo los datos de tus apps…',
+    const head = pageHead('Inicio', 'Todo tu ecosistema, de un vistazo', d ? `Actualizado ${inAgo(d.generado)}.` : 'Trayendo los datos de tus apps…',
       `<button class="btn" data-act="inicioRefresh">${ic('swap')} Actualizar</button><button class="btn btn-lens" data-act="inicioInforme" ${d ? '' : 'disabled'}>${ic('reportes')} Informe</button>`);
     if (!d) {
       if (INICIO.status === 'error') return head + `<div class="card"><p class="in-err">${inEsc(INICIO.error)}</p><button class="btn" data-act="inicioRefresh">Reintentar</button></div>`;
       return head + `<div class="bento">${'<div class="card s3 in-skel"></div>'.repeat(4)}</div>`;
     }
     const apps = d.apps || [];
-    const pag = apps.reduce((s, a) => s + (a.ok ? a.clientes.pagando : 0), 0), prueba = apps.reduce((s, a) => s + (a.ok ? a.clientes.en_prueba : 0), 0);
+    const pag = apps.reduce((s, a) => s + (a.ok ? a.clientes.pagando : 0), 0), prueba = apps.reduce((s, a) => s + (a.ok ? a.clientes.en_prueba : 0), 0), gracia = apps.reduce((s, a) => s + (a.ok ? a.clientes.gracia : 0), 0);
     const rojas = d.alertas.filter(a => a.nivel === 'rojo').length, amar = d.alertas.filter(a => a.nivel === 'amarillo').length;
     const cargando = apps.some(a => a.loading) || (d.tienda && d.tienda.loading);
-    const estado = cargando ? `<div class="in-status"><b>Leyendo tus apps…</b><span>Se van completando una por una, puede tardar unos segundos.</span></div>` : rojas ? `<div class="in-status rojo"><b>${rojas} problema${rojas === 1 ? '' : 's'} para resolver</b><span>${inEsc(d.alertas.find(a => a.nivel === 'rojo').app)}: ${inEsc(d.alertas.find(a => a.nivel === 'rojo').texto)}</span></div>`
-      : amar ? `<div class="in-status amarillo"><b>${amar} aviso${amar === 1 ? '' : 's'} para revisar</b><span>Nada urgente, pero conviene mirarlo.</span></div>`
-        : `<div class="in-status ok"><b>Todo en orden</b><span>No hay alertas en tus apps ni en la tienda.</span></div>`;
-    const kpi = (cls, lbl, val, sub) => `<div class="card ${cls} in-kpi"><div class="lbl">${lbl}</div><div class="val">${val}</div><div class="sub">${sub || ''}</div></div>`;
-    const v = T ? T.ventas : null, vd = T && T.visitantes_prev > 0 ? Math.round((T.visitantes - T.visitantes_prev) / T.visitantes_prev * 100) : null;
-    let h = head + inicioSetupCard(d) + estado + '<div class="bento in-top">'
-      + kpi('s3', 'Ventas · tienda', T ? fnum(v.n) : '—', T ? (v.por_moneda.length ? v.por_moneda.map(x => inCur(x.moneda, x.monto)).join(' + ') : 'sin ventas todavía') + ` · ${T.dias} días` : 'tienda sin conexión')
-      + kpi('s3', 'Visitas a la tienda', T ? fnum(T.visitantes) : '—', T ? `${fnum(T.visitantes_hoy)} hoy` + (vd !== null ? ` · <span class="${vd >= 0 ? 'pos' : 'neg'}">${vd >= 0 ? '▲' : '▼'} ${Math.abs(vd)}%</span>` : '') : '')
-      + kpi('s3', 'Suscripciones activas', fnum(pag), `${fnum(prueba)} en prueba · ${apps.length} apps`)
-      + kpi('s3', 'Conversión tienda', T && T.conv_pct !== null ? T.conv_pct + '%' : '—', T ? `${fnum(T.sesiones)} sesiones` : '')
-      + '</div>';
-    if (d.alertas.length) h += `<div class="card in-alerts"><div class="card-h"><h3>Alertas</h3><span class="tiny muted">${d.alertas.length}</span></div>${d.alertas.slice(0, 10).map(a => `<div class="in-alert ${a.nivel}"><i></i><span><b>${inEsc(a.app)}</b> ${inEsc(a.texto)}</span></div>`).join('')}</div>`;
-    h += '<div class="in-sec">Tus apps</div><div class="bento">' + apps.map(a => inicioCard(inicioAppCard, a)).join('') + '</div>';
-    h += '<div class="in-sec">Tienda · descargar</div><div class="bento">' + inicioCard(inicioTienda, d.tienda) + '</div>';
+    const estado = cargando ? `<div class="in-strip"><span><b>Leyendo tus apps…</b> una por una, puede tardar unos segundos.</span></div>` : rojas ? `<div class="in-strip bad"><span><b>${rojas} problema${rojas === 1 ? '' : 's'} para resolver</b> · ${inEsc(d.alertas.find(a => a.nivel === 'rojo').app)}: ${inEsc(d.alertas.find(a => a.nivel === 'rojo').texto)}</span></div>` : '';
+    const tile = (lbl, val, sub, act) => `<div class="card tile s3" ${act ? `data-act="${act}" style="cursor:pointer"` : ''}><div class="lbl">${lbl}</div><div class="val">${val}</div><div class="sub">${sub || ''}</div></div>`;
+    const vd = T && T.visitantes_prev > 0 ? Math.round((T.visitantes - T.visitantes_prev) / T.visitantes_prev * 100) : null;
+    let h = head + estado + inicioSetupStrip(d) + inicioSyncStrip() + '<div class="bento in-top">'
+      + tile('Ventas · tienda', T ? fnum(T.ventas.n) : '—', T ? inMoneyList(T) + ` · ${T.dias} d` : 'sin conexión con la tienda', T ? 'inicioVentas' : '')
+      + tile('Visitas a la tienda', T ? fnum(T.visitantes) : '—', T ? `${fnum(T.visitantes_hoy)} hoy` + (vd !== null ? ` · <span class="${vd >= 0 ? 'pos' : 'neg'}">${vd >= 0 ? '▲' : '▼'} ${Math.abs(vd)}%</span>` : '') : '')
+      + tile('Cuentas en apps', fnum(pag) + ' <small>pagando</small>', `${fnum(prueba)} en prueba · ${fnum(gracia)} en gracia · ${apps.length} apps`)
+      + tile('Conversión tienda', T && T.conv_pct !== null ? T.conv_pct + '%' : '—', T ? `${fnum(T.sesiones)} sesiones` : '') + '</div>';
+    const alr = d.alertas.slice(0, 10).map(a => `<div class="in-alert ${a.nivel}"${a.pedido ? ` data-act="syncVerPedido" data-id="${a.pedido}" style="cursor:pointer"` : ''}><i></i><span><b>${inEsc(a.app)}</b> ${inEsc(a.texto)}${a.pedido ? ' <u>ver recorrido</u>' : ''}</span></div>`).join('');
+    h += `<div class="bento in-mid"><div class="card in-card s5"><div class="card-h"><h3>Alertas</h3><span class="tiny muted">${d.alertas.length ? d.alertas.length + (rojas ? ' · ' + rojas + ' urgentes' : '') : 'sin alertas'}</span></div>${alr || '<p class="muted small">Todo en orden: no hay alertas en tus apps ni en la tienda.</p>'}</div><div class="s7" style="min-width:0">${inSafe(() => T ? inicioOrders(T) : (d.tienda && d.tienda.loading ? `<div class="card in-card"><div class="card-h"><h3>Pedidos de la tienda</h3><span class="tiny muted" data-wait="${inEsc(d.tienda.id)}">${inicioWait(d.tienda)}</span></div></div>` : (d.tienda ? `<div class="card in-card in-bad"><div class="card-h"><h3>Pedidos de la tienda</h3></div><p class="in-err">${inEsc(d.tienda.error)}</p>${inicioFoot(d.tienda)}</div>` : '')), null, (x, e) => `<div class="card"><p class="in-err">No pude dibujar los pedidos: ${inEsc(e.message)}</p></div>`)}</div></div>`;
+    h += inicioAppsTable(apps);
+    if (T) h += `<div class="bento in-bot"><div class="s7" style="min-width:0">${inSafe(inicioProductos, T, (x, e) => `<div class="card"><p class="in-err">No pude dibujar los productos: ${inEsc(e.message)}</p></div>`)}</div><div class="s5" style="min-width:0">${inSafe(inicioEmbudo, T, (x, e) => `<div class="card"><p class="in-err">No pude dibujar el embudo: ${inEsc(e.message)}</p></div>`)}</div></div>`;
     return h;
   },
   after() { inicioLoad(false); }
+};
+ACT.inicioVentas = () => {
+  const T = INICIO.data && INICIO.data.tienda; if (!T || !T.ok) return;
+  const L = (T.pedidos_lista || []).filter(o => o.estado === 'paid');
+  openModal({ title: 'Ventas de la tienda · ' + T.dias + ' días', size: 'md', body: `<p class="small muted">Cada importe es un pedido pagado. Tocá uno para ver quién fue y qué hizo antes de comprar.</p>${L.length ? `<div class="table-wrap"><table class="rt in-t"><thead><tr><th>Pagado</th><th>Producto</th><th>Cliente</th><th class="right">Monto</th><th>Medio</th></tr></thead><tbody>${L.map(o => `<tr class="click" data-act="syncVerPedido" data-id="${o.id}"><td class="small">${inEsc(String(o.pagado || o.creado).slice(0, 16))}</td><td class="firstc">${inEsc(o.producto)}${o.propio ? ' <span class="badge">prueba tuya</span>' : ''}</td><td class="small">${inEsc(o.email)}</td><td class="right num">${inCur(o.moneda, o.monto)}</td><td class="small">${o.metodo === 'pp' ? 'PayPal' : 'Mercado Pago'}</td></tr>`).join('')}</tbody></table></div>` : '<p class="muted">Sin pedidos pagados.</p>'}` });
 };
 ACT.inicioRefresh = () => inicioLoad(true);
 ACT.inicioInforme = () => {

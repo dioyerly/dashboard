@@ -75,7 +75,7 @@ final class Overview
     /** Resumen legible de lo que paso con cada pedido (para mostrar en pantalla cuando algo falla). */
     private static function diag(array $res, string $id): string
     {
-        $n = ['summary' => 'resumen', 'customers' => 'clientes', 'sistema' => 'sistema']; $p = [];
+        $n = ['summary' => 'resumen', 'customers' => 'clientes', 'sistema' => 'sistema', 'pedidos' => 'pedidos']; $p = [];
         foreach ($n as $v => $lbl) {
             $r = $res[$id . '|' . $v] ?? null; if ($r === null) continue;
             if ($r['status'] === -1) { $p[] = $lbl . ': omitido'; continue; }
@@ -135,7 +135,7 @@ final class Overview
             if (strlen($tok) < 32 || ($parts['scheme'] ?? '') !== 'https' || !str_ends_with($host, '.estrategia.site')) continue;
             $sep = str_contains($url, '?') ? '&' : '?';
             $kind = self::kindOf((string)$id, $src);
-            $views = $kind === 'tienda' ? ['summary&d=30', 'sistema'] : ['summary&d=30', 'customers', 'sistema'];
+            $views = $kind === 'tienda' ? ['summary&d=30', 'sistema', 'pedidos'] : ['summary&d=30', 'customers', 'sistema'];
             foreach ($views as $v) $jobs[$id . '|' . explode('&', $v)[0]] = ['url' => $url . $sep . 'view=' . $v, 'token' => $tok];
         }
         $res = self::fetchAll($jobs, 10, 16);
@@ -149,7 +149,7 @@ final class Overview
             if ($sum['json'] === null || $sum['status'] !== 200) { $x = self::broken((string)$id, $name, $kind, self::reason($sum['status']) . ' — ' . self::diag($res, (string)$id)); if ($kind === 'tienda') $tienda = $x; else $apps[] = $x; continue; }
             $sis = $res[$id . '|sistema']['json'] ?? null;
             if (($res[$id . '|sistema']['status'] ?? 0) !== 200) $sis = null;
-            if ($kind === 'tienda') { $tienda = self::tienda((string)$id, $name, $sum['json'], $sis); $tienda['diag'] = self::diag($res, (string)$id); continue; }
+            if ($kind === 'tienda') { $tienda = self::tienda((string)$id, $name, $sum['json'], $sis); $pj = $res[$id . '|pedidos'] ?? null; $tienda['pedidos_lista'] = ($pj && $pj['status'] === 200 && is_array($pj['json']['pedidos'] ?? null)) ? $pj['json']['pedidos'] : []; $tienda['diag'] = self::diag($res, (string)$id); continue; }
             $cus = $res[$id . '|customers']['json']['customers'] ?? null;
             if (($res[$id . '|customers']['status'] ?? 0) !== 200 || !is_array($cus)) $cus = [];
             $ap = self::app((string)$id, $name, $sum['json'], $cus, $sis); $ap['diag'] = self::diag($res, (string)$id); $apps[] = $ap;
