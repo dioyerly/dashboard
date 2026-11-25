@@ -115,7 +115,7 @@ final class Overview
         foreach (self::DEFAULTS as $d1) $defHost[strtolower((string)parse_url($d1['url'], PHP_URL_HOST))] = $d1['id'];
         foreach ($sources as $id => $src) {
             $h1 = strtolower((string)parse_url((string)($src['url'] ?? ''), PHP_URL_HOST));
-            $plan[] = ['id' => (string)$id, 'name' => (string)($src['name'] ?? $id), 'kind' => self::kindOf((string)$id, $src), 'conectar_id' => $defHost[$h1] ?? '', 'origen' => (string)($src['origen'] ?? '')];
+            $plan[] = ['id' => (string)$id, 'name' => (string)($src['name'] ?? $id), 'kind' => self::kindOf((string)$id, $src), 'conectar_id' => $defHost[$h1] ?? '', 'via' => (string)($src['origen'] ?? '')];
             $hosts[strtolower((string)parse_url((string)($src['url'] ?? ''), PHP_URL_HOST))] = true;
         }
         $pend = [];
@@ -157,7 +157,7 @@ final class Overview
         $defHost = [];
         foreach (self::DEFAULTS as $d1) $defHost[strtolower((string)parse_url($d1['url'], PHP_URL_HOST))] = $d1['id'];
         $mark = function (array $a) use ($sources, $defHost): array {
-            $a['origen'] = (string)($sources[$a['id']]['origen'] ?? '');
+            $a['via'] = (string)($sources[$a['id']]['origen'] ?? '');
             $a['conectar_id'] = $defHost[strtolower((string)parse_url((string)($sources[$a['id']]['url'] ?? ''), PHP_URL_HOST))] ?? '';
             return $a;
         };

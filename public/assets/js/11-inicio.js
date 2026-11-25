@@ -39,7 +39,7 @@ async function inicioLoad(force) {
 async function inicioRun() {
   const pl = await inicioGet('api.php?action=overview_plan', 15000);
   if (!pl.d || !pl.d.ok) { INICIO.status = 'error'; INICIO.error = pl.status === 401 ? 'La sesión venció. Volvé a entrar.' : 'No pude traer los datos ahora. Probá de nuevo en un momento.'; if (ui.route === 'inicio') inicioPaint(); return; }
-  const mk = p => ({ id: p.id, name: p.name, kind: p.kind, conectar_id: p.conectar_id, origen: p.origen, ok: false, loading: true, alertas: [] });
+  const mk = p => ({ id: p.id, name: p.name, kind: p.kind, conectar_id: p.conectar_id, via: p.via, ok: false, loading: true, alertas: [] });
   INICIO.data = { apps: pl.d.plan.filter(p => p.kind !== 'tienda').map(mk), tienda: (pl.d.plan.filter(p => p.kind === 'tienda').map(mk))[0] || null, alertas: [], sin_conectar: pl.d.sin_conectar || [], generado: new Date().toISOString() };
   INICIO.status = 'ok'; INICIO.at = Date.now(); inicioPaint();
   /* de a una: tus sitios comparten los procesos del hosting y pedirlas todas juntas las traba */
@@ -51,7 +51,7 @@ async function inicioRun() {
     const secs = Math.round((Date.now() - t0) / 100) / 10;
     const got = r.d && r.d.ok ? (r.d.tienda || (r.d.apps || [])[0]) : null;
     const why = r.aborted ? 'el panel no recibió respuesta en ' + secs + ' s' : (r.status === 0 ? 'sin conexión con el panel' : 'el panel respondió con error (HTTP ' + r.status + ')');
-    const item = got || { id: p.id, name: p.name, kind: p.kind, conectar_id: p.conectar_id, origen: p.origen, ok: false, error: why, alertas: [{ nivel: 'rojo', texto: 'No pude leer los datos: ' + why }] };
+    const item = got || { id: p.id, name: p.name, kind: p.kind, conectar_id: p.conectar_id, via: p.via, ok: false, error: why, alertas: [{ nivel: 'rojo', texto: 'No pude leer los datos: ' + why }] };
     const D = INICIO.data;
     if (p.kind === 'tienda') D.tienda = item; else D.apps = D.apps.map(a => a.id === p.id ? item : a);
     inicioRepaint();
@@ -115,7 +115,7 @@ function inicioReportText(d) {
   L.push('3. QUÉ MEJORAR EN LAS PÁGINAS'); (I.mejorar.length ? I.mejorar : ['Por ahora no hay datos suficientes para marcar algo puntual.']).forEach(x => L.push('- ' + x)); L.push('');
   L.push('4. QUÉ ES MÁS PROBABLE QUE SE VENDA'); (I.vender.length ? I.vender : ['Todavía no hay suficiente movimiento para decirlo.']).forEach(x => L.push('- ' + x)); L.push('');
   L.push('5. CUENTAS ACTIVAS POR APP');
-  (d.apps || []).forEach(a => L.push(a.ok ? `- ${a.name}: ${a.clientes.pagando} pagando · ${a.clientes.en_prueba} en prueba · ${a.clientes.gracia} en gracia · ${a.clientes.solo_lectura} solo lectura · ${a.clientes.total} registradas` : `- ${a.name}: sin datos (${a.error})`));
+  (d.apps || []).forEach(a => L.push(a.ok ? `- ${a.name}: ${a.clientes.pagando} pagando · ${a.clientes.en_prueba} en prueba · ${a.clientes.gracia} en gracia · ${a.clientes.solo_lectura} solo lectura · ${a.clientes.total} registradas` : `- ${a.name}: sin datos (${a.loading ? 'todavía leyendo' : a.error})`));
   L.push('');
   if (T && T.productos && T.productos.length) {
     L.push('6. PRODUCTOS MÁS VISTOS DE LA TIENDA (' + T.dias + ' días)');
@@ -133,7 +133,7 @@ function inicioSetupCard(d) {
 }
 function inicioFoot(a) {
   const cid = a.conectar_id || ''; if (!cid) return '';
-  return `<div class="in-foot"><button class="btn btn-sm btn-ghost" data-act="conectarCodigo" data-app="${inEsc(cid)}" data-name="${inEsc(a.name)}">${a.ok ? 'Renovar conexión' : 'Conectar de nuevo'}</button>${a.origen === 'tabla' ? `<button class="btn btn-sm btn-ghost" data-act="inicioQuitar" data-id="${inEsc(a.id)}" data-name="${inEsc(a.name)}">Desconectar</button>` : ''}</div>`;
+  return `<div class="in-foot"><button class="btn btn-sm btn-ghost" data-act="conectarCodigo" data-app="${inEsc(cid)}" data-name="${inEsc(a.name)}">${a.ok ? 'Renovar conexión' : 'Conectar de nuevo'}</button>${a.via === 'tabla' ? `<button class="btn btn-sm btn-ghost" data-act="inicioQuitar" data-id="${inEsc(a.id)}" data-name="${inEsc(a.name)}">Desconectar</button>` : ''}</div>`;
 }
 
 function inicioWait(a) {
@@ -203,8 +203,7 @@ VIEWS.inicio = {
 ACT.inicioRefresh = () => inicioLoad(true);
 ACT.inicioInforme = () => {
   if (!INICIO.data) return;
-  if (INICIO.data.apps.concat(INICIO.data.tienda ? [INICIO.data.tienda] : []).some(a => a.loading)) return toast('Esperá a que terminen de cargar las apps', 'warn');
-  const txt = inicioReportText(INICIO.data);
+  let txt; try { txt = inicioReportText(INICIO.data); } catch (e) { return toast('No pude armar el informe: ' + (e && e.message), 'bad'); }
   const m = openModal({ title: 'Informe del ecosistema', size: 'lg', body: `<pre class="in-report" id="inReport">${inEsc(txt)}</pre>`,
     footer: `<button class="btn" data-in-copy>Copiar</button><button class="btn btn-lens" data-in-print>Imprimir / PDF</button>` });
   m.el.querySelector('[data-in-copy]').onclick = async () => { try { await navigator.clipboard.writeText(txt); toast('Informe copiado'); } catch (e) { toast('No pude copiar', 'warn'); } };
