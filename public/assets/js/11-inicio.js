@@ -36,17 +36,21 @@ async function inicioLoad(force) {
   INICIO.status = 'loading';
   const pl = await inicioGet('api.php?action=overview_plan', 15000);
   if (!pl.d || !pl.d.ok) { INICIO.status = 'error'; INICIO.error = pl.status === 401 ? 'La sesión venció. Volvé a entrar.' : 'No pude traer los datos ahora. Probá de nuevo en un momento.'; if (ui.route === 'inicio') inicioPaint(); return; }
-  const mk = p => ({ id: p.id, name: p.name, kind: p.kind, ok: false, loading: true, alertas: [] });
+  const mk = p => ({ id: p.id, name: p.name, kind: p.kind, conectar_id: p.conectar_id, origen: p.origen, ok: false, loading: true, alertas: [] });
   INICIO.data = { apps: pl.d.plan.filter(p => p.kind !== 'tienda').map(mk), tienda: (pl.d.plan.filter(p => p.kind === 'tienda').map(mk))[0] || null, alertas: [], sin_conectar: pl.d.sin_conectar || [], generado: new Date().toISOString() };
   INICIO.status = 'ok'; INICIO.at = Date.now(); inicioPaint();
-  await Promise.all(pl.d.plan.map(async p => {
-    const r = await inicioGet('api.php?action=overview&id=' + encodeURIComponent(p.id), 25000);
+  /* de a una: tus sitios comparten los procesos del hosting y pedirlas todas juntas las traba */
+  for (const p of pl.d.plan) {
+    const t0 = Date.now();
+    const r = await inicioGet('api.php?action=overview&id=' + encodeURIComponent(p.id), 45000);
+    const secs = Math.round((Date.now() - t0) / 100) / 10;
     const got = r.d && r.d.ok ? (r.d.tienda || (r.d.apps || [])[0]) : null;
-    const item = got || { id: p.id, name: p.name, kind: p.kind, ok: false, error: r.aborted ? 'tardó demasiado en responder' : 'no pude leerla ahora', alertas: [{ nivel: 'rojo', texto: 'No pude leer los datos: ' + (r.aborted ? 'tardó demasiado en responder' : 'error de conexión') }] };
+    const why = r.aborted ? 'el panel no recibió respuesta en ' + secs + ' s' : (r.status === 0 ? 'sin conexión con el panel' : 'el panel respondió con error (HTTP ' + r.status + ')');
+    const item = got || { id: p.id, name: p.name, kind: p.kind, conectar_id: p.conectar_id, origen: p.origen, ok: false, error: why, alertas: [{ nivel: 'rojo', texto: 'No pude leer los datos: ' + why }] };
     const D = INICIO.data;
     if (p.kind === 'tienda') D.tienda = item; else D.apps = D.apps.map(a => a.id === p.id ? item : a);
     inicioRepaint();
-  }));
+  }
   INICIO.at = Date.now();
 }
 function inicioPaint() { const page = $('#view .page'); if (page && ui.route === 'inicio') page.innerHTML = VIEWS.inicio.render(); }
@@ -160,7 +164,8 @@ VIEWS.inicio = {
     const apps = d.apps || [];
     const pag = apps.reduce((s, a) => s + (a.ok ? a.clientes.pagando : 0), 0), prueba = apps.reduce((s, a) => s + (a.ok ? a.clientes.en_prueba : 0), 0);
     const rojas = d.alertas.filter(a => a.nivel === 'rojo').length, amar = d.alertas.filter(a => a.nivel === 'amarillo').length;
-    const estado = rojas ? `<div class="in-status rojo"><b>${rojas} problema${rojas === 1 ? '' : 's'} para resolver</b><span>${inEsc(d.alertas.find(a => a.nivel === 'rojo').app)}: ${inEsc(d.alertas.find(a => a.nivel === 'rojo').texto)}</span></div>`
+    const cargando = apps.some(a => a.loading) || (d.tienda && d.tienda.loading);
+    const estado = cargando ? `<div class="in-status"><b>Leyendo tus apps…</b><span>Se van completando una por una, puede tardar unos segundos.</span></div>` : rojas ? `<div class="in-status rojo"><b>${rojas} problema${rojas === 1 ? '' : 's'} para resolver</b><span>${inEsc(d.alertas.find(a => a.nivel === 'rojo').app)}: ${inEsc(d.alertas.find(a => a.nivel === 'rojo').texto)}</span></div>`
       : amar ? `<div class="in-status amarillo"><b>${amar} aviso${amar === 1 ? '' : 's'} para revisar</b><span>Nada urgente, pero conviene mirarlo.</span></div>`
         : `<div class="in-status ok"><b>Todo en orden</b><span>No hay alertas en tus apps ni en la tienda.</span></div>`;
     const kpi = (cls, lbl, val, sub) => `<div class="card ${cls} in-kpi"><div class="lbl">${lbl}</div><div class="val">${val}</div><div class="sub">${sub || ''}</div></div>`;

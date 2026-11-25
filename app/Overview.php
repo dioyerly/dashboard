@@ -37,14 +37,13 @@ final class Overview
         return ($id === 'descargar' || str_starts_with($host, 'descargar.')) ? 'tienda' : 'app';
     }
 
-    /** @return array<string,array{status:int,json:?array,raw_ok:bool}> clave "id|vista" */
+    /** Pedidos de a uno (el hosting comparte procesos entre todos tus sitios: en paralelo se traba). */
     private static function fetchAll(array $jobs, int $timeout): array
     {
         $out = [];
-        if (function_exists('curl_multi_init')) {
-            $mh = curl_multi_init();
-            $hs = [];
-            foreach ($jobs as $key => $j) {
+        foreach ($jobs as $key => $j) {
+            $t0 = microtime(true); $code = 0; $body = '';
+            if (function_exists('curl_init')) {
                 $ch = curl_init($j['url']);
                 curl_setopt_array($ch, [
                     CURLOPT_RETURNTRANSFER => true, CURLOPT_TIMEOUT => $timeout, CURLOPT_CONNECTTIMEOUT => 6,
@@ -52,30 +51,17 @@ final class Overview
                     CURLOPT_PROTOCOLS => CURLPROTO_HTTPS, CURLOPT_REDIR_PROTOCOLS => CURLPROTO_HTTPS, CURLOPT_FOLLOWLOCATION => false,
                     CURLOPT_MAXFILESIZE => 5000000,
                 ]);
-                curl_multi_add_handle($mh, $ch);
-                $hs[$key] = $ch;
-            }
-            do {
-                $st = curl_multi_exec($mh, $running);
-                if ($running) curl_multi_select($mh, 1.0);
-            } while ($running && $st === CURLM_OK);
-            foreach ($hs as $key => $ch) {
-                $body = curl_multi_getcontent($ch);
-                $code = (int)curl_getinfo($ch, CURLINFO_RESPONSE_CODE);
-                $out[$key] = self::parse($code, is_string($body) ? $body : '');
-                curl_multi_remove_handle($mh, $ch);
+                $b = curl_exec($ch); $code = (int)curl_getinfo($ch, CURLINFO_RESPONSE_CODE); $body = is_string($b) ? $b : '';
                 curl_close($ch);
+            } else {
+                $ctx = stream_context_create(['http' => ['method' => 'GET', 'timeout' => $timeout, 'ignore_errors' => true,
+                    'header' => "Authorization: Bearer " . $j['token'] . "\r\nAccept: application/json\r\n"]]);
+                $raw = @file_get_contents($j['url'], false, $ctx);
+                if (isset($http_response_header[0]) && preg_match('/\s(\d{3})(\s|$)/', $http_response_header[0], $m)) $code = (int)$m[1];
+                $body = $raw === false ? '' : $raw;
             }
-            curl_multi_close($mh);
-            return $out;
-        }
-        foreach ($jobs as $key => $j) {
-            $ctx = stream_context_create(['http' => ['method' => 'GET', 'timeout' => $timeout, 'ignore_errors' => true,
-                'header' => "Authorization: Bearer " . $j['token'] . "\r\nAccept: application/json\r\n"]]);
-            $raw = @file_get_contents($j['url'], false, $ctx);
-            $code = 0;
-            if (isset($http_response_header[0]) && preg_match('/\s(\d{3})(\s|$)/', $http_response_header[0], $m)) $code = (int)$m[1];
-            $out[$key] = self::parse($code, $raw === false ? '' : $raw);
+            $r = self::parse($code, $body); $r['ms'] = (int)round((microtime(true) - $t0) * 1000);
+            $out[$key] = $r;
         }
         return $out;
     }
@@ -107,9 +93,11 @@ final class Overview
     /** Lista rápida (sin red) de lo que el panel va a leer y de lo que falta conectar. */
     public static function plan(array $sources): array
     {
-        $plan = []; $hosts = [];
+        $plan = []; $hosts = []; $defHost = [];
+        foreach (self::DEFAULTS as $d1) $defHost[strtolower((string)parse_url($d1['url'], PHP_URL_HOST))] = $d1['id'];
         foreach ($sources as $id => $src) {
-            $plan[] = ['id' => (string)$id, 'name' => (string)($src['name'] ?? $id), 'kind' => self::kindOf((string)$id, $src)];
+            $h1 = strtolower((string)parse_url((string)($src['url'] ?? ''), PHP_URL_HOST));
+            $plan[] = ['id' => (string)$id, 'name' => (string)($src['name'] ?? $id), 'kind' => self::kindOf((string)$id, $src), 'conectar_id' => $defHost[$h1] ?? '', 'origen' => (string)($src['origen'] ?? '')];
             $hosts[strtolower((string)parse_url((string)($src['url'] ?? ''), PHP_URL_HOST))] = true;
         }
         $pend = [];
@@ -132,7 +120,7 @@ final class Overview
             $views = $kind === 'tienda' ? ['summary&d=30', 'sistema'] : ['summary&d=30', 'customers', 'sistema'];
             foreach ($views as $v) $jobs[$id . '|' . explode('&', $v)[0]] = ['url' => $url . $sep . 'view=' . $v, 'token' => $tok];
         }
-        $res = self::fetchAll($jobs, 12);
+        $res = self::fetchAll($jobs, 10);
         $apps = [];
         $tienda = null;
         foreach ($sources as $id => $src) {
@@ -140,7 +128,7 @@ final class Overview
             $name = (string)($src['name'] ?? $id);
             $sum = $res[$id . '|summary'] ?? null;
             if ($sum === null) { $apps[] = self::broken((string)$id, $name, $kind, 'sin clave o direccion invalida'); continue; }
-            if ($sum['json'] === null || $sum['status'] !== 200) { $x = self::broken((string)$id, $name, $kind, self::reason($sum['status'])); if ($kind === 'tienda') $tienda = $x; else $apps[] = $x; continue; }
+            if ($sum['json'] === null || $sum['status'] !== 200) { $x = self::broken((string)$id, $name, $kind, self::reason($sum['status']) . ' (HTTP ' . $sum['status'] . ', ' . round(($sum['ms'] ?? 0) / 1000, 1) . ' s)'); if ($kind === 'tienda') $tienda = $x; else $apps[] = $x; continue; }
             $sis = $res[$id . '|sistema']['json'] ?? null;
             if (($res[$id . '|sistema']['status'] ?? 0) !== 200) $sis = null;
             if ($kind === 'tienda') { $tienda = self::tienda((string)$id, $name, $sum['json'], $sis); continue; }

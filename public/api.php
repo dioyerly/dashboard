@@ -73,6 +73,7 @@ try {
     if ($action === 'overview' && $method === 'GET') {
         if (!$auth->current()) respond(401, ['ok' => false, 'code' => 'session_expired']);
         if (session_status() === PHP_SESSION_ACTIVE) session_write_close(); /* no trabar otros pedidos mientras se leen las apps */
+        @set_time_limit(60);
         $only = $_GET['id'] ?? null;
         if (is_string($only) && $only !== '') { if (!isset($sources[$only])) respond(404, ['ok' => false, 'code' => 'source_not_found']); $sources = [$only => $sources[$only]]; }
         $out = Centro\Overview::build($sources);
